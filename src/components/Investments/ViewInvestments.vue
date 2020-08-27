@@ -19,7 +19,7 @@
         <ul class="list-group">
 
             <!-- no investments -->
-            <li class="list-group-item d-flex justify-content-between align-items-center disabled" v-if="hasInvestments">
+            <li class="list-group-item d-flex justify-content-between align-items-center disabled" v-if="!hasInvestments">
                 You haven't added any investments yet.
             </li>
 
@@ -88,7 +88,7 @@ export default {
             this.$emit('populateInvestment');
         },
         displayExemption: function (exemption) {
-            return this.util.formatMoney(parseInt(exemption.value) + parseInt(exemption.match));
+            return this.util.formatMoney(exemption.value + exemption.match);
         },
         getExemptionTooltip: function (exemption) {
             let value = this.util.formatMoney(exemption.value);
@@ -111,7 +111,7 @@ export default {
             })
             this.incomesItemized.forEach(income => {
                 income.exemptions.forEach(exemption => {
-                    let value = parseInt(exemption.value) + parseInt(exemption.match);
+                    let value = exemption.value + exemption.match;
                     tip += `${exemption.label} (${util.formatMoney(value)}) + `;
                 })
             })

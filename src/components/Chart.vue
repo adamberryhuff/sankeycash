@@ -168,9 +168,7 @@ export default {
             this.itemizedIncomes.forEach(stream => {
                 stream.exemptions.forEach(exemption => {
                     exemption = JSON.parse(JSON.stringify(exemption));
-                    exemption.value = this.formatValue(
-                        parseInt(exemption.value) + parseInt(exemption.match)
-                    );
+                    exemption.value = this.formatValue(exemption.value + exemption.match);
                     this.addChartRow(this.net, exemption);
                     this.addChartRow(exemption, this.investments);
                 });

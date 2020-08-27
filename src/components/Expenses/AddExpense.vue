@@ -40,8 +40,9 @@ export default {
     },
     methods: {
         addExpense: function () {
-            // validate
             this.value = parseInt(this.value);
+
+            // validate
             if (isNaN(this.value) || this.value < 0) {
                 alert('Expense amount must be a positive number!');
                 return;

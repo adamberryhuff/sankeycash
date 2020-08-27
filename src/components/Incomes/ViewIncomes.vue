@@ -64,7 +64,7 @@ export default {
     methods: {
         removeIncome: function (idx, income) {
             let net = this.getNet(income);
-            net = net - income.exemptions.reduce((a, e) => a + parseInt(e.value) + parseInt(e.match), 0);
+            net = net - income.exemptions.reduce((a, e) => a + e.value + e.match, 0);
             if (net > this.unallocatedSum) {
                 alert(`You cannot remove this income stream until you free up at least ${util.formatMoney(net)} into your unallocated budget. You must remove at least ${util.formatMoney(net-this.unallocatedSum)} in expenses or investments before you can remove this income stream.`);
                 return;
@@ -74,25 +74,25 @@ export default {
             }
         },
         getTaxableIncome: function (income) {
-            var value = parseInt(income.value);
+            var value = income.value;
             income.exemptions.forEach(exemption => {
-                value -= parseInt(exemption.value);
+                value -= exemption.value;
             })
             return value;
         },
         getTax: function (income) {
-            let value = parseInt(income.value);
-            value -= income.exemptions.reduce((a, e) => a + parseInt(e.value), 0);
-            return parseInt(value)*(parseInt(income.tax)/100);
+            let value = income.value;
+            value -= income.exemptions.reduce((a, e) => a + e.value, 0);
+            return value*(income.tax/100);
         },
         getMatch: function (income) {
-            return income.exemptions.reduce((a, e) => a + parseInt(e.match), 0);
+            return income.exemptions.reduce((a, e) => a + e.match, 0);
         },
         getNet: function (income) {
-            return parseInt(income.value) - this.getTax(income) + this.getMatch(income);
+            return income.value - this.getTax(income) + this.getMatch(income);
         },
         getExemptions: function (income) {
-            return income.exemptions.reduce((a, e) => a + parseInt(e.value), 0);
+            return income.exemptions.reduce((a, e) => a + e.value, 0);
         },
         getNetDisplay: function (income) {
             let net = util.formatMoney(this.getNet(income));

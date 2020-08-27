@@ -82,9 +82,10 @@ export default {
     },
     methods: {
         addIncome: function () {
-            // validate
-            this.value = parseInt(this.value);
             this.tax   = parseInt(this.tax);
+            this.value = parseInt(this.value);
+
+            // validate
             if (isNaN(this.tax) || this.tax < 0 || this.tax > 100) {
                 alert('Income stream tax rate should be between 0 and 100');
                 return;
@@ -103,6 +104,7 @@ export default {
                     alert('Exemption amount must be greater or equal to 0.');
                     return;
                 }
+                exemption.match = parseInt(exemption.match);
                 if (isNaN(exemption.match) || exemption.match < 0) {
                     alert('Exemption match amount must be greater or equal to 0.');
                     return;

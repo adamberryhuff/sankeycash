@@ -99,6 +99,14 @@ export default {
         },
         setItemizedIncomes: function (incomes) {
             incomes.sort((a, b) => a.value < b.value);
+            incomes.forEach(income => {
+                income.value = parseInt(income.value);
+                income.tax   = parseInt(income.tax);
+                income.exemptions.forEach(exemption => {
+                    exemption.value = parseInt(exemption.value);
+                    exemption.match = parseInt(exemption.match);
+                });
+            });
             Vue.set(this, 'incomesItemized', incomes);
         },
 
@@ -152,9 +160,9 @@ export default {
         grossSum () {
             let value = 0;
             this.incomesItemized.forEach(income => {
-                value += parseInt(income.value);
+                value += income.value;
                 income.exemptions.forEach(exemption => {
-                    value += parseInt(exemption.match);
+                    value += exemption.match;
                 })
             })
             return value;
@@ -165,24 +173,24 @@ export default {
         taxSum () {
             let value = 0;
             this.incomesItemized.forEach(income => {
-                let untaxable = income.exemptions.reduce((acc, e) => acc + parseInt(e.value),0);
-                let taxable   = parseInt(income.value) - untaxable;
-                value += taxable*(parseInt(income.tax)/100)
+                let untaxable = income.exemptions.reduce((a, e) => a + e.value, 0);
+                let taxable   = income.value - untaxable;
+                value += taxable*(income.tax/100);
             })
             return value;
         },
         exemptionSum () {
             var value = 0;
             this.incomesItemized.forEach(income => {
-                value += income.exemptions.reduce((acc, exemp) => acc + parseInt(exemp.value) + parseInt(exemp.match), 0);
+                value += income.exemptions.reduce((a, e) => a + e.value + e.match, 0);
             });
             return value;
         },
         expenseSum () {
-            return this.expensesItemized.reduce((acc, expense) => acc + parseInt(expense.value), 0);
+            return this.expensesItemized.reduce((a, e) => a + e.value, 0);
         },
         investmentSum () {
-            let value = this.investmentsItemized.reduce((acc, i) => acc + parseInt(i.value), 0);
+            let value = this.investmentsItemized.reduce((a, i) => a + i.value, 0);
             return value + this.exemptionSum;
         },
         unallocatedSum () {
