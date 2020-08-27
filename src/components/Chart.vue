@@ -3,7 +3,7 @@
         <div id="sankey"></div>
         <div style="position: relative;" v-on:click="toggleMode()">
             <span class="float-right switch">
-                <b><input type="checkbox" id="mode-checkbox" checked data-toggle="toggle" data-size="md" data-on="$" data-off="%" data-onstyle="secondary" data-offstyle="secondary"></b>
+                <b><input type="checkbox" id="mode-checkbox" checked data-toggle="toggle" data-size="sm" data-on="$" data-off="%" data-onstyle="secondary" data-offstyle="secondary"></b>
             </span>
         </div>
         <div class="btn-group" role="group">

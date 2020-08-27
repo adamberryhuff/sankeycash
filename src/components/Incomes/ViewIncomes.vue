@@ -32,9 +32,6 @@
                             {{ getGrossDisplay(income) }}
                         </span><br>
                         <span v-for="(exemption, idx) in income.exemptions" v-bind:key="idx">
-                            <span class="badge badge-secondary badge-pill" v-if="exemption.match > 0">
-                                {{ getExemptionMatchDisplay(exemption) }}
-                            </span>&nbsp;
                             <span class="badge badge-secondary badge-pill" v-if="exemption.value > 0">
                                 {{ getExemptionDisplay(exemption) }}
                             </span>&nbsp;
@@ -141,13 +138,10 @@ export default {
             let gross = util.formatMoney(income.value);
             return `Gross: ${gross}`
         },
-        getExemptionMatchDisplay: function (exemption) {
-            let match = util.formatMoney(exemption.match);
-            return `${exemption.label} Match: ${match} @ 0%`;
-        },
         getExemptionDisplay: function (exemption) {
             let contribution = util.formatMoney(exemption.value);
-            return `${exemption.label}: ${contribution} @ 0%`;
+            let match        = util.formatMoney(exemption.match);
+            return `${exemption.label}: ${contribution} +  ${match} Match`;
         },
         getIncomeDisplay: function (income) {
             let taxable = util.formatMoney(this.getTaxableIncome(income));
