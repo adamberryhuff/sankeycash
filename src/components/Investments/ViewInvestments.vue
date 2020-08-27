@@ -118,11 +118,12 @@ export default {
             return tip.substring(0, tip.length-2);
         },
         hasInvestments: function () {
-            if (this.investmentsItemized.length) return true;
+            let has = false;
+            if (this.investmentsItemized.length) has = true;
             this.incomesItemized.forEach(income => {
-                if (income.exemptions.length) return true;
+                if (income.exemptions.length) has = true;
             });
-            return false;
+            return has;
         }
     }
 }
