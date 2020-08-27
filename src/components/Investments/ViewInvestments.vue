@@ -19,7 +19,7 @@
         <ul class="list-group">
 
             <!-- no investments -->
-            <li class="list-group-item d-flex justify-content-between align-items-center disabled" v-if="!investmentsItemized.length">
+            <li class="list-group-item d-flex justify-content-between align-items-center disabled" v-if="hasInvestments">
                 You haven't added any investments yet.
             </li>
 
@@ -45,8 +45,9 @@
                             <span id="label">{{ exemption.label }}</span>
                         </div>
                         <div class="col-md-8">
-                            <span class="badge badge-secondary badge-pill">
-                                {{ util.formatMoney(exemption.value) }}
+                            <span class="badge badge-secondary badge-pill" :title="getExemptionTooltip(exemption)">
+                                {{ displayExemption(exemption) }}
+                                <span class="fa fa-question-circle"></span>
                             </span>
                         </div>
                     </div>
@@ -85,6 +86,14 @@ export default {
         },
         populateInvestment: function () {
             this.$emit('populateInvestment');
+        },
+        displayExemption: function (exemption) {
+            return this.util.formatMoney(parseInt(exemption.value) + parseInt(exemption.match));
+        },
+        getExemptionTooltip: function (exemption) {
+            let value = this.util.formatMoney(exemption.value);
+            let match = this.util.formatMoney(exemption.match);
+            return `${exemption.label} = Contribution (${value}) + Employee Match (${match})`;
         }
     },
     computed: {
@@ -102,10 +111,18 @@ export default {
             })
             this.incomesItemized.forEach(income => {
                 income.exemptions.forEach(exemption => {
-                    tip += `${exemption.label} (${util.formatMoney(exemption.value)}) + `;
+                    let value = parseInt(exemption.value) + parseInt(exemption.match);
+                    tip += `${exemption.label} (${util.formatMoney(value)}) + `;
                 })
             })
             return tip.substring(0, tip.length-2);
+        },
+        hasInvestments: function () {
+            if (this.investmentsItemized.length) return true;
+            this.incomesItemized.forEach(income => {
+                if (income.exemptions.length) return true;
+            });
+            return false;
         }
     }
 }

@@ -165,24 +165,24 @@ export default {
         taxSum () {
             let value = 0;
             this.incomesItemized.forEach(income => {
-                let untaxable = income.exemptions.reduce((acc, e) => acc + e.value, 0);
-                let taxable   = income.value - untaxable;
-                value += taxable*(income.tax/100)
+                let untaxable = income.exemptions.reduce((acc, e) => acc + parseInt(e.value),0);
+                let taxable   = parseInt(income.value) - untaxable;
+                value += taxable*(parseInt(income.tax)/100)
             })
             return value;
         },
         exemptionSum () {
             var value = 0;
             this.incomesItemized.forEach(income => {
-                value += income.exemptions.reduce((acc, exemp) => acc + exemp.value + exemp.match, 0);
+                value += income.exemptions.reduce((acc, exemp) => acc + parseInt(exemp.value) + parseInt(exemp.match), 0);
             });
             return value;
         },
         expenseSum () {
-            return this.expensesItemized.reduce((acc, expense) => acc + expense.value, 0);
+            return this.expensesItemized.reduce((acc, expense) => acc + parseInt(expense.value), 0);
         },
         investmentSum () {
-            let value = this.investmentsItemized.reduce((acc, i) => acc + i.value, 0);
+            let value = this.investmentsItemized.reduce((acc, i) => acc + parseInt(i.value), 0);
             return value + this.exemptionSum;
         },
         unallocatedSum () {

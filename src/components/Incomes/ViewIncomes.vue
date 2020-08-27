@@ -64,6 +64,7 @@ export default {
     methods: {
         removeIncome: function (idx, income) {
             let net = this.getNet(income);
+            net = net - income.exemptions.reduce((a, e) => a + parseInt(e.value) + parseInt(e.match), 0);
             if (net > this.unallocatedSum) {
                 alert(`You cannot remove this income stream until you free up at least ${util.formatMoney(net)} into your unallocated budget. You must remove at least ${util.formatMoney(net-this.unallocatedSum)} in expenses or investments before you can remove this income stream.`);
                 return;
@@ -147,7 +148,7 @@ export default {
             let taxable = util.formatMoney(this.getTaxableIncome(income));
             let tax     = util.formatTax(income.tax);
             return `${income.label}: ${taxable} @ ${tax}`;
-        }
+        },
     },
     computed: {
         netTooltip () {
