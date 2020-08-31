@@ -3,7 +3,7 @@
         <!-- income stream label -->
         <div class="form-group">
             <label>Chart Label</label>
-            <input id="new-income-focus" v-model="label" type="text" class="form-control" placeholder="Label" v-on:keyup="processKeyPress">
+            <input id="new-income-focus" v-model="label" type="text" class="form-control" placeholder="Label">
             <small class="form-text text-muted">
                 The label will be used in the chart: Salary, Rental Income, etc.
             </small>
