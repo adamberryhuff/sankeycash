@@ -22,7 +22,8 @@
             :taxSum="taxSum"
             :expenseSum="expenseSum"
             :unallocatedSum="unallocatedSum"
-            :investmentSum="investmentSum" />
+            :investmentSum="investmentSum"
+            @setMode="setMode" />
         <div class="container-fluid">
             <Incomes
                 :incomesItemized="incomesItemized"
@@ -30,6 +31,7 @@
                 :grossSum="grossSum"
                 :netSum="netSum"
                 :taxSum="taxSum"
+                :mode="mode"
                 @addIncome="addIncome"
                 @removeIncome="removeIncome" />
             <img src="./assets/divider.png" class="divider">
@@ -39,6 +41,7 @@
                 :expenseSum="expenseSum"
                 :unallocatedSum="unallocatedSum"
                 :investmentSum="investmentSum"
+                :mode="mode"
                 @removeExpense="removeExpense"
                 @addExpense="addExpense" />
             <img src="./assets/divider.png" class="divider">
@@ -49,6 +52,7 @@
                 :expenseSum="expenseSum"
                 :unallocatedSum="unallocatedSum"
                 :investmentSum="investmentSum"
+                :mode="mode"
                 @removeInvestment="removeInvestment"
                 @addInvestment="addInvestment" />
         </div>
@@ -81,6 +85,7 @@ export default {
             incomesItemized: [],
             expensesItemized: [],
             investmentsItemized: [],
+            mode: '$'
         }
     },
     methods: {
@@ -155,6 +160,9 @@ export default {
         alert: function (alert) {
             this.$refs.toast.show(alert);
         },
+        setMode: function (mode) {
+            this.mode = mode;
+        }
     },
     computed: {
         grossSum () {

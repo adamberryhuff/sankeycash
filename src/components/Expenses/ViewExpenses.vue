@@ -7,11 +7,11 @@
         <!-- expenses: net - expenses = savings -->
         <span class="float-right">
             <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip">
-                Unallocated<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum) }}</span>
+                Unallocated<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum, mode) }}</span>
                 &nbsp;<span class="fa fa-question-circle"></span>
             </span>
             <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="expenseTooltip">
-                Expenses<span class="desktop-only-inline">: {{ util.formatMoney(expenseSum) }}</span>
+                Expenses<span class="desktop-only-inline">: {{ util.formatMoney(expenseSum, mode) }}</span>
                 &nbsp;<span class="fa fa-question-circle"></span>
             </span>
         </span>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-md-8">
                         <span class="badge badge-secondary badge-pill">
-                            {{ util.formatMoney(expense.value) }}
+                            {{ util.formatMoney(expense.value, mode) }}
                         </span>
                     </div>
                 </div>
@@ -49,7 +49,9 @@ import util from '../../util.js';
 
 export default {
     name: 'ViewExpenses',
-    props: ['expensesItemized', 'netSum', 'expenseSum', 'unallocatedSum', 'investmentSum'],
+    props: [
+        'expensesItemized', 'netSum', 'expenseSum', 'unallocatedSum', 'investmentSum', 'mode'
+    ],
     data () {
         return {
             util: util,
@@ -64,16 +66,16 @@ export default {
     },
     computed: {
         budgetTooltip () {
-            var tip = `Budget (${util.formatMoney(this.unallocatedSum)}) = `;
-            tip += `Net Income (${util.formatMoney(this.netSum)}) - `;
-            tip += `Expenses (${util.formatMoney(this.expenseSum)}) - `;
-            tip += `Investments (${util.formatMoney(this.investmentSum)})`;
+            var tip = `Budget (${util.formatMoney(this.unallocatedSum, this.mode)}) = `;
+            tip += `Net Income (${util.formatMoney(this.netSum, this.mode)}) - `;
+            tip += `Expenses (${util.formatMoney(this.expenseSum, this.mode)}) - `;
+            tip += `Investments (${util.formatMoney(this.investmentSum, this.mode)})`;
             return tip;
         },
         expenseTooltip () {
-            var tip = `Expenses (${util.formatMoney(this.expenseSum)}) = `;
+            var tip = `Expenses (${util.formatMoney(this.expenseSum, this.mode)}) = `;
             this.expensesItemized.forEach(expense => {
-                tip += `${expense.label} (${util.formatMoney(expense.value)}) + `;
+                tip += `${expense.label} (${util.formatMoney(expense.value, this.mode)}) + `;
             })
             return tip.substring(0, tip.length-2);
         }

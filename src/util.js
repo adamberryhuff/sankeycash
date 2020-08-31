@@ -1,6 +1,14 @@
 export default {
-    formatMoney (quantity) {
-        return '$' + quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    formatMoney (quantity, type='$') {
+        if (type == '$') {
+            return '$' + quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        } else if (type == '%') {
+            return quantity + '%';
+        } else if (type == '£') {
+            return '£' + quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        } else {
+            return '€ ' + quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
     },
     formatTax (rate) {
         return rate + '%';

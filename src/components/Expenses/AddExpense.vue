@@ -33,7 +33,7 @@ import util from '../../util.js';
 
 export default {
     name: 'AddExpense',
-    props: ['unallocatedSum'],
+    props: ['unallocatedSum', 'mode'],
     data () {
         return {
             // new income stream
@@ -53,7 +53,7 @@ export default {
             }
             if (this.value > this.unallocatedSum) {
                 alert(
-                    `Expense must be less than your available budget of ${util.formatMoney(this.unallocatedSum)}`
+                    `Expense must be less than your available budget of ${util.formatMoney(this.unallocatedSum, this.mode)}`
                 );
                 return;
             }

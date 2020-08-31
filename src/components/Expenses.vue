@@ -7,12 +7,13 @@
                     Expenses
                 </span>
             </h2>
-            <p>Input your annual expenses. You have <span class="budget-inline">{{ util.formatMoney(unallocatedSum) }}</span> available in your budget.</p>
+            <p>Input your annual expenses. You have <span class="budget-inline">{{ util.formatMoney(unallocatedSum, mode) }}</span> available in your budget.</p>
         </div>
 
         <div class="col-md-6">
             <AddExpense
                 :unallocatedSum="unallocatedSum"
+                :mode="mode"
                 @addExpense="addExpense" />
         </div>
         <div class="col-sm-12 mobile-only">
@@ -25,6 +26,7 @@
                 :expenseSum="expenseSum"
                 :unallocatedSum="unallocatedSum"
                 :investmentSum="investmentSum"
+                :mode="mode"
                 @removeExpense="deleteExpense" />
         </div>
     </div>
@@ -37,7 +39,9 @@ import ViewExpenses from './Expenses/ViewExpenses.vue';
 
 export default {
     name: 'Expenses',
-    props: ['expensesItemized', 'netSum', 'expenseSum', 'unallocatedSum', 'investmentSum'],
+    props: [
+        'expensesItemized', 'netSum', 'expenseSum', 'unallocatedSum', 'investmentSum', 'mode'
+    ],
     components: {
         AddExpense,
         ViewExpenses

@@ -1,14 +1,27 @@
 <template>
     <div v-show="this.gross.value > 0">
-        <div class="sankey-wrapper">
-            <div id="sankey"></div>
+        <div class="sankey-wrapper" :class="{ 'sankey-scroll': canvas == 'medium' || canvas == 'large' }">
+            <div id="sankey" class="sankey" :class="{ 'sankey-md': canvas == 'medium', 'sankey-lg': canvas == 'large' }"></div>
         </div>
-        <div style="position: relative;" v-on:click="toggleMode()">
+        <div style="position: relative;">
             <span class="float-right switch">
-                <b><input type="checkbox" id="mode-checkbox" checked data-toggle="toggle" data-size="sm" data-on="$" data-off="%" data-onstyle="secondary" data-offstyle="secondary"></b>
+                <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
+                    <button type="button" v-on:click="toggleCanvas('small')" class="btn btn-secondary canvas-small" :class="{ active: canvas == 'small' }"><span class="fa fa-square"></span></button>
+                    <button type="button" v-on:click="toggleCanvas('medium')" class="btn btn-secondary canvas-medium" :class="{ active: canvas == 'medium' }"><span class="fa fa-square"></span></button>
+                    <button type="button" v-on:click="toggleCanvas('large')" class="btn btn-secondary canvas-large" :class="{ active: canvas == 'large' }"><span class="fa fa-square"></span></button>
+                </div>
+                <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
+                    <button type="button" v-on:click="toggleMode('$')" class="btn btn-secondary" :class="{ active: mode == '$' }">$</button>
+                    <button type="button" v-on:click="toggleMode('£')" class="btn btn-secondary" :class="{ active: mode == '£' }">£</button>
+                    <button type="button" v-on:click="toggleMode('€')" class="btn btn-secondary" :class="{ active: mode == '€' }">€</button>
+                </div>
+                <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
+                    <button type="button" v-on:click="togglePercent(false)" class="btn btn-secondary" :class="{ active: !percent }">{{ mode }}</button>
+                    <button type="button" v-on:click="togglePercent(true)" class="btn btn-secondary" :class="{ active: percent }">%</button>
+                </div>
             </span>
         </div>
-        <div class="btn-group" role="group">
+        <div class="btn-group chart-up" role="group">
             <button type="button" class="btn btn-secondary" v-on:click="viewChart()" v-show="!atTop && chartShowing">
                 <span class="fa fa-arrow-up"> Chart</span>
             </button>
@@ -43,8 +56,9 @@ export default {
             chart: false,
             colors: 'gradient',
             atTop: true,
-            mode: 'value',
-            percent: false
+            mode: '$',
+            percent: false,
+            canvas: 'small'
         }
     },
     mounted () {
@@ -182,14 +196,15 @@ export default {
          * Chart Stuff
          **************************************************************/
         addChartRow: function (from, to) {
+            let mode = this.percent ? '%' : this.mode;
             if (from.value == 0 || to.value == 0) return;
             var append = to.label == from.label ? ' ' : '';
             let value = Math.min(from.value, to.value);
             let from_label = from.label + ' (';
-            from_label += this.percent ? from.value + '%' : util.formatMoney(from.value);
+            from_label += util.formatMoney(from.value, mode);
             from_label += ')';
-            let to_label   = to.label   + append + ' (';
-            to_label += this.percent ? to.value + '%' : util.formatMoney(to.value);
+            let to_label   = to.label + append + ' (';
+            to_label += util.formatMoney(to.value, mode);
             to_label += ')';
             this.chart.addRow([from_label, to_label, value]);
             to.label += append;
@@ -241,8 +256,12 @@ export default {
         formatValue: function (num) {
             return this.percent ? Math.round(num/this.grossSum*100*10)/10 : num;
         },
-        toggleMode: function () {
-            this.percent           = document.getElementById('mode-checkbox').checked;
+        togglePercent: function (percent) {
+            this.percent = percent;
+            this.toggleMode(this.mode);
+        },
+        toggleMode: function (mode) {
+            this.mode              = mode;
             this.gross.value       = this.formatValue(this.grossSum);
             this.net.value         = this.formatValue(this.netSum);
             this.tax.value         = this.formatValue(this.taxSum);
@@ -250,19 +269,36 @@ export default {
             this.expenses.value    = this.formatValue(this.expenseSum);
             this.investments.value = this.formatValue(this.investmentSum);
             this.render();
+            this.$emit('setMode', this.mode);
+        },
+        toggleCanvas: function (size) {
+            this.canvas = size;
+            this.toggleMode(this.mode);
         }
     }
 }
 </script>
 
 <style scoped>
-#sankey {
+
+.sankey {
+    min-height:300px;
     width: 100%;
     min-width:1000px;
-    height:300px;
+    margin-bottom:15px;
 }
 
-.btn-group {
+.sankey-md {
+    min-height:450px;
+    width: 150%;
+}
+
+.sankey-lg {
+    min-height:600px;
+    width:200%;
+}
+
+.chart-up {
     position:fixed;
     bottom:0px;
     left:0px;
@@ -270,14 +306,14 @@ export default {
     border-radius:
 }
 
-.btn-secondary {
+.chart-up .btn-secondary {
     box-shadow: 0 0 0 .2rem rgba(130,138,145,.5);
 }
 
-.btn-group .btn:first-child {
+.chart-up .btn:first-child {
     border-radius: 0rem 0rem 0rem 0rem !important;
 }
-.btn-group .btn:last-child {
+.chart-up .btn:last-child {
     border-radius: 0rem 0.25rem 0rem 0rem !important;
 }
 
@@ -295,10 +331,28 @@ export default {
     overflow-y: hidden;
 }
 
+.sankey-scroll {
+    overflow-x: scroll;
+}
+
 @media only screen and (max-width: 1000px) {
     .sankey-wrapper {
         overflow-x: scroll;
     }
+}
+
+.percent-buttons {
+    margin-left:10px;
+}
+
+.canvas-small {
+    font-size: 5px;
+}
+.canvas-medium {
+    font-size: 10px;
+}
+.canvas-large {
+    font-size: 15px;
 }
 
 </style>

@@ -9,7 +9,7 @@
                 </span>
             </h2>
             <p>
-                Input your annual post-tax investment contributions. You have <span class="budget-inline" v-on:click="populateInvestment()">{{ util.formatMoney(unallocatedSum) }}</span> available in your budget.
+                Input your annual post-tax investment contributions. You have <span class="budget-inline" v-on:click="populateInvestment()">{{ util.formatMoney(unallocatedSum, mode) }}</span> available in your budget.
             </p>
         </div>
 
@@ -18,6 +18,7 @@
             <AddInvestment
                 ref="add"
                 :unallocatedSum="unallocatedSum"
+                :mode="mode"
                 @addInvestment="addInvestment" />
         </div>
         <div class="col-sm-12 mobile-only">
@@ -33,6 +34,7 @@
                 :expenseSum="expenseSum"
                 :unallocatedSum="unallocatedSum"
                 :investmentSum="investmentSum"
+                :mode="mode"
                 @removeInvestment="removeInvestment"
                 @populateInvestment="populateInvestment" />
         </div>
@@ -49,7 +51,8 @@ export default {
     name: 'Investments',
     props: [
         'investmentsItemized', 'incomesItemized',
-        'unallocatedSum', 'netSum', 'investmentSum', 'expenseSum'
+        'unallocatedSum', 'netSum', 'investmentSum', 'expenseSum',
+        'mode'
     ],
     data () {
         return {

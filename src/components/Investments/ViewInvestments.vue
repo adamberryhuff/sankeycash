@@ -6,11 +6,11 @@
         <!-- investments: net - expenses = savings -->
         <span class="float-right">
             <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip" v-on:click="populateInvestment()">
-                Unallocated<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum) }}</span>&nbsp;
+                Unallocated<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum, mode) }}</span>&nbsp;
                 <span class="fa fa-question-circle"></span>
             </span>
             <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="investmentTooltip">
-                Investments<span class="desktop-only-inline">: {{ util.formatMoney(investmentSum) }}</span>&nbsp;
+                Investments<span class="desktop-only-inline">: {{ util.formatMoney(investmentSum, mode) }}</span>&nbsp;
                 <span class="fa fa-question-circle"></span>
             </span>
         </span>
@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-md-8">
                         <span class="badge badge-secondary badge-pill">
-                            {{ util.formatMoney(investment.value) }}
+                            {{ util.formatMoney(investment.value, mode) }}
                         </span>
                     </div>
                 </div>
@@ -67,7 +67,8 @@ export default {
     name: 'ViewInvestments',
     props: [
         'investmentsItemized', 'incomesItemized',
-        'netSum', 'expenseSum', 'unallocatedSum', 'investmentSum'
+        'netSum', 'expenseSum', 'unallocatedSum', 'investmentSum',
+        'mode'
     ],
     data () {
         return {
@@ -87,31 +88,31 @@ export default {
             this.$emit('populateInvestment');
         },
         displayExemption: function (exemption) {
-            return this.util.formatMoney(exemption.value + exemption.match);
+            return this.util.formatMoney(exemption.value + exemption.match, this.mode);
         },
         getExemptionTooltip: function (exemption) {
-            let value = this.util.formatMoney(exemption.value);
-            let match = this.util.formatMoney(exemption.match);
+            let value = this.util.formatMoney(exemption.value, this.mode);
+            let match = this.util.formatMoney(exemption.match, this.mode);
             return `${exemption.label} = Contribution (${value}) + Employee Match (${match})`;
         }
     },
     computed: {
         budgetTooltip () {
-            var tip = `Budget (${util.formatMoney(this.unallocatedSum)}) = `;
-            tip += `Net Income (${util.formatMoney(this.netSum)}) - `;
-            tip += `Expenses (${util.formatMoney(this.expenseSum)}) - `;
-            tip += `Investments (${util.formatMoney(this.investmentSum)})`;
+            var tip = `Budget (${util.formatMoney(this.unallocatedSum, this.mode)}) = `;
+            tip += `Net Income (${util.formatMoney(this.netSum, this.mode)}) - `;
+            tip += `Expenses (${util.formatMoney(this.expenseSum, this.mode)}) - `;
+            tip += `Investments (${util.formatMoney(this.investmentSum, this.mode)})`;
             return tip;
         },
         investmentTooltip () {
-            var tip = `Expenses (${util.formatMoney(this.investmentSum)}) = `;
+            var tip = `Expenses (${util.formatMoney(this.investmentSum, this.mode)}) = `;
             this.investmentsItemized.forEach(invest => {
-                tip += `${invest.label} (${util.formatMoney(invest.value)}) + `;
+                tip += `${invest.label} (${util.formatMoney(invest.value, this.mode)}) + `;
             })
             this.incomesItemized.forEach(income => {
                 income.exemptions.forEach(exemption => {
                     let value = exemption.value + exemption.match;
-                    tip += `${exemption.label} (${util.formatMoney(value)}) + `;
+                    tip += `${exemption.label} (${util.formatMoney(value, this.mode)}) + `;
                 })
             })
             return tip.substring(0, tip.length-2);

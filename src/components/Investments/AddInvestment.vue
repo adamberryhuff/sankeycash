@@ -33,7 +33,7 @@ import util from '../../util.js';
 
 export default {
     name: 'AddInvestment',
-    props: ['unallocatedSum'],
+    props: ['unallocatedSum', 'mode'],
     data () {
         return {
             // new investment
@@ -52,7 +52,7 @@ export default {
                 return;
             }
             if (this.value > this.unallocatedSum) {
-                alert(`Investment must be less than your available budget of ${util.formatMoney(this.unallocatedSum)}`);
+                alert(`Investment must be less than your available budget of ${util.formatMoney(this.unallocatedSum, this.mode)}`);
                 return;
             }
 

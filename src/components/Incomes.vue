@@ -27,6 +27,7 @@
                 :grossSum="grossSum"
                 :taxSum="taxSum"
                 :netSum="netSum"
+                :mode="mode"
                 @removeIncome="deleteIncome" />
         </div>
     </div>
@@ -39,7 +40,7 @@ import ViewIncomes from './Incomes/ViewIncomes.vue';
 
 export default {
     name: 'Incomes',
-    props: ['incomesItemized', 'unallocatedSum', 'grossSum', 'netSum', 'taxSum'],
+    props: ['incomesItemized', 'unallocatedSum', 'grossSum', 'netSum', 'taxSum', 'mode'],
     components: {
         AddIncome,
         ViewIncomes
