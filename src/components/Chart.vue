@@ -50,9 +50,11 @@ export default {
     },
     created () {
         window.addEventListener('scroll', this.handleScroll);
+        window.addEventListener('resize', this.handleResize);
     },
     destroyed () {
         window.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener('resize', this.handleResize);
     },
     watch: {
         grossSum: function () {
@@ -230,6 +232,9 @@ export default {
         },
         handleScroll: function () {
             this.atTop = window.scrollY < 300;
+        },
+        handleResize: function () {
+            this.render();
         },
         formatValue: function (num) {
             return this.percent ? Math.round(num/this.grossSum*100*10)/10 : num;
