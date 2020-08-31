@@ -3,7 +3,7 @@
         <!-- investment label -->
         <div class="form-group">
             <label>Chart Label</label>
-            <input v-model="label" type="text" class="form-control" placeholder="Label">
+            <input id="new-investment-focus" v-model="label" type="text" class="form-control" placeholder="Label" v-on:keyup="processKeyPress">
             <small class="form-text text-muted">
                 The label will be used in the chart: Stocks, Bonds, Roth IRA, Extra Mortgage Payment, etc.
             </small>
@@ -12,7 +12,7 @@
         <!-- investment amount -->
         <div class="form-group">
             <label>Amount</label>
-            <input id="new-investment" type="number" class="form-control" min="1" v-model="value" placeholder="Amount">
+            <input id="new-investment" type="number" class="form-control" min="1" v-model="value" placeholder="Amount" v-on:keyup="processKeyPress">
             <small class="form-text text-muted">
                 The amount you invest annually in this fund.
             </small>
@@ -61,9 +61,17 @@ export default {
             // reset
             this.label = '';
             this.value = '';
+
+            this.focusNewInvestment();
         },
         populateInvestment: function () {
             this.value = this.unallocatedSum;
+        },
+        focusNewInvestment: function () {
+            document.getElementById('new-investment-focus').focus();
+        },
+        processKeyPress: function (event) {
+            if (event.keyCode == 13) this.addInvestment();
         }
     }
 }

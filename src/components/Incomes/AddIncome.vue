@@ -3,7 +3,7 @@
         <!-- income stream label -->
         <div class="form-group">
             <label>Chart Label</label>
-            <input v-model="label" type="text" class="form-control" placeholder="Label">
+            <input id="new-income-focus" v-model="label" type="text" class="form-control" placeholder="Label" v-on:keyup="processKeyPress">
             <small class="form-text text-muted">
                 The label will be used in the chart: Salary, Rental Income, etc.
             </small>
@@ -12,7 +12,7 @@
         <!-- income stream amount -->
         <div class="form-group">
             <label>Amount (Gross)</label>
-            <input type="number" class="form-control" min="1" v-model="value" placeholder="Amount">
+            <input type="number" class="form-control" min="1" v-model="value" placeholder="Amount" v-on:keyup="processKeyPress">
             <small class="form-text text-muted">
                 The amount you make annually from this income stream (pre-tax).
             </small>
@@ -21,7 +21,7 @@
         <!-- income stream tax rate -->
         <div class="form-group">
             <label>Tax Rate</label>
-            <input type="number" class="form-control" step=".001" min="0" max="100" v-model="tax" placeholder="Tax">
+            <input type="number" class="form-control" step=".001" min="0" max="100" v-model="tax" placeholder="Tax" v-on:keyup="processKeyPress">
             <small class="form-text text-muted">
                 The percentage of tax for this income stream.
             </small>
@@ -31,26 +31,26 @@
         <div class="form-group">
             Does this income stream have any tax-exempt contributions?
             <span class="float-right">
-                <input type="radio" name="gridRadios" v-on:click="addExemption()">
+                <input type="radio" name="gridRadios" v-on:click="addExemption()" v-on:keyup="processKeyPress">
                 &nbsp;Yes
-                <input type="radio" class="no-checkbox" id="no-exemptions-cb" name="gridRadios" v-on:click="exemptions = []" checked>
+                <input type="radio" class="no-checkbox" id="no-exemptions-cb" name="gridRadios" v-on:click="exemptions = []" checked v-on:keyup="processKeyPress">
                 &nbsp;No
             </span>
             <div v-for="(exemption, idx) in exemptions" v-bind:key="idx" class="row no-gutters">
 
                 <!-- income stream tax exemption label -->
                 <div class="col-md-4 exemptions">
-                    <input placeholder="Chart Label" class="form-control" v-model="exemption.label" />
+                    <input placeholder="Chart Label" class="form-control" v-model="exemption.label" v-on:keyup="processKeyPress" />
                 </div>
 
                 <!-- income stream tax exemption amount -->
                 <div class="col-md-4 exemptions">
-                    <input placeholder="Contribution" type="number" class="form-control"  v-model="exemption.value" />
+                    <input placeholder="Contribution" type="number" class="form-control"  v-model="exemption.value" v-on:keyup="processKeyPress" />
                 </div>
 
                 <!-- income stream tax exemption employer match -->
                 <div class="col-md-4 exemptions">
-                    <input placeholder="Employer Match" type="number" class="form-control" v-model="exemption.match" />
+                    <input placeholder="Employer Match" type="number" class="form-control" v-model="exemption.match" v-on:keyup="processKeyPress" />
                 </div>
             </div>
             <small class="form-text text-muted">
@@ -79,6 +79,9 @@ export default {
             tax:   '',
             exemptions: []
         }
+    },
+    mounted () {
+        this.focusNewIncome();
     },
     methods: {
         addIncome: function () {
@@ -130,12 +133,19 @@ export default {
             this.value      = '';
             this.exemptions = [];
 
-            // set no exemptions checkbox
-            document.getElementById('no-exemptions-cb').checked = true;
+            // focus new income
+            this.focusNewIncome();
         },
         addExemption: function () {
             this.exemptions.push({ label: '', value: '', match: '' });
         },
+        focusNewIncome: function () {
+            document.getElementById('new-income-focus').focus();
+            document.getElementById('no-exemptions-cb').checked = true;
+        },
+        processKeyPress: function (event) {
+            if (event.keyCode == 13) this.addIncome();
+        }
     },
 }
 
