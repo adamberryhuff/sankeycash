@@ -55,9 +55,9 @@
             </div>
             <small class="form-text text-muted">
                 Examples: 401k, HSA
-                <span class="float-right add-exemption" v-if="exemptions.length" v-on:click="addExemption()">
+                <button type="button" class="btn btn-link float-right add-exemption" v-if="exemptions.length" v-on:click="addExemption()" tabindex="0">
                     <i>Add Another</i>
-                </span>
+                </button>
             </small>
         </div>
         <button type="submit" class="btn btn-primary float-right" v-on:click="addIncome()">
@@ -152,6 +152,15 @@ export default {
     color: #007bff;
     text-decoration: none;
     background-color: transparent;
+    padding: 0px;
+    border: 0px;
+    font-size: 100%;
+    font-weight: 400;
+}
+
+.add-exemption:focus {
+    text-decoration: #007bff;
+    text-decoration-line: underline;
 }
 
 .no-checkbox {
