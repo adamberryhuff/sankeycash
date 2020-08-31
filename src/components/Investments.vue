@@ -20,6 +20,9 @@
                 :unallocatedSum="unallocatedSum"
                 @addInvestment="addInvestment" />
         </div>
+        <div class="col-sm-12 mobile-only">
+            <hr class="lr-break">
+        </div>
 
         <!-- view investments -->
         <div class="col-md-6">

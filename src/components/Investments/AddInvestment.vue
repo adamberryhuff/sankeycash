@@ -17,8 +17,11 @@
                 The amount you invest annually in this fund.
             </small>
         </div>
-
-        <button class="btn btn-primary float-right" style="position:relative;" v-on:click.enter.prevent="addInvestment" v-on:keyup="processKeyPress">
+        <br class="mobile-only">
+        <button class="btn btn-primary float-right desktop-only" style="position:relative;" v-on:click.enter.prevent="addInvestment" v-on:keyup="processKeyPress">
+            Add Investment
+        </button>
+        <button class="btn btn-primary mobile-only" style="position:relative;" v-on:click.enter.prevent="addInvestment" v-on:keyup="processKeyPress">
             Add Investment
         </button>
     </form>
@@ -78,3 +81,11 @@ export default {
 }
 
 </script>
+
+<style SCOPED>
+
+.btn.mobile-only {
+    width:100%;
+}
+
+</style>

@@ -11,12 +11,16 @@
         </div>
 
         <!-- add income stream -->
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-12">
             <AddIncome @addIncome="newIncome" />
         </div>
 
+        <div class="col-sm-12 mobile-only">
+            <hr class="lr-break">
+        </div>
+
         <!-- view income streams -->
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-12">
             <ViewIncomes
                 :incomesItemized="incomesItemized"
                 :unallocatedSum="unallocatedSum"

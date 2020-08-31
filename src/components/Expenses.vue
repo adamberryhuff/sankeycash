@@ -15,6 +15,9 @@
                 :unallocatedSum="unallocatedSum"
                 @addExpense="addExpense" />
         </div>
+        <div class="col-sm-12 mobile-only">
+            <hr class="lr-break">
+        </div>
         <div class="col-md-6">
             <ViewExpenses
                 :expensesItemized="expensesItemized"

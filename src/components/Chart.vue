@@ -1,6 +1,8 @@
 <template>
     <div v-show="this.gross.value > 0">
-        <div id="sankey"></div>
+        <div class="sankey-wrapper">
+            <div id="sankey"></div>
+        </div>
         <div style="position: relative;" v-on:click="toggleMode()">
             <span class="float-right switch">
                 <b><input type="checkbox" id="mode-checkbox" checked data-toggle="toggle" data-size="sm" data-on="$" data-off="%" data-onstyle="secondary" data-offstyle="secondary"></b>
@@ -256,6 +258,7 @@ export default {
 <style scoped>
 #sankey {
     width: 100%;
+    min-width:1000px;
     height:300px;
 }
 
@@ -284,6 +287,12 @@ export default {
 
 .btn-secondary {
     font-weight:bold !important;
+}
+
+.sankey-wrapper {
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
 }
 </style>
 

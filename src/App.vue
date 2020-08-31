@@ -80,7 +80,7 @@ export default {
         return {
             incomesItemized: [],
             expensesItemized: [],
-            investmentsItemized: []
+            investmentsItemized: [],
         }
     },
     methods: {
@@ -154,7 +154,7 @@ export default {
         },
         alert: function (alert) {
             this.$refs.toast.show(alert);
-        }
+        },
     },
     computed: {
         grossSum () {
@@ -198,7 +198,7 @@ export default {
         },
         chartShowing () {
             return this.investmentSum || this.expenseSum || this.unallocatedSum;
-        }
+        },
     },
     watch: {
         incomesItemized: function () {
@@ -206,8 +206,8 @@ export default {
                 window.$('[data-toggle="tooltip"]').tooltip('dispose');
                 window.$('[data-toggle="tooltip"]').tooltip('enable');
             })
-        }
-    }
+        },
+    },
 }
 </script>
 
@@ -216,6 +216,7 @@ export default {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
 }
 .container-fluid {
     padding:30px 30px 0px 30px;
@@ -239,6 +240,37 @@ export default {
 }
 .google-visualization-tooltip {
     display:none;
+}
+
+.mobile-only {
+    display:none;
+}
+
+@media only screen and (max-width: 540px) {
+    .mobile-only {
+        display: block;
+    }
+}
+
+.desktop-only {
+    display:none;
+}
+
+.desktop-only-inline {
+    display: none;
+}
+
+@media only screen and (min-width: 540px) {
+    .desktop-only {
+        display: flex;
+    }
+    .desktop-only-inline {
+        display: inline;
+    }
+}
+
+.lr-break {
+    margin: 25px 0px 25px 0px;
 }
 
 </style>

@@ -7,7 +7,8 @@
         <!-- income streams gross, tax, net -->
         <span class="float-right net-income">
             <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="netTooltip">
-                Net: {{ util.formatMoney(netSum) }}
+                Net<span class="desktop-only-inline">: {{ util.formatMoney(netSum) }}</span>
+                &nbsp;
                 <span class="fa fa-question-circle"></span>
             </span>
         </span>
@@ -173,9 +174,6 @@ export default {
 }
 .income-display {
     width:100%;
-}
-.net-income {
-    padding-right: 1.25rem;
 }
 .net-income-badge {
     float:initial;

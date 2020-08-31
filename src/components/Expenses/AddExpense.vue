@@ -17,8 +17,11 @@
                 The amount you pay annually to this expense.
             </small>
         </div>
-
-        <button class="btn btn-primary float-right" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
+        <br class="mobile-only">
+        <button class="btn btn-primary float-right desktop-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
+            Add Expense
+        </button>
+        <button class="btn btn-primary mobile-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
             Add Expense
         </button>
     </form>
@@ -77,3 +80,11 @@ export default {
 }
 
 </script>
+
+<style SCOPED>
+
+.btn.mobile-only {
+    width:100%;
+}
+
+</style>

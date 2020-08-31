@@ -36,21 +36,39 @@
                 <input type="radio" class="no-checkbox" id="no-exemptions-cb" name="gridRadios" v-on:click="exemptions = []" checked v-on:keyup="processKeyPress">
                 &nbsp;No
             </span>
-            <div v-for="(exemption, idx) in exemptions" v-bind:key="idx" class="row no-gutters">
-
-                <!-- income stream tax exemption label -->
+            <div class="row no-gutters desktop-only" v-if="exemptions.length">
+                <div class="col-md-3 exemptions">
+                    <label class="exemption-label">Label</label>
+                </div>
                 <div class="col-md-4 exemptions">
+                    <label class="exemption-label">Contribution</label>
+                </div>
+                <div class="col-md-4 exemptions">
+                    <label class="exemption-label">Match</label>
+                </div>
+                <div class="col-md-1 exemptions"></div>
+            </div>
+            <div v-for="(exemption, idx) in exemptions" v-bind:key="idx" class="row no-gutters">
+                <!-- income stream tax exemption label -->
+                <div class="col-md-3 exemptions">
+                    <label class="exemption-label mobile-only">Label</label>
                     <input placeholder="Chart Label" class="form-control" v-model="exemption.label" v-on:keyup="processKeyPress" />
                 </div>
 
                 <!-- income stream tax exemption amount -->
                 <div class="col-md-4 exemptions">
+                    <label class="exemption-label mobile-only">Contribution</label>
                     <input placeholder="Contribution" type="number" class="form-control"  v-model="exemption.value" v-on:keyup="processKeyPress" />
                 </div>
 
                 <!-- income stream tax exemption employer match -->
                 <div class="col-md-4 exemptions">
+                    <label class="exemption-label mobile-only">Match</label>
                     <input placeholder="Employer Match" type="number" class="form-control" v-model="exemption.match" v-on:keyup="processKeyPress" />
+                </div>
+                <div class="col-md-1 exemptions">
+                    <button type="button" class="btn btn-outline-danger desktop-only" v-on:click="removeExemption(idx)">X</button>
+                    <button type="button" class="btn btn-outline-danger mobile-only" v-on:click="removeExemption(idx)">Remove Exemption</button>
                 </div>
             </div>
             <small class="form-text text-muted">
@@ -60,7 +78,10 @@
                 </button>
             </small>
         </div>
-        <button class="btn btn-primary float-right" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
+        <button class="btn btn-primary float-right desktop-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
+            Add Income Stream
+        </button>
+        <button class="btn btn-primary mobile-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
             Add Income Stream
         </button>
     </form>
@@ -105,13 +126,15 @@ export default {
             this.exemptions.forEach(exemption => {
                 exemption.value = parseInt(exemption.value);
                 if (isNaN(exemption.value) || exemption.value < 0) {
-                    alert('Exemption amount must be greater or equal to 0.');
-                    return;
+                    let str = 'Exemption amount must be greater or equal to 0.';
+                    alert(str);
+                    throw str;
                 }
                 exemption.match = parseInt(exemption.match);
                 if (isNaN(exemption.match) || exemption.match < 0) {
-                    alert('Exemption match amount must be greater or equal to 0.');
-                    return;
+                    let str = 'Exemption match amount must be greater or equal to 0.';
+                    alert(str);
+                    throw str;
                 }
                 exemption_total += exemption.value;
             })
@@ -139,6 +162,17 @@ export default {
         },
         addExemption: function () {
             this.exemptions.push({ label: '', value: '', match: '' });
+        },
+        removeExemption: function (idx) {
+            var empty = !this.exemptions[idx].label;
+            empty = empty && !this.exemptions[idx].value;
+            empty = empty && !this.exemptions[idx].match;
+            if (empty || confirm('Are you sure you want to remove this exemption?')) {
+                this.exemptions.splice(idx, 1);
+                if (!this.exemptions.length) {
+                    document.getElementById('no-exemptions-cb').checked = true;
+                }
+            }
         },
         focusNewIncome: function () {
             document.getElementById('new-income-focus').focus();
@@ -177,4 +211,23 @@ export default {
 .no-checkbox {
      margin-left:10px;
 }
+
+.exemption-label {
+    font-size:14px;
+    margin-bottom:0px;
+}
+
+.remove-label {
+    color: transparent;
+}
+
+.btn.mobile-only {
+    width:100%;
+}
+
+.btn.mobile-only.btn-primary {
+    margin-top:30px;
+}
+
+
 </style>

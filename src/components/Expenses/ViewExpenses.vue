@@ -5,14 +5,14 @@
         <label>Expenses</label>
 
         <!-- expenses: net - expenses = savings -->
-        <span class="float-right net-income">
+        <span class="float-right">
             <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip">
-                Unallocated: {{ util.formatMoney(unallocatedSum) }}
-                <span class="fa fa-question-circle"></span>
+                Unallocated<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum) }}</span>
+                &nbsp;<span class="fa fa-question-circle"></span>
             </span>
             <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="expenseTooltip">
-                Expenses: {{ util.formatMoney(expenseSum) }}
-                <span class="fa fa-question-circle"></span>
+                Expenses<span class="desktop-only-inline">: {{ util.formatMoney(expenseSum) }}</span>
+                &nbsp;<span class="fa fa-question-circle"></span>
             </span>
         </span>
 
@@ -93,9 +93,6 @@ export default {
 }
 .income-display {
     width:100%;
-}
-.net-income {
-    padding-right: 1.25rem;
 }
 .net-income-badge {
     float:initial;

@@ -3,15 +3,14 @@
 
         <!-- investments label -->
         <label>Investments</label>
-
         <!-- investments: net - expenses = savings -->
-        <span class="float-right net-income">
+        <span class="float-right">
             <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip" v-on:click="populateInvestment()">
-                Unallocated: {{ util.formatMoney(unallocatedSum) }}
+                Unallocated<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum) }}</span>&nbsp;
                 <span class="fa fa-question-circle"></span>
             </span>
             <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="investmentTooltip">
-                Investments: {{ util.formatMoney(investmentSum) }}
+                Investments<span class="desktop-only-inline">: {{ util.formatMoney(investmentSum) }}</span>&nbsp;
                 <span class="fa fa-question-circle"></span>
             </span>
         </span>
@@ -141,9 +140,6 @@ export default {
 }
 .income-display {
     width:100%;
-}
-.net-income {
-    padding-right: 1.25rem;
 }
 .net-income-badge {
     float:initial;
