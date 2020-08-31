@@ -202,9 +202,9 @@ export default {
     },
     watch: {
         incomesItemized: function () {
-            var $ = global.jQuery;
-            $(function () {
-              $('[data-toggle="tooltip"]').tooltip()
+            window.$(function () {
+                window.$('[data-toggle="tooltip"]').tooltip('dispose');
+                window.$('[data-toggle="tooltip"]').tooltip('enable');
             })
         }
     }
