@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <form v-on:keydown.enter.prevent="">
         <!-- expense label -->
         <div class="form-group">
             <label>Chart Label</label>
@@ -18,10 +18,10 @@
             </small>
         </div>
 
-        <button class="btn btn-primary float-right" v-on:click="addExpense()">
+        <button class="btn btn-primary float-right" v-on:click="addExpense()" v-on:keyup="processKeyPress">
             Add Expense
         </button>
-    </div>
+    </form>
 </template>
 
 

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <form v-on:keydown.enter.prevent="">
         <!-- investment label -->
         <div class="form-group">
             <label>Chart Label</label>
@@ -18,10 +18,10 @@
             </small>
         </div>
 
-        <button type="submit" class="btn btn-primary float-right" style="position:relative;" v-on:click="addInvestment()">
+        <button class="btn btn-primary float-right" style="position:relative;" v-on:click="addInvestment()" v-on:keyup="processKeyPress">
             Add Investment
         </button>
-    </div>
+    </form>
 </template>
 
 
