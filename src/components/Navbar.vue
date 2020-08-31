@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#" v-intro="'<div></div>'" v-intro-step="1"><span class="fa fa-money"></span> SankeyCash</a>
+        <a v-on:click="resetConfig()" class="navbar-brand" href="#" v-intro="'<div></div>'" v-intro-step="1"><span class="fa fa-money"></span> SankeyCash</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -100,7 +100,10 @@ export default {
             reader.readAsText(f);
         },
         resetConfig: function () {
-            if (confirm("Are you sure you want to reset?")) {
+            let fresh = !this.itemizedInvestments.length;
+            fresh = fresh && !this.itemizedExpenses.length;
+            fresh = fresh && !this.itemizedIncomes.length;
+            if (fresh || confirm("Are you sure you want to reset?")) {
                 this.$emit('setItemizedInvestments', []);
                 this.$emit('setItemizedExpenses', []);
                 this.$emit('setItemizedIncomes', []);
