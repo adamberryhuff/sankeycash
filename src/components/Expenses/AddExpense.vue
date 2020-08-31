@@ -18,7 +18,7 @@
             </small>
         </div>
 
-        <button class="btn btn-primary float-right" v-on:click="addExpense()" v-on:keyup="processKeyPress">
+        <button class="btn btn-primary float-right" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
             Add Expense
         </button>
     </form>
@@ -39,7 +39,8 @@ export default {
         }
     },
     methods: {
-        addExpense: function () {
+        addExpense: function (e) {
+            if (e) e.preventDefault();
             this.value = parseInt(this.value);
 
             // validate

@@ -60,7 +60,7 @@
                 </button>
             </small>
         </div>
-        <button class="btn btn-primary float-right" v-on:click="addIncome()" v-on:keyup="processKeyPress">
+        <button class="btn btn-primary float-right" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
             Add Income Stream
         </button>
     </form>
@@ -84,7 +84,8 @@ export default {
         this.focusNewIncome();
     },
     methods: {
-        addIncome: function () {
+        addIncome: function (e) {
+            if (e) e.preventDefault();
             this.tax   = parseInt(this.tax);
             this.value = parseInt(this.value);
 
