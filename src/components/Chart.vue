@@ -291,8 +291,15 @@ export default {
 
 .sankey-wrapper {
     width: 100%;
-    overflow-x: scroll;
+    overflow-x: hidden;
     overflow-y: hidden;
 }
+
+@media only screen and (max-width: 1000px) {
+    .sankey-wrapper {
+        overflow-x: scroll;
+    }
+}
+
 </style>
 
