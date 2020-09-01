@@ -14,7 +14,7 @@
             <label>Amount</label>
             <input type="number" class="form-control" min="1" v-model="value" placeholder="Amount" v-on:keyup="processKeyPress">
             <small class="form-text text-muted">
-                The amount you pay annually to this expense.
+                The amount ({{ mode }}) you pay annually for this expense.
             </small>
         </div>
         <br class="mobile-only">

@@ -14,7 +14,7 @@
             <label>Amount</label>
             <input id="new-investment" type="number" class="form-control" min="1" v-model="value" placeholder="Amount" v-on:keyup="processKeyPress">
             <small class="form-text text-muted">
-                The amount you invest annually in this fund.
+                The amount ({{ mode }}) you invest annually in this fund.
             </small>
         </div>
         <br class="mobile-only">

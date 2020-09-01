@@ -11,19 +11,19 @@
 
         <!-- income stream amount -->
         <div class="form-group">
-            <label>Amount (Gross)</label>
+            <label>Gross Amount</label>
             <input type="number" class="form-control" min="1" v-model="value" placeholder="Amount" v-on:keyup="processKeyPress">
             <small class="form-text text-muted">
-                The amount you make annually from this income stream (pre-tax).
+                The amount ({{ mode }}) you make annually from this income stream (pre-tax).
             </small>
         </div>
 
         <!-- income stream tax rate -->
         <div class="form-group">
             <label>Tax Rate</label>
-            <input type="number" class="form-control" step=".001" min="0" max="100" v-model="tax" placeholder="Tax" v-on:keyup="processKeyPress">
+            <input type="number" class="form-control" step=".001" min="1" max="100" v-model="tax" placeholder="Tax" v-on:keyup="processKeyPress">
             <small class="form-text text-muted">
-                The percentage of tax for this income stream.
+                The tax rate (%) of this income stream.
             </small>
         </div>
 
@@ -41,10 +41,10 @@
                     <label class="exemption-label">Label</label>
                 </div>
                 <div class="col-md-4 exemptions">
-                    <label class="exemption-label">Contribution</label>
+                    <label class="exemption-label">Contribution ({{ mode }})</label>
                 </div>
                 <div class="col-md-4 exemptions">
-                    <label class="exemption-label">Match</label>
+                    <label class="exemption-label">Match ({{ mode }})</label>
                 </div>
                 <div class="col-md-1 exemptions"></div>
             </div>
@@ -57,13 +57,13 @@
 
                 <!-- income stream tax exemption amount -->
                 <div class="col-md-4 exemptions">
-                    <label class="exemption-label mobile-only">Contribution</label>
+                    <label class="exemption-label mobile-only">Contribution ({{ mode }})</label>
                     <input placeholder="Contribution" type="number" class="form-control"  v-model="exemption.value" v-on:keyup="processKeyPress" />
                 </div>
 
                 <!-- income stream tax exemption employer match -->
                 <div class="col-md-4 exemptions">
-                    <label class="exemption-label mobile-only">Match</label>
+                    <label class="exemption-label mobile-only">Match ({{ mode }})</label>
                     <input placeholder="Employer Match" type="number" class="form-control" v-model="exemption.match" v-on:keyup="processKeyPress" />
                 </div>
                 <div class="col-md-1 exemptions">
@@ -87,7 +87,7 @@
         <span v-if="income">
             <!-- Delete Button -->
             <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteIncome">Remove Income Stream</button>
-            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteIncome">Remove Income Stream</button>
+            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteIncome">Remove Income</button>
             <!-- Cancel Button -->
             <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
             <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
@@ -123,8 +123,8 @@ export default {
             this.value = parseInt(this.value);
 
             // validate
-            if (isNaN(this.tax) || this.tax < 0 || this.tax > 100) {
-                alert('Income stream tax rate should be between 0 and 100');
+            if (isNaN(this.tax) || this.tax < 1 || this.tax > 100) {
+                alert('Income stream tax rate should be between 1 and 100');
                 return;
             }
             if (isNaN(this.value) || this.value <= 0) {
