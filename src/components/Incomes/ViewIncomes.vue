@@ -19,7 +19,7 @@
             <li class="list-group-item d-flex justify-content-between align-items-center disabled" v-if="!incomesItemized.length">
                 You haven't added any income streams yet.
             </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="(income, idx) in incomesItemized" v-bind:key="income.label" v-on:click="removeIncome(idx, income)">
+            <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="(income, idx) in incomesItemized" v-bind:key="income.label" v-on:click="editIncome(idx)">
                 <div class="row no-gutters income-display">
                     <div class="col-md-4">
                         <span id="label">{{ income.label }}</span>
@@ -45,7 +45,7 @@
             </li>
         </ul>
         <small class="form-text text-muted">
-            Click on an income stream to remove it.
+            Click on an income stream to edit or remove it.
         </small>
     </div>
 </template>
@@ -56,55 +56,26 @@ import util from '../../util.js';
 
 export default {
     name: 'ViewIncomes',
-    props: ['incomesItemized', 'unallocatedSum', 'grossSum', 'taxSum', 'netSum', 'mode'],
+    props: ['incomesItemized', 'grossSum', 'taxSum', 'netSum', 'mode'],
     data () {
         return {
             util: util,
         }
     },
     methods: {
-        removeIncome: function (idx, income) {
-            let net = this.getNet(income);
-            net = net - income.exemptions.reduce((a, e) => a + e.value + e.match, 0);
-            if (net > this.unallocatedSum) {
-                alert(`You cannot remove this income stream until you free up at least ${util.formatMoney(net, this.mode)} into your unallocated budget. You must remove at least ${util.formatMoney(net-this.unallocatedSum, this.mode)} in expenses or investments before you can remove this income stream.`);
-                return;
-            }
-            if (confirm("Are you sure you want to remove this income stream?")) {
-                this.$emit('removeIncome', idx);
-            }
-        },
-        getTaxableIncome: function (income) {
-            var value = income.value;
-            income.exemptions.forEach(exemption => {
-                value -= exemption.value;
-            })
-            return value;
-        },
-        getTax: function (income) {
-            let value = income.value;
-            value -= income.exemptions.reduce((a, e) => a + e.value, 0);
-            return value*(income.tax/100);
-        },
-        getMatch: function (income) {
-            return income.exemptions.reduce((a, e) => a + e.match, 0);
-        },
-        getNet: function (income) {
-            return income.value - this.getTax(income) + this.getMatch(income);
-        },
-        getExemptions: function (income) {
-            return income.exemptions.reduce((a, e) => a + e.value, 0);
+        editIncome: function (idx) {
+            this.$emit('editIncome', idx);
         },
         getNetDisplay: function (income) {
-            let net = util.formatMoney(this.getNet(income), this.mode);
+            let net = util.formatMoney(util.getNet(income), this.mode);
             return `Net: ${net}`;
         },
         getNetTooltip: function (income) {
-            var exemptions = util.formatMoney(this.getExemptions(income), this.mode);
-            var match = util.formatMoney(this.getMatch(income), this.mode);
+            var exemptions = util.formatMoney(util.getExemptions(income), this.mode);
+            var match = util.formatMoney(util.getMatch(income), this.mode);
             var gross = util.formatMoney(income.value, this.mode);
             var tax = util.formatTax(income.tax);
-            var taxable = util.formatMoney(this.getTaxableIncome(income), this.mode);
+            var taxable = util.formatMoney(util.getTaxableIncome(income), this.mode);
 
             var tip = '';
             if (income.exemptions.length) {
@@ -146,7 +117,7 @@ export default {
             return `${exemption.label}: ${contribution} +  ${match} Match`;
         },
         getIncomeDisplay: function (income) {
-            let taxable = util.formatMoney(this.getTaxableIncome(income), this.mode);
+            let taxable = util.formatMoney(util.getTaxableIncome(income), this.mode);
             let tax     = util.formatTax(income.tax);
             return `${income.label}: ${taxable} @ ${tax}`;
         },
@@ -178,4 +149,5 @@ export default {
 .net-income-badge {
     float:initial;
 }
+
 </style>

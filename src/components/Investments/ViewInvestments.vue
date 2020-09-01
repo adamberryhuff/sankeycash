@@ -23,7 +23,7 @@
             </li>
 
             <!-- investments -->
-            <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="(investment, idx) in investmentsItemized" v-bind:key="idx" v-on:click="removeInvestment(idx)">
+            <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="(investment, idx) in investmentsItemized" v-bind:key="idx" v-on:click="editInvestment(idx)">
                 <div class="row no-gutters income-display">
                     <div class="col-md-4">
                         <span id="label">{{ investment.label }}</span>
@@ -38,7 +38,7 @@
 
             <!-- contribution investments -->
             <span v-for="income in incomesItemized" v-bind:key="income.label">
-                <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="exemption in income.exemptions" v-bind:key="exemption.label" v-on:click="unremovableInvestment()">
+                <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="exemption in income.exemptions" v-bind:key="exemption.label" v-on:click="uneditableInvestment()">
                     <div class="row no-gutters income-display">
                         <div class="col-md-4">
                             <span id="label">{{ exemption.label }}</span>
@@ -54,7 +54,7 @@
             </span>
         </ul>
         <small class="form-text text-muted">
-            Click on an investment to remove it.
+            Click on an investment to edit or remove it.
         </small>
     </div>
 </template>
@@ -76,13 +76,11 @@ export default {
         }
     },
     methods: {
-        removeInvestment: function (idx) {
-            if (confirm("Are you sure you want to remove this investment?")) {
-                this.$emit('removeInvestment', idx);
-            }
+        editInvestment: function (idx) {
+            this.$emit('editInvestment', idx);
         },
-        unremovableInvestment: function () {
-            alert("Remove tax-exempt contributions via the 'Incomes' interface at the top of the page.");
+        uneditableInvestment: function () {
+            alert("Edit tax-exempt contributions using the 'Incomes' interface at the top of the page.");
         },
         populateInvestment: function () {
             this.$emit('populateInvestment');

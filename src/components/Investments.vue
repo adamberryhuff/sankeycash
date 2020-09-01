@@ -19,7 +19,10 @@
                 ref="add"
                 :unallocatedSum="unallocatedSum"
                 :mode="mode"
-                @addInvestment="addInvestment" />
+                :investment="investment"
+                @addInvestment="addInvestment"
+                @removeInvestment="removeInvestment"
+                @editInvestment="editInvestment" />
         </div>
         <div class="col-sm-12 mobile-only">
             <hr class="lr-break">
@@ -35,8 +38,8 @@
                 :unallocatedSum="unallocatedSum"
                 :investmentSum="investmentSum"
                 :mode="mode"
-                @removeInvestment="removeInvestment"
-                @populateInvestment="populateInvestment" />
+                @populateInvestment="populateInvestment"
+                @editInvestment="editInvestment" />
         </div>
     </div>
 </template>
@@ -56,7 +59,8 @@ export default {
     ],
     data () {
         return {
-            util: util
+            util: util,
+            idx: false
         }
     },
     components: {
@@ -64,14 +68,25 @@ export default {
         AddInvestment
     },
     methods: {
-        removeInvestment: function (idx) {
-            this.$emit('removeInvestment', idx);
+        removeInvestment: function () {
+            this.$emit('removeInvestment', this.idx);
+            this.idx = false;
+        },
+        editInvestment: function (idx) {
+            this.idx = idx;
         },
         addInvestment: function (investment) {
+            investment.idx = this.idx;
             this.$emit('addInvestment', investment);
+            this.idx = false;
         },
         populateInvestment: function () {
             this.$refs.add.populateInvestment();
+        }
+    },
+    computed: {
+        investment: function () {
+            return this.investmentsItemized[this.idx];
         }
     }
 }

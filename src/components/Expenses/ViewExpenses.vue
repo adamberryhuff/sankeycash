@@ -24,7 +24,7 @@
             </li>
 
             <!-- expenses -->
-            <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="(expense, idx) in expensesItemized" v-bind:key="idx" v-on:click="removeExpense(idx)">
+            <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="(expense, idx) in expensesItemized" v-bind:key="idx" v-on:click="editExpense(idx)">
                 <div class="row no-gutters income-display">
                     <div class="col-md-4">
                         <span id="label">{{ expense.label }}</span>
@@ -38,7 +38,7 @@
             </li>
         </ul>
         <small class="form-text text-muted">
-            Click on an expense to remove it.
+            Click on an expense to edit or remove it.
         </small>
     </div>
 </template>
@@ -58,10 +58,8 @@ export default {
         }
     },
     methods: {
-        removeExpense: function (idx) {
-            if (confirm("Are you sure you want to remove this expense?")) {
-                this.$emit('removeExpense', idx);
-            }
+        editExpense: function (idx) {
+            this.$emit('editExpense', idx);
         }
     },
     computed: {

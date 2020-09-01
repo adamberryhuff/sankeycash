@@ -14,6 +14,9 @@
             <AddExpense
                 :unallocatedSum="unallocatedSum"
                 :mode="mode"
+                :expense="expense"
+                @deleteExpense="deleteExpense"
+                @editExpense="editExpense"
                 @addExpense="addExpense" />
         </div>
         <div class="col-sm-12 mobile-only">
@@ -27,7 +30,7 @@
                 :unallocatedSum="unallocatedSum"
                 :investmentSum="investmentSum"
                 :mode="mode"
-                @removeExpense="deleteExpense" />
+                @editExpense="editExpense" />
         </div>
     </div>
 </template>
@@ -48,15 +51,27 @@ export default {
     },
     data () {
         return {
-            util: util
+            util: util,
+            idx: false
         }
     },
     methods: {
-        deleteExpense: function (idx) {
-            this.$emit('removeExpense', idx);
+        deleteExpense: function () {
+            this.$emit('removeExpense', this.idx);
+            this.idx = false;
+        },
+        editExpense: function (idx) {
+            this.idx = idx;
         },
         addExpense: function (expense) {
+            expense.idx = this.idx;
             this.$emit('addExpense', expense);
+            this.idx = false;
+        }
+    },
+    computed: {
+        expense: function () {
+            return this.expensesItemized[this.idx];
         }
     }
 }

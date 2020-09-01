@@ -79,26 +79,38 @@
             </small>
         </div>
         <button class="btn btn-primary float-right desktop-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
-            Add Income Stream
+            {{ submitText }}
         </button>
         <button class="btn btn-primary mobile-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
-            Add Income Stream
+            {{ submitText }}
         </button>
+        <span v-if="income">
+            <!-- Delete Button -->
+            <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteIncome">Remove Income Stream</button>
+            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteIncome">Remove Income Stream</button>
+            <!-- Cancel Button -->
+            <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
+            <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
+        </span>
     </form>
 </template>
 
 
 <script>
+import util from '../../util.js';
 
 export default {
     name: 'AddIncome',
+    props: ['income', 'mode', 'unallocatedSum'],
     data () {
         return {
             // new income stream
             label: '',
             value: '',
             tax:   '',
-            exemptions: []
+            exemptions: [],
+
+            util: util
         }
     },
     mounted () {
@@ -143,6 +155,16 @@ export default {
                 return;
             }
 
+            // if editing income stream, make sure new value doesn't make our budget
+            // go negative
+            let income = JSON.parse(JSON.stringify(this.income));
+            income.value = this.value;
+            var diff = util.getNet(this.income) - util.getNet(income);
+            if (diff > this.unallocatedSum) {
+                alert(`You cannot edit this income stream until you free up at least ${util.formatMoney(diff, this.mode)} into your unallocated budget. You must remove at least ${util.formatMoney(diff-this.unallocatedSum, this.mode)} in expenses or investments before you can make this change.`);
+                return;
+            }
+
             // add the new stream
             this.$emit('addIncome', {
                 label: this.label,
@@ -159,6 +181,20 @@ export default {
 
             // focus new income
             this.focusNewIncome();
+        },
+        cancelEdit: function () {
+            this.$emit('editIncome', false);
+        },
+        deleteIncome: function () {
+            let net = util.getNet(this.income);
+            net = net - this.income.exemptions.reduce((a, e) => a + e.value + e.match, 0);
+            if (net > this.unallocatedSum) {
+                alert(`You cannot remove this income stream until you free up at least ${util.formatMoney(net, this.mode)} into your unallocated budget. You must remove at least ${util.formatMoney(net-this.unallocatedSum, this.mode)} in expenses or investments before you can remove this income stream.`);
+                return;
+            }
+            if (confirm("Are you sure you want to remove this income stream?")) {
+                this.$emit('deleteIncome');
+            }
         },
         addExemption: function () {
             this.exemptions.push({ label: '', value: '', match: '' });
@@ -182,6 +218,19 @@ export default {
             if (event.keyCode == 13) this.addIncome();
         }
     },
+    computed: {
+        submitText: function () {
+            return this.income ? 'Update Income Stream' : 'Add Income Stream';
+        }
+    },
+    watch: {
+        income: function () {
+            this.value      = this.income ? this.income.value : '';
+            this.label      = this.income ? this.income.label : '';
+            this.tax        = this.income ? this.income.tax : '';
+            this.exemptions = this.income ? this.income.exemptions : '';
+        }
+    }
 }
 
 </script>
@@ -221,12 +270,29 @@ export default {
     color: transparent;
 }
 
-.btn.mobile-only {
+.btn.btn-primary.mobile-only {
+    margin-top:30px;
     width:100%;
 }
 
-.btn.mobile-only.btn-primary {
-    margin-top:30px;
+.btn.mobile-only.btn-outline-danger {
+    width:100%;
+}
+
+.btn.desktop-only {
+    float: right;
+}
+
+.btn.btn-primary.desktop-only {
+    margin-left: .5rem;
+}
+
+.btn.mobile-only.cancel-btn {
+    float:right;
+}
+
+.remove-expense {
+    color: red;
 }
 
 

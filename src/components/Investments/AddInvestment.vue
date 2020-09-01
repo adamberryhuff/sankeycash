@@ -18,12 +18,21 @@
             </small>
         </div>
         <br class="mobile-only">
-        <button class="btn btn-primary float-right desktop-only" style="position:relative;" v-on:click.enter.prevent="addInvestment" v-on:keyup="processKeyPress">
-            Add Investment
+
+        <button class="btn btn-primary desktop-only" v-on:click.enter.prevent="addInvestment" v-on:keyup="processKeyPress">
+            {{ submitText }}
         </button>
-        <button class="btn btn-primary mobile-only" style="position:relative;" v-on:click.enter.prevent="addInvestment" v-on:keyup="processKeyPress">
-            Add Investment
+        <button class="btn btn-primary mobile-only" v-on:click.enter.prevent="addInvestment" v-on:keyup="processKeyPress">
+            {{ submitText }}
         </button>
+        <span v-if="investment">
+            <!-- Delete Button -->
+            <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteInvestment">Remove Investment</button>
+            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteInvestment">Remove Investment</button>
+            <!-- Cancel Button -->
+            <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
+            <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
+        </span>
     </form>
 </template>
 
@@ -33,7 +42,7 @@ import util from '../../util.js';
 
 export default {
     name: 'AddInvestment',
-    props: ['unallocatedSum', 'mode'],
+    props: ['unallocatedSum', 'mode', 'investment'],
     data () {
         return {
             // new investment
@@ -51,8 +60,11 @@ export default {
                 alert('Investment amount must be a positive number!');
                 return;
             }
-            if (this.value > this.unallocatedSum) {
-                alert(`Investment must be less than your available budget of ${util.formatMoney(this.unallocatedSum, this.mode)}`);
+
+            var difstr = this.investment ? 'difference ' : '';
+            var value  = this.investment ? this.value - this.investment.value : this.value;
+            if (value > this.unallocatedSum) {
+                alert(`Investment ${difstr}must be less than your available budget of ${util.formatMoney(this.unallocatedSum, this.mode)}`);
                 return;
             }
 
@@ -68,6 +80,14 @@ export default {
 
             this.focusNewInvestment();
         },
+        cancelEdit: function () {
+            this.$emit('editInvestment', false);
+        },
+        deleteInvestment: function () {
+            if (confirm("Are you sure you want to remove this investment?")) {
+                this.$emit('removeInvestment');
+            }
+        },
         populateInvestment: function () {
             this.value = this.unallocatedSum;
         },
@@ -77,15 +97,42 @@ export default {
         processKeyPress: function (event) {
             if (event.keyCode == 13) this.addInvestment();
         }
+    },
+    computed: {
+        submitText: function () {
+            return this.investment ? 'Update Investment' : 'Add Investment';
+        }
+    },
+    watch: {
+        investment: function () {
+            this.value = this.investment ? this.investment.value : '';
+            this.label = this.investment ? this.investment.label : '';
+        }
     }
 }
 
 </script>
 
-<style SCOPED>
+<style scoped>
 
-.btn.mobile-only {
+.btn.btn-primary.mobile-only {
     width:100%;
+}
+
+.btn.desktop-only {
+    float: right;
+}
+
+.btn.btn-primary.desktop-only {
+    margin-left: .5rem;
+}
+
+.btn.mobile-only.cancel-btn {
+    float:right;
+}
+
+.remove-expense {
+    color: red;
 }
 
 </style>

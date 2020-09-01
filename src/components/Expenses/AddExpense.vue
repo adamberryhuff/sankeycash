@@ -18,12 +18,22 @@
             </small>
         </div>
         <br class="mobile-only">
-        <button class="btn btn-primary float-right desktop-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
-            Add Expense
+
+        <!-- Submit button -->
+        <button class="btn btn-primary desktop-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
+            {{ submitText }}
         </button>
         <button class="btn btn-primary mobile-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
-            Add Expense
+            {{ submitText }}
         </button>
+        <span v-if="expense">
+            <!-- Delete Button -->
+            <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteExpense">Remove Expense</button>
+            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteExpense">Remove Expense</button>
+            <!-- Cancel Button -->
+            <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
+            <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
+        </span>
     </form>
 </template>
 
@@ -33,7 +43,7 @@ import util from '../../util.js';
 
 export default {
     name: 'AddExpense',
-    props: ['unallocatedSum', 'mode'],
+    props: ['unallocatedSum', 'mode', 'expense'],
     data () {
         return {
             // new income stream
@@ -51,9 +61,13 @@ export default {
                 alert('Expense amount must be a positive number!');
                 return;
             }
-            if (this.value > this.unallocatedSum) {
+
+            // make sure it's in the budget but take into account edit mode
+            var difstr = this.expense ? 'difference ' : '';
+            var value  = this.expense ? this.value - this.expense.value : this.value;
+            if (value > this.unallocatedSum) {
                 alert(
-                    `Expense must be less than your available budget of ${util.formatMoney(this.unallocatedSum, this.mode)}`
+                    `Expense ${difstr}must be less than your available budget of ${util.formatMoney(this.unallocatedSum, this.mode)}`
                 );
                 return;
             }
@@ -70,11 +84,30 @@ export default {
 
             this.focusNewExpense();
         },
+        cancelEdit: function () {
+            this.$emit('editExpense', false);
+        },
+        deleteExpense: function () {
+            if (confirm("Are you sure you want to remove this expense?")) {
+                this.$emit('deleteExpense');
+            }
+        },
         focusNewExpense: function () {
             document.getElementById('new-expense-focus').focus();
         },
         processKeyPress: function (event) {
             if (event.keyCode == 13) this.addExpense();
+        }
+    },
+    computed: {
+        submitText: function () {
+            return this.expense ? 'Update Expense' : 'Add Expense';
+        }
+    },
+    watch: {
+        expense: function () {
+            this.value = this.expense ? this.expense.value : '';
+            this.label = this.expense ? this.expense.label : '';
         }
     }
 }
@@ -83,8 +116,24 @@ export default {
 
 <style SCOPED>
 
-.btn.mobile-only {
+.btn.btn-primary.mobile-only {
     width:100%;
+}
+
+.btn.desktop-only {
+    float: right;
+}
+
+.btn.btn-primary.desktop-only {
+    margin-left: .5rem;
+}
+
+.btn.mobile-only.cancel-btn {
+    float:right;
+}
+
+.remove-expense {
+    color: red;
 }
 
 </style>

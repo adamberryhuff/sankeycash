@@ -12,7 +12,13 @@
 
         <!-- add income stream -->
         <div class="col-md-6 col-sm-12">
-            <AddIncome @addIncome="newIncome" />
+            <AddIncome
+                :income="income"
+                :mode="mode"
+                :unallocatedSum="unallocatedSum"
+                @addIncome="addIncome"
+                @editIncome="editIncome"
+                @deleteIncome="deleteIncome" />
         </div>
 
         <div class="col-sm-12 mobile-only">
@@ -23,12 +29,11 @@
         <div class="col-md-6 col-sm-12">
             <ViewIncomes
                 :incomesItemized="incomesItemized"
-                :unallocatedSum="unallocatedSum"
                 :grossSum="grossSum"
                 :taxSum="taxSum"
                 :netSum="netSum"
                 :mode="mode"
-                @removeIncome="deleteIncome" />
+                @editIncome="editIncome" />
         </div>
     </div>
 </template>
@@ -45,14 +50,30 @@ export default {
         AddIncome,
         ViewIncomes
     },
-    methods: {
-        newIncome: function (income) {
-            this.$emit('addIncome', income);
-        },
-        deleteIncome: function (idx) {
-            this.$emit('removeIncome', idx);
-        },
+    data () {
+        return {
+            idx: false
+        }
     },
+    methods: {
+        deleteIncome: function () {
+            this.$emit('removeIncome', this.idx);
+            this.idx = false;
+        },
+        editIncome: function (idx) {
+            this.idx = idx;
+        },
+        addIncome: function (income) {
+            income.idx = this.idx;
+            this.$emit('addIncome', income);
+            this.idx = false;
+        }
+    },
+    computed: {
+        income: function () {
+            return this.incomesItemized[this.idx];
+        }
+    }
 }
 
 </script>
