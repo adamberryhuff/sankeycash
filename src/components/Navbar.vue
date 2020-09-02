@@ -35,6 +35,9 @@
                     <a class="dropdown-item" href="#" v-for="(language, key) in $t('languages')" v-bind:key="key" v-on:click="setLanguage(key)">
                         {{ language }}
                     </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" v-on:click="addLanguage()" download>Add Language</a>
+
                 </div>
             </div>
             <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
@@ -146,6 +149,18 @@ export default {
         setLanguage: function (key) {
             this.$i18n.locale = key;
             this.toggleMode(this.$t('currency'));
+        },
+        addLanguage: function () {
+            var contents = require("../assets/content/en.json");
+            contents = encodeURIComponent(JSON.stringify(contents))
+            var element  = document.createElement('a');
+            element.setAttribute('href', 'data:application/json;charset=utf-8,' + contents);
+            element.setAttribute('download', 'en.json');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+            alert(this.$t('add'));
         }
     }
 }
