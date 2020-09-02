@@ -2,19 +2,19 @@
     <form v-on:keydown.enter.prevent="">
         <!-- expense label -->
         <div class="form-group">
-            <label>Chart Label</label>
-            <input id="new-expense-focus" v-model="label" type="text" class="form-control" placeholder="Label">
+            <label>{{ $t('common.chart_label') }}</label>
+            <input id="new-expense-focus" v-model="label" type="text" class="form-control" :placeholder="$t('common.label')">
             <small class="form-text text-muted">
-                The label will be used in the chart: Mortgage, Living Expenses, Car Payment, etc.
+                {{ $t('expenses.chart_label_examples') }}
             </small>
         </div>
 
         <!-- income stream amount -->
         <div class="form-group">
-            <label>Amount</label>
-            <input type="number" class="form-control" min="1" v-model="value" placeholder="Amount" v-on:keyup="processKeyPress">
+            <label>{{ $t('common.amount') }}</label>
+            <input type="number" class="form-control" min="1" v-model="value" :placeholder="$t('common.amount')" v-on:keyup="processKeyPress">
             <small class="form-text text-muted">
-                The amount ({{ mode }}) you pay annually for this expense.
+                {{ $t('expenses.amount_examples', {mode: mode}) }}
             </small>
         </div>
         <br class="mobile-only">
@@ -28,11 +28,11 @@
         </button>
         <span v-if="expense">
             <!-- Delete Button -->
-            <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteExpense">Delete</button>
-            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteExpense">Delete</button>
+            <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteExpense">{{ $t('common.delete') }}</button>
+            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteExpense">{{ $t('common.delete') }}</button>
             <!-- Cancel Button -->
-            <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">Cancel</button>
-            <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">Cancel</button>
+            <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">{{ $t('common.cancel') }}</button>
+            <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">{{ $t('common.cancel') }}</button>
         </span>
     </form>
 </template>
@@ -58,17 +58,18 @@ export default {
 
             // validate
             if (isNaN(this.value) || this.value < 0) {
-                alert('Expense amount must be a positive number!');
+                alert(this.$t('expenses.value_error'));
                 return;
             }
 
             // make sure it's in the budget but take into account edit mode
-            var difstr = this.expense ? 'difference ' : '';
-            var value  = this.expense ? this.value - this.expense.value : this.value;
+            var err   = this.expense ? 'difference_error_edit' : 'difference_error_add';
+            var value = this.expense ? this.value - this.expense.value : this.value;
             if (value > this.unallocatedSum) {
-                alert(
-                    `Expense ${difstr}must be less than your available budget of ${util.formatMoney(this.unallocatedSum, this.mode)}`
-                );
+                var error = this.$t(`expenses.${err}`, {
+                    budget: util.formatMoney(this.unallocatedSum, this.mode)
+                });
+                alert(error);
                 return;
             }
 
@@ -88,7 +89,7 @@ export default {
             this.$emit('editExpense', false);
         },
         deleteExpense: function () {
-            if (confirm("Are you sure you want to remove this expense?")) {
+            if (confirm(this.$t('expenses.delete_confirmation'))) {
                 this.$emit('deleteExpense');
             }
         },
@@ -101,7 +102,7 @@ export default {
     },
     computed: {
         submitText: function () {
-            return this.expense ? 'Update Expense' : 'Add Expense';
+            return this.expense ? this.$t('expenses.update') : this.$t('expenses.add');
         }
     },
     watch: {

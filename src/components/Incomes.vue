@@ -3,11 +3,11 @@
         <!-- income streams title -->
         <div class="col-md-12">
             <h2>
-                <span v-intro="'In the Income Streams section you can add your streams of income including tax rates and the tax-exempt investment account like your 401k.'" v-intro-step="2">
-                    Income Streams
+                <span v-intro="$t('incomes.instructions')" v-intro-step="2">
+                    {{ $t('incomes.header') }}
                 </span>
             </h2>
-            <p>Input your annual income stream(s) and the tax rate you expect to pay.</p>
+            <p>{{ $t('incomes.title') }}</p>
         </div>
 
         <!-- add income stream -->

@@ -4,9 +4,9 @@
         <!-- yes/no button -->
         <span class="float-right">
             <input type="radio" name="yes-exemptions" :checked="exemptions.length" v-on:click="addExemption()" v-on:keyup="processKeyPress">
-            &nbsp;Yes
+            &nbsp;{{ $t('common.yes') }}
             <input type="radio" class="no-checkbox" :checked="!exemptions.length" name="no-exemptions" v-on:click="clearExemptions()" v-on:keyup="processKeyPress">
-            &nbsp;No
+            &nbsp;{{ $t('common.no') }}
         </span>
 
         <div class="row no-gutters" v-if="exemptions.length">
@@ -16,13 +16,13 @@
                 <!-- headers -->
                 <div class="row no-gutters">
                     <div class="col-md-3 exemptions">
-                        <label class="exemption-label">Chart Label</label>
+                        <label class="exemption-label">{{ $t('common.chart_label') }}</label>
                     </div>
                     <div class="col-md-4 exemptions">
-                        <label class="exemption-label">Contribution</label>
+                        <label class="exemption-label">{{ $t('common.contribution') }}</label>
                     </div>
                     <div class="col-md-4 exemptions">
-                        <label class="exemption-label">Employee Match</label>
+                        <label class="exemption-label">{{ $t('common.match') }}</label>
                     </div>
                     <div class="col-md-1 exemptions"></div>
                 </div>
@@ -31,13 +31,13 @@
 
                     <!-- label -->
                     <div class="col-md-3 exemptions">
-                        <label class="exemption-label mobile-only">Chart Label</label>
+                        <label class="exemption-label mobile-only">{{ $t('common.chart_label') }}</label>
                         <input placeholder="Label" class="form-control" v-model="exemption.label" v-on:keyup="processKeyPress" />
                     </div>
 
                     <!-- value -->
                     <div class="col-md-4 exemptions">
-                        <label class="exemption-label mobile-only">Contribution</label>
+                        <label class="exemption-label mobile-only">{{ $t('common.contribution') }}</label>
                         <div class="input-group">
                             <input placeholder="Contribution" type="number" class="form-control"  v-model="exemption.value" v-on:keyup="processKeyPress" />
                             <div class="input-group-append">
@@ -51,7 +51,7 @@
 
                     <!-- match -->
                     <div class="col-md-4 exemptions">
-                        <label class="exemption-label mobile-only">Employee Match</label>
+                        <label class="exemption-label mobile-only">{{ $t('common.match') }}</label>
                         <div class="input-group">
                             <input placeholder="Match" type="number" class="form-control" v-model="exemption.match" v-on:keyup="processKeyPress" />
                             <div class="input-group-append">
@@ -66,7 +66,7 @@
                     <!-- remove -->
                     <div class="col-md-1 exemptions">
                         <button type="button" class="btn btn-danger desktop-only" v-on:click="removeExemption(idx)">X</button>
-                        <button type="button" class="btn btn-danger mobile-only" v-on:click="removeExemption(idx)">Remove Exemption</button>
+                        <button type="button" class="btn btn-danger mobile-only" v-on:click="removeExemption(idx)">{{ $t('incomes.exemption_remove') }}</button>
                     </div>
                 </div>
             </div>
@@ -74,9 +74,9 @@
 
         <!-- exemption examples and add button -->
         <small class="form-text text-muted">
-            Examples: 401k, HSA
+            {{ $t('incomes.exemption_examples') }}
             <button type="button" class="btn btn-link float-right add-exemption" v-if="exemptions.length" v-on:click="addExemption()" tabindex="0">
-                <i>Add Another</i>
+                <i>{{ $t('common.add_another') }}</i>
             </button>
         </small>
     </span>

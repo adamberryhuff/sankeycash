@@ -2,15 +2,15 @@
     <div>
 
         <!-- investments label -->
-        <label>Investments</label>
+        <label>{{ $t('common.investments') }}</label>
         <!-- investments: net - expenses = savings -->
         <span class="float-right">
             <span class="badge badge-success net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip" v-on:click="populateInvestment()">
-                Unallocated<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum, mode) }}</span>&nbsp;
+                {{ $t('common.unallocated') }}<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum, mode) }}</span>&nbsp;
                 <span class="fa fa-question-circle"></span>
             </span>
             <span class="badge badge-success net-income-badge clickable pad" data-toggle="tooltip" data-placement="top" :title="investmentTooltip">
-                Investments<span class="desktop-only-inline">: {{ util.formatMoney(investmentSum, mode) }}</span>&nbsp;
+                {{ $t('common.investments') }}<span class="desktop-only-inline">: {{ util.formatMoney(investmentSum, mode) }}</span>&nbsp;
                 <span class="fa fa-question-circle"></span>
             </span>
         </span>
@@ -19,7 +19,7 @@
 
             <!-- no investments -->
             <li class="list-group-item d-flex justify-content-between align-items-center disabled" v-if="!hasInvestments">
-                You haven't added any investments yet.
+                {{ $t('investments.no_investments') }}
             </li>
 
             <!-- investments -->
@@ -54,7 +54,7 @@
             </span>
         </ul>
         <small class="form-text text-muted">
-            Click on an investment to edit or remove it.
+            {{ $t('investments.edit_instructions') }}
         </small>
     </div>
 </template>
@@ -80,7 +80,7 @@ export default {
             this.$emit('editInvestment', idx);
         },
         uneditableInvestment: function () {
-            alert("Edit tax-exempt contributions using the 'Incomes' interface at the top of the page.");
+            alert(this.$t('investments.uneditable'));
         },
         populateInvestment: function () {
             this.$emit('populateInvestment');
@@ -91,19 +91,26 @@ export default {
         getExemptionTooltip: function (exemption) {
             let value = this.util.formatMoney(exemption.value, this.mode);
             let match = this.util.formatMoney(exemption.match, this.mode);
-            return `${exemption.label} = Contribution (${value}) + Employee Match (${match})`;
+            let tip = `${exemption.label} = ${this.$t('common.contribution')} `;
+            tip += `(${value}) + ${this.$t('common.match')} (${match})`;
+            return tip;
         }
     },
     computed: {
         budgetTooltip () {
-            var tip = `Budget (${util.formatMoney(this.unallocatedSum, this.mode)}) = `;
-            tip += `Net Income (${util.formatMoney(this.netSum, this.mode)}) - `;
-            tip += `Expenses (${util.formatMoney(this.expenseSum, this.mode)}) - `;
-            tip += `Investments (${util.formatMoney(this.investmentSum, this.mode)})`;
+            var tip = `${this.$t('common.budget')} `;
+            tip += `(${util.formatMoney(this.unallocatedSum, this.mode)}) = `;
+            tip += `${this.$t('common.net')} `;
+            tip += `(${util.formatMoney(this.netSum, this.mode)}) - `;
+            tip += `${this.$t('common.expenses')} `;
+            tip += `(${util.formatMoney(this.expenseSum, this.mode)}) - `;
+            tip += `${this.$t('common.investments')} `;
+            tip += `(${util.formatMoney(this.investmentSum, this.mode)})`;
             return tip;
         },
         investmentTooltip () {
-            var tip = `Expenses (${util.formatMoney(this.investmentSum, this.mode)}) = `;
+            var tip = `${this.$t('common.expenses')} `;
+            tip += `(${util.formatMoney(this.investmentSum, this.mode)}) = `;
             this.investmentsItemized.forEach(invest => {
                 tip += `${invest.label} (${util.formatMoney(invest.value, this.mode)}) + `;
             })

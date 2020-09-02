@@ -2,16 +2,16 @@
     <div>
 
         <!-- expenses label -->
-        <label>Expenses</label>
+        <label>{{ $t('common.expenses') }}</label>
 
         <!-- expenses: net - expenses = savings -->
         <span class="float-right">
             <span class="badge badge-success net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip">
-                Unallocated<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum, mode) }}</span>
+                {{ $t('common.unallocated') }}<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum, mode) }}</span>
                 &nbsp;<span class="fa fa-question-circle"></span>
             </span>
             <span class="badge badge-success net-income-badge clickable pad" data-toggle="tooltip" data-placement="top" :title="expenseTooltip">
-                Expenses<span class="desktop-only-inline">: {{ util.formatMoney(expenseSum, mode) }}</span>
+                {{ $t('common.expenses') }}<span class="desktop-only-inline">: {{ util.formatMoney(expenseSum, mode) }}</span>
                 &nbsp;<span class="fa fa-question-circle"></span>
             </span>
         </span>
@@ -20,7 +20,7 @@
 
             <!-- no expenses -->
             <li class="list-group-item d-flex justify-content-between align-items-center disabled" v-if="!expensesItemized.length">
-                You haven't added any expenses yet.
+                {{ $t('expenses.no_expenses') }}
             </li>
 
             <!-- expenses -->
@@ -38,7 +38,7 @@
             </li>
         </ul>
         <small class="form-text text-muted">
-            Click on an expense to edit or remove it.
+            {{ $t('expenses.edit_instructions') }}
         </small>
     </div>
 </template>
@@ -64,14 +64,18 @@ export default {
     },
     computed: {
         budgetTooltip () {
-            var tip = `Budget (${util.formatMoney(this.unallocatedSum, this.mode)}) = `;
-            tip += `Net Income (${util.formatMoney(this.netSum, this.mode)}) - `;
-            tip += `Expenses (${util.formatMoney(this.expenseSum, this.mode)}) - `;
-            tip += `Investments (${util.formatMoney(this.investmentSum, this.mode)})`;
+            var tip = `${this.$t('common.budget')} `;
+            tip += `(${util.formatMoney(this.unallocatedSum, this.mode)}) = `;
+            tip += `${this.$t('common.net')} (${util.formatMoney(this.netSum, this.mode)}) - `;
+            tip += `${this.$t('common.expenses')} `;
+            tip += `(${util.formatMoney(this.expenseSum, this.mode)}) - `;
+            tip += `${this.$t('common.investments')} `;
+            tip += `(${util.formatMoney(this.investmentSum, this.mode)})`;
             return tip;
         },
         expenseTooltip () {
-            var tip = `Expenses (${util.formatMoney(this.expenseSum, this.mode)}) = `;
+            var tip = `${this.$t('common.expenses')} `;
+            tip += `(${util.formatMoney(this.expenseSum, this.mode)}) = `;
             this.expensesItemized.forEach(expense => {
                 tip += `${expense.label} (${util.formatMoney(expense.value, this.mode)}) + `;
             })

@@ -4,12 +4,15 @@
         <!-- income streams title -->
         <div class="col-md-12">
             <h2>
-                <span v-intro="'In the Investments section you can add your expected investment contribtions. The pre-tax contributions you entered in the Income Streams section will automatically show up here.'" v-intro-step="4">
-                    Investments
+                <span v-intro="$t('investments.instructions')" v-intro-step="4">
+                    {{ $t('common.investments') }}
                 </span>
             </h2>
             <p>
-                Input your annual post-tax investment contributions. You have <span class="budget-inline" v-on:click="populateInvestment()">{{ util.formatMoney(unallocatedSum, mode) }}</span> available in your budget.
+                {{ $t('investments.title') }} {{ $t('common.remaining_budget') }}
+                <span class="budget-inline" v-on:click="populateInvestment()">
+                    {{ util.formatMoney(unallocatedSum, mode) }}
+                </span>
             </p>
         </div>
 

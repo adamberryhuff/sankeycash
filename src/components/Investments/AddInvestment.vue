@@ -2,19 +2,19 @@
     <form v-on:keydown.enter.prevent="">
         <!-- investment label -->
         <div class="form-group">
-            <label>Chart Label</label>
-            <input id="new-investment-focus" v-model="label" type="text" class="form-control" placeholder="Label">
+            <label>{{ $t('common.chart_label') }}</label>
+            <input id="new-investment-focus" v-model="label" type="text" class="form-control" :placeholder="$t('common.label')">
             <small class="form-text text-muted">
-                The label will be used in the chart: Stocks, Bonds, Roth IRA, Extra Mortgage Payment, etc.
+                {{ $t('investments.chart_label_examples') }}
             </small>
         </div>
 
         <!-- investment amount -->
         <div class="form-group">
-            <label>Amount</label>
-            <input id="new-investment" type="number" class="form-control" min="1" v-model="value" placeholder="Amount" v-on:keyup="processKeyPress">
+            <label>{{ $t('common.amount') }}</label>
+            <input id="new-investment" type="number" class="form-control" min="1" v-model="value" :placeholder="$t('common.amount')" v-on:keyup="processKeyPress">
             <small class="form-text text-muted">
-                The amount ({{ mode }}) you invest annually in this fund.
+                {{ $t('investments.amount_examples', {mode: mode}) }}
             </small>
         </div>
         <br class="mobile-only">
@@ -27,11 +27,11 @@
         </button>
         <span v-if="investment">
             <!-- Delete Button -->
-            <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteInvestment">Delete</button>
-            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteInvestment">Delete</button>
+            <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteInvestment">{{ $t('common.delete') }}</button>
+            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteInvestment">{{ $t('common.delete') }}</button>
             <!-- Cancel Button -->
-            <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">Cancel</button>
-            <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">Cancel</button>
+            <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">{{ $t('common.cancel') }}</button>
+            <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">{{ $t('common.cancel') }}</button>
         </span>
     </form>
 </template>
@@ -57,14 +57,18 @@ export default {
 
             // validate
             if (isNaN(this.value) || this.value < 0) {
-                alert('Investment amount must be a positive number!');
+                alert(this.$t('investments.value_error'));
                 return;
             }
 
-            var difstr = this.investment ? 'difference ' : '';
-            var value  = this.investment ? this.value - this.investment.value : this.value;
+            // make sure it's in the budget but take into account edit mode
+            var err   = this.investment ? 'difference_error_edit' : 'difference_error_add';
+            var value = this.investment ? this.value - this.investment.value : this.value;
             if (value > this.unallocatedSum) {
-                alert(`Investment ${difstr}must be less than your available budget of ${util.formatMoney(this.unallocatedSum, this.mode)}`);
+                var error = this.$t(`investments.${err}`, {
+                    budget: util.formatMoney(this.unallocatedSum, this.mode)
+                });
+                alert(error);
                 return;
             }
 
@@ -84,7 +88,7 @@ export default {
             this.$emit('editInvestment', false);
         },
         deleteInvestment: function () {
-            if (confirm("Are you sure you want to remove this investment?")) {
+            if (confirm(this.$t('investments.delete_confirmation'))) {
                 this.$emit('removeInvestment');
             }
         },
@@ -100,7 +104,7 @@ export default {
     },
     computed: {
         submitText: function () {
-            return this.investment ? 'Update Investment' : 'Add Investment';
+            return this.investment ? this.$t('investments.update') : this.$t('investments.add');
         }
     },
     watch: {

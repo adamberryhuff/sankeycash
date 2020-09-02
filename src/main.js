@@ -22,7 +22,7 @@ Vue.use(VueIntro);
 Vue.use(VueI18n);
 
 const messages = {en, de};
-const i18n = new VueI18n({locale: 'de', messages});
+const i18n = new VueI18n({locale: 'en', messages});
 
 new Vue({
     i18n,

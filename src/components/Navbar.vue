@@ -1,35 +1,35 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a v-on:click="resetConfig()" class="navbar-brand" href="#" v-intro="'<div></div>'" v-intro-step="1"><span class="fa fa-money"></span> SankeyCash</a>
+        <a v-on:click="resetConfig()" class="navbar-brand" href="#" v-intro="'<div></div>'" v-intro-step="1"><span class="fa fa-money"></span> {{ $t('product') }}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent" v-intro="'The chart will render in realtime at the top of the page.<br><br>In the nav you can render the demo chart, download a PNG of your chart, import a previously exported chart configuration, export the current chart configuration, or reset the chart data. You can also change your desired currency.'" v-intro-step="5">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" v-intro="$t('instructions.header')" v-intro-step="5">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#" v-on:click="instructions()" data-toggle="tooltip" data-placement="bottom" title="View chart rendering instructions.">Instructions </a>
+                    <a class="nav-link" href="#" v-on:click="instructions()" data-toggle="tooltip" data-placement="bottom" :title="$t('header.instructions_tt')">{{ $t('header.instructions') }} </a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#" v-on:click="loadTestData()" data-toggle="tooltip" data-placement="bottom" title="Load demo data and render demo chart.">Demo </a>
+                    <a class="nav-link" href="#" v-on:click="loadTestData()" data-toggle="tooltip" data-placement="bottom" :title="$t('header.demo_tt')">{{ $t('header.demo') }} </a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#" v-on:click="download()" data-toggle="tooltip" data-placement="bottom" title="Download a PNG image of the chart.">Download </a>
+                    <a class="nav-link" href="#" v-on:click="download()" data-toggle="tooltip" data-placement="bottom" :title="$t('header.download_tt')">{{ $t('header.download') }} </a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#" v-on:click="importConfig()" data-toggle="tooltip" data-placement="bottom" title="Import a chart configuration file.">Import </a>
+                    <a class="nav-link" href="#" v-on:click="importConfig()" data-toggle="tooltip" data-placement="bottom" :title="$t('header.import_tt')" >{{ $t('header.import') }} </a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#" v-on:click="exportConfig()" data-toggle="tooltip" data-placement="bottom" title="Export a chart configuration file.">Export </a>
+                    <a class="nav-link" href="#" v-on:click="exportConfig()" data-toggle="tooltip" data-placement="bottom" :title="$t('header.export_tt')">{{ $t('header.export') }} </a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#" v-on:click="resetConfig()" data-toggle="tooltip" data-placement="bottom" title="Reset the chart data.">Reset </a>
+                    <a class="nav-link" href="#" v-on:click="resetConfig()" data-toggle="tooltip" data-placement="bottom" :title="$t('header.reset_tt')">{{ $t('header.reset') }} </a>
                 </li>
                 <li class="nav-item active" id="uploader"></li>
             </ul>
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle languages" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span style="color: #6c757d; font-size:20px;" class="fa fa-globe"></span>
+                    <span class="fa fa-globe"></span>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" href="#" v-for="(language, key) in $t('languages')" v-bind:key="key" v-on:click="setLanguage(key)">
@@ -60,7 +60,7 @@ export default {
         },
         download: function () {
             if (!this.chartShowing) {
-                alert("You must input chart data before you can download the chart!");
+                alert(this.$t('header.download_error'));
                 return;
             }
             this.$emit('download');
@@ -71,7 +71,7 @@ export default {
         },
         exportConfig: function () {
             if (!this.chartShowing) {
-                alert("You must input chart data before you can export the config file!");
+                alert(this.$t('header.export_error'));
                 return;
             }
             let filename = 'sankeycash.json';
@@ -105,10 +105,15 @@ export default {
             reader.onload = (() =>  {
                 document.getElementById('config').remove();
                 return function(e) {
-                    var config = JSON.parse(e.target.result);
+                    try {
+                        var config = JSON.parse(e.target.result);
+                    } catch (e) {
+                        alert(a.$t('header.import_error'));
+                        return;
+                    }
                     if (typeof config !== 'object' || config.investments === undefined
                         || config.expenses === undefined || config.income === undefined) {
-                        alert("Invalid input file!");
+                        alert(a.$t('header.import_error'));
                     } else {
                         a.$emit('setItemizedInvestments', config.investments);
                         a.$emit('setItemizedExpenses', config.expenses);
@@ -123,7 +128,7 @@ export default {
             let fresh = !this.itemizedInvestments.length;
             fresh = fresh && !this.itemizedExpenses.length;
             fresh = fresh && !this.itemizedIncomes.length;
-            if (fresh || confirm("Are you sure you want to reset?")) {
+            if (fresh || confirm(this.$t('header.reset_confirmation'))) {
                 this.$emit('setItemizedInvestments', []);
                 this.$emit('setItemizedExpenses', []);
                 this.$emit('setItemizedIncomes', []);
@@ -131,9 +136,7 @@ export default {
             }
         },
         loadTestData: function () {
-            let str = "Are you sure you want to load demo data? ";
-            str    += "Your current configuration will be lost.";
-            if (!this.chartShowing || confirm(str)) {
+            if (!this.chartShowing || confirm(this.$t('header.demo_confirmation'))) {
                 this.$emit('setItemizedInvestments', test.investments);
                 this.$emit('setItemizedExpenses', test.expenses);
                 this.$emit('setItemizedIncomes', test.income);
@@ -169,4 +172,10 @@ export default {
     border-color: transparent !important;
     background-color: transparent !important;
 }
+
+.languages span {
+    color: #6c757d;
+    font-size:20px;
+}
+
 </style>

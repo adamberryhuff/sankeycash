@@ -2,9 +2,9 @@
     <div class="footer">
         <div class="footer-content">
             <br>
-            Made with 💖 by Adam Berry-Huff, 2020<br>
-            Feature Requests & Bugs: <a href="mailto:adamberryhuff@gmail.com">Email</a>, <a href="https://github.com/adamberryhuff">GitHub</a><br>
-            Donations:
+            {{ $t('footer.made') }}, 2020<br>
+            {{ $t('footer.feature') }}: <a href="mailto:adamberryhuff@gmail.com">{{ $t('footer.email') }}</a>, <a href="https://github.com/adamberryhuff">GitHub</a><br>
+            {{ $t('footer.donations') }}:
             <span>
                 <span class="link" v-on:click="square = !square">Cash App</span>, <span class="link" v-on:click="ethereum = !ethereum">Ethereum</span>, <span class="link" v-on:click="paypal = !paypal">PayPal</span>
             </span>

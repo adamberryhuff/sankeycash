@@ -18,7 +18,7 @@
         </div>
         <div class="btn-group chart-up" role="group">
             <button type="button" class="btn btn-secondary" v-on:click="viewChart()" v-show="!atTop && chartShowing">
-                <span class="fa fa-arrow-up"> Chart</span>
+                <span class="fa fa-arrow-up"> {{ $t('common.chart') }}</span>
             </button>
         </div>
         <br>
@@ -41,13 +41,34 @@ export default {
     data () {
         return {
             // chart labels
-            gross:       { label: 'Gross Income', value: this.formatValue(this.grossSum)      },
-            net:         { label: 'Net Income',   value: this.formatValue(this.netSum)        },
-            tax:         { label: 'Taxes',        value: this.formatValue(this.taxSum)        },
-            deductions:  { label: 'Deductions',   value: this.formatValue(this.deductionSum) },
-            unallocated: { label: 'Unallocated',  value: this.formatValue(this.unallocatedSum)},
-            expenses:    { label: 'Expenses',     value: this.formatValue(this.expenseSum)    },
-            investments: { label: 'Investments',  value: this.formatValue(this.investmentSum) },
+            gross: {
+                label: this.$t('common.gross'),
+                value: this.formatValue(this.grossSum)
+            },
+            net: {
+                label: this.$t('common.net'),
+                value: this.formatValue(this.netSum)
+            },
+            tax: {
+                label: this.$t('common.taxes'),
+                value: this.formatValue(this.taxSum)
+            },
+            deductions: {
+                label: this.$t('common.deductions'),
+                value: this.formatValue(this.deductionSum)
+            },
+            unallocated: {
+                label: this.$t('common.unallocated'),
+                value: this.formatValue(this.unallocatedSum)
+            },
+            expenses: {
+                label: this.$t('common.expenses'),
+                value: this.formatValue(this.expenseSum)
+            },
+            investments: {
+                label: this.$t('common.investments'),
+                value: this.formatValue(this.investmentSum)
+            },
 
             // chart rendering
             chart: false,

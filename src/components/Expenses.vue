@@ -3,11 +3,16 @@
         <!-- title -->
         <div class="col-md-12">
             <h2>
-                <span v-intro="'In the Expenses section you can add your expected expenses such as mortgage payments, rent, and other living expenses.'" v-intro-step="3">
-                    Expenses
+                <span v-intro="$t('expenses.instructions')" v-intro-step="3">
+                    {{ $t('common.expenses') }}
                 </span>
             </h2>
-            <p>Input your annual expenses. You have <span class="budget-inline">{{ util.formatMoney(unallocatedSum, mode) }}</span> available in your budget.</p>
+            <p>
+                {{ $t('expenses.title') }} {{ $t('common.remaining_budget') }}
+                <span class="budget-inline">
+                    {{ util.formatMoney(unallocatedSum, mode) }}
+                </span>
+            </p>
         </div>
 
         <div class="col-md-6">
@@ -72,7 +77,7 @@ export default {
     computed: {
         expense: function () {
             return this.expensesItemized[this.idx];
-        }
+        },
     }
 }
 

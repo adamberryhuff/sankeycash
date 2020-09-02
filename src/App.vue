@@ -99,17 +99,17 @@ export default {
             if (income.idx !== false) {
                 this.incomesItemized[income.idx] = income;
                 delete this.incomesItemized[income.idx].idx;
-                this.$refs.toast.show('Income Stream Update');
+                this.$refs.toast.show(this.$t('toasts.income_update'));
             } else {
                 this.incomesItemized.push(income);
-                this.$refs.toast.show('Income Stream Added');
+                this.$refs.toast.show(this.$t('toasts.income_added'));
             }
             this.incomesItemized.sort((a, b) => a.value < b.value);
         },
         removeIncome: function (idx) {
             this.incomesItemized.splice(idx, 1);
             this.incomesItemized.sort((a, b) => a.value < b.value);
-            this.$refs.toast.show('Income Stream Removed');
+            this.$refs.toast.show(this.$t('toasts.income_removed'));
         },
         setItemizedIncomes: function (incomes) {
             incomes.sort((a, b) => a.value < b.value);
@@ -131,17 +131,17 @@ export default {
             if (expense.idx !== false) {
                 this.expensesItemized[expense.idx] = expense;
                 delete this.expensesItemized[expense.idx].idx;
-                this.$refs.toast.show('Expense Updated');
+                this.$refs.toast.show(this.$t('toasts.expense_update'));
             } else {
                 this.expensesItemized.push(expense);
-                this.$refs.toast.show('Expense Added');
+                this.$refs.toast.show(this.$t('toasts.expense_added'));
             }
             this.expensesItemized.sort((a, b) => a.value < b.value);
         },
         removeExpense: function (idx) {
             this.expensesItemized.splice(idx, 1);
             this.expensesItemized.sort((a, b) => a.value < b.value);
-            this.$refs.toast.show('Expense Removed');
+            this.$refs.toast.show(this.$t('toasts.expense_removed'));
         },
         setItemizedExpenses: function (expenses) {
             expenses.sort((a, b) => a.value < b.value);
@@ -155,17 +155,17 @@ export default {
             if (investment.idx !== false) {
                 this.investmentsItemized[investment.idx] = investment;
                 delete this.investmentsItemized[investment.idx].idx;
-                this.$refs.toast.show('Investment Updated');
+                this.$refs.toast.show(this.$t('toasts.investment_update'));
             } else {
                 this.investmentsItemized.push(investment);
-                this.$refs.toast.show('Investment Added');
+                this.$refs.toast.show(this.$t('toasts.investment_added'));
             }
             this.investmentsItemized.sort((a, b) => a.value < b.value);
         },
         removeInvestment: function (idx) {
             this.investmentsItemized.splice(idx, 1);
             this.investmentsItemized.sort((a, b) => a.value < b.value);
-            this.$refs.toast.show('Investment Removed');
+            this.$refs.toast.show(this.$t('toasts.investment_removed'));
         },
         setItemizedInvestments: function (investments) {
             investments.sort((a, b) => a.value < b.value);
