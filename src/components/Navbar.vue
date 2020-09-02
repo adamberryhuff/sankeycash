@@ -5,8 +5,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto" v-intro="'The chart will render in realtime at the top of the page.<br><br>In the nav you can render the demo chart, download a PNG of your chart, import a previously exported chart configuration, export the current chart configuration, or reset the chart data.'" v-intro-step="5">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" v-intro="'The chart will render in realtime at the top of the page.<br><br>In the nav you can render the demo chart, download a PNG of your chart, import a previously exported chart configuration, export the current chart configuration, or reset the chart data. You can also change your desired currency.'" v-intro-step="5">
+            <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="#" v-on:click="instructions()" data-toggle="tooltip" data-placement="bottom" title="View chart rendering instructions.">Instructions </a>
                 </li>

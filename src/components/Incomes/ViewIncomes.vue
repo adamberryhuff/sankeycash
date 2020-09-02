@@ -35,22 +35,16 @@
                         <span class="badge badge-primary">
                             {{ getGrossDisplay(income) }}
                         </span><br>
-                        <span class="badge badge-secondary float-right" style="border: #007bff 1px solid;
-background: transparent;
-color: #007bff;">
+                        <span class="badge badge-secondary float-right">
                             {{ getIncomeDisplay(income) }}
                         </span>
                         <span v-for="(exemption, idx) in income.exemptions" v-bind:key="idx">
-                            <span class="badge badge-secondary" style="border: #007bff 1px solid;
-background: transparent;
-color: #007bff;" v-if="exemption.value > 0">
+                            <span class="badge badge-secondary">
                                 {{ getExemptionDisplay(exemption) }}
                             </span>&nbsp;
                         </span>
                         <span v-for="(deduction, idx) in income.deductions" v-bind:key="deduction.label">
-                            <span class="badge badge-secondary" style="border: #dc3545 1px solid;
-background: transparent;
-color: #dc3545;" v-if="deduction.value > 0">
+                            <span class="badge badge-secondary">
                                 {{ getDeductionDisplay(deduction) }}
                             </span>&nbsp;
                         </span>
