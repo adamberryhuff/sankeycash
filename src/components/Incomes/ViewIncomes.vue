@@ -38,12 +38,12 @@
                         <span class="badge badge-secondary float-right">
                             {{ getIncomeDisplay(income) }}
                         </span>
-                        <span v-for="(exemption, idx) in income.exemptions" v-bind:key="idx">
+                        <span v-for="exemption in income.exemptions" v-bind:key="exemption.label">
                             <span class="badge badge-secondary">
                                 {{ getExemptionDisplay(exemption) }}
                             </span>&nbsp;
                         </span>
-                        <span v-for="(deduction, idx) in income.deductions" v-bind:key="deduction.label">
+                        <span v-for="deduction in income.deductions" v-bind:key="deduction.label">
                             <span class="badge badge-secondary">
                                 {{ getDeductionDisplay(deduction) }}
                             </span>&nbsp;

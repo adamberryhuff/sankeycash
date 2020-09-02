@@ -27,6 +27,16 @@
                 </li>
                 <li class="nav-item active" id="uploader"></li>
             </ul>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle languages" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span style="color: #6c757d; font-size:20px;" class="fa fa-globe"></span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#" v-for="(language, key) in $t('languages')" v-bind:key="key" v-on:click="setLanguage(key)">
+                        {{ language }}
+                    </a>
+                </div>
+            </div>
             <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
                 <button type="button" v-on:click="toggleMode('$')" class="btn btn-secondary" :class="{ active: mode == '$' }">$</button>
                 <button type="button" v-on:click="toggleMode('£')" class="btn btn-secondary" :class="{ active: mode == '£' }">£</button>
@@ -129,6 +139,10 @@ export default {
                 this.$emit('setItemizedIncomes', test.income);
                 this.$emit('alert', 'Demo Data Loaded');
             }
+        },
+        setLanguage: function (key) {
+            this.$i18n.locale = key;
+            this.toggleMode(this.$t('currency'));
         }
     }
 }
@@ -138,5 +152,21 @@ export default {
 <style scoped>
 .fa {
     color: #28A745;
+}
+
+.languages {
+    background-color: transparent !important;
+    color: #6c757d !important;
+    border-color: transparent !important;
+}
+
+.languages:focus {
+    box-shadow: unset !important;
+}
+
+.languages:active {
+    box-shadow: unset !important;
+    border-color: transparent !important;
+    background-color: transparent !important;
 }
 </style>
