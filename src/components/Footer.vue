@@ -22,6 +22,7 @@
             </span>
             <br><br>
         </div>
+        <div class="fb-share-button" data-href="https://www.sankeycash.com" data-layout="button_count"></div>
     </div>
 </template>
 
@@ -73,4 +74,11 @@ export default {
     background-color: transparent;
     cursor:pointer;
 }
+
+.fb-share-button {
+    position:absolute;
+    top: 5px;
+    right: 7px;
+}
+
 </style>
