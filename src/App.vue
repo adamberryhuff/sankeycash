@@ -2,6 +2,7 @@
     <div id="app">
         <Toast ref="toast"></Toast>
         <Navbar
+            :mode="mode"
             :chartShowing="chartShowing"
             :itemizedIncomes="incomesItemized"
             :itemizedExpenses="expensesItemized"
@@ -10,7 +11,8 @@
             @setItemizedExpenses="setItemizedExpenses"
             @setItemizedIncomes="setItemizedIncomes"
             @download="download"
-            @alert="alert" />
+            @alert="alert"
+            @setMode="setMode" />
         <Chart
             ref="chart"
             :chartShowing="chartShowing"
@@ -20,10 +22,11 @@
             :grossSum="grossSum"
             :netSum="netSum"
             :taxSum="taxSum"
+            :mode="mode"
             :expenseSum="expenseSum"
             :unallocatedSum="unallocatedSum"
             :investmentSum="investmentSum"
-            @setMode="setMode" />
+            :deductionSum="deductionSum" />
         <div class="container-fluid">
             <Incomes
                 :incomesItemized="incomesItemized"
@@ -194,15 +197,23 @@ export default {
             return value;
         },
         netSum () {
-            return this.grossSum-this.taxSum;
+            return this.grossSum-this.taxSum-this.deductionSum;
         },
         taxSum () {
             let value = 0;
             this.incomesItemized.forEach(income => {
                 let untaxable = income.exemptions.reduce((a, e) => a + e.value, 0);
+                untaxable = income.deductions.reduce((a, d) => a + d.value, untaxable);
                 let taxable   = income.value - untaxable;
                 value += taxable*(income.tax/100);
             })
+            return value;
+        },
+        deductionSum () {
+            var value = 0;
+            this.incomesItemized.forEach(income => {
+                value += income.deductions.reduce((a, d) => a + d.value, 0);
+            });
             return value;
         },
         exemptionSum () {
@@ -297,6 +308,16 @@ export default {
 
 .lr-break {
     margin: 25px 0px 25px 0px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 </style>

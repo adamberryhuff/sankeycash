@@ -27,81 +27,69 @@
             </small>
         </div>
 
-        <!-- income stream tax exemptions -->
-        <div class="form-group">
-            Does this income stream have any tax-exempt contributions?
-            <span class="float-right">
-                <input type="radio" name="gridRadios" v-on:click="addExemption()" v-on:keyup="processKeyPress">
-                &nbsp;Yes
-                <input type="radio" class="no-checkbox" id="no-exemptions-cb" name="gridRadios" v-on:click="exemptions = []" checked v-on:keyup="processKeyPress">
-                &nbsp;No
-            </span>
-            <div class="row no-gutters desktop-only" v-if="exemptions.length">
-                <div class="col-md-3 exemptions">
-                    <label class="exemption-label">Label</label>
-                </div>
-                <div class="col-md-4 exemptions">
-                    <label class="exemption-label">Contribution ({{ mode }})</label>
-                </div>
-                <div class="col-md-4 exemptions">
-                    <label class="exemption-label">Match ({{ mode }})</label>
-                </div>
-                <div class="col-md-1 exemptions"></div>
-            </div>
-            <div v-for="(exemption, idx) in exemptions" v-bind:key="idx" class="row no-gutters">
-                <!-- income stream tax exemption label -->
-                <div class="col-md-3 exemptions">
-                    <label class="exemption-label mobile-only">Label</label>
-                    <input placeholder="Chart Label" class="form-control" v-model="exemption.label" v-on:keyup="processKeyPress" />
-                </div>
+        <!-- exemptions question -->
+        Does this income stream have any tax-exempt contributions?
+        <AddIncomeExemption
+            :exemptions="exemptions"
+            :mode="mode"
+            @addIncome="addIncome"
+            @addExemption="addExemption"
+            @removeExemption="removeExemption"
+            @clearExemptions="clearExemptions" />
+        <br>
 
-                <!-- income stream tax exemption amount -->
-                <div class="col-md-4 exemptions">
-                    <label class="exemption-label mobile-only">Contribution ({{ mode }})</label>
-                    <input placeholder="Contribution" type="number" class="form-control"  v-model="exemption.value" v-on:keyup="processKeyPress" />
-                </div>
+        <!-- deductions question -->
+        Does this income stream have any pre-tax deductions?
+        <AddIncomeDeduction
+            :deductions="deductions"
+            :mode="mode"
+            @addIncome="addIncome"
+            @addDeduction="addDeduction"
+            @removeDeduction="removeDeduction"
+            @clearDeductions="clearDeductions" />
 
-                <!-- income stream tax exemption employer match -->
-                <div class="col-md-4 exemptions">
-                    <label class="exemption-label mobile-only">Match ({{ mode }})</label>
-                    <input placeholder="Employer Match" type="number" class="form-control" v-model="exemption.match" v-on:keyup="processKeyPress" />
-                </div>
-                <div class="col-md-1 exemptions">
-                    <button type="button" class="btn btn-outline-danger desktop-only" v-on:click="removeExemption(idx)">X</button>
-                    <button type="button" class="btn btn-outline-danger mobile-only" v-on:click="removeExemption(idx)">Remove Exemption</button>
-                </div>
-            </div>
-            <small class="form-text text-muted">
-                Examples: 401k, HSA
-                <button type="button" class="btn btn-link float-right add-exemption" v-if="exemptions.length" v-on:click="addExemption()" tabindex="0">
-                    <i>Add Another</i>
-                </button>
-            </small>
+        <!-- desktop buttons: save, delete, cancel -->
+        <div class="desktop-only">
+            <button class="btn btn-primary float-right" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
+                {{ income ? 'Update Income Stream' : 'Add Income Stream' }}
+            </button>
+            <button v-if="income" class="btn btn-link" v-on:click.enter.prevent="cancelEditIncome">
+                Cancel
+            </button>
+            <button v-if="income" class="btn btn-link remove-expense" v-on:click.enter.prevent="deleteIncome">
+                Delete
+            </button>
         </div>
-        <button class="btn btn-primary float-right desktop-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
-            {{ submitText }}
-        </button>
-        <button class="btn btn-primary mobile-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
-            {{ submitText }}
-        </button>
-        <span v-if="income">
-            <!-- Delete Button -->
-            <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteIncome">Remove Income Stream</button>
-            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteIncome">Remove Income</button>
-            <!-- Cancel Button -->
-            <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
-            <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
-        </span>
+
+        <!-- mobile buttons: save, delete, cancel -->
+        <div class="mobile-only">
+            <button class="btn btn-primary" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
+                {{ income ? 'Update Income Stream' : 'Add Income Stream' }}
+            </button>
+            <button v-if="income" class="btn btn-link cancel-btn" v-on:click.enter.prevent="cancelEditIncome">
+                Cancel
+            </button>
+            <button v-if="income" class="btn btn-link remove-expense" v-on:click.enter.prevent="deleteIncome">
+                Delete
+            </button>
+        </div>
     </form>
 </template>
 
 
 <script>
+
+import AddIncomeExemption from './AddIncomeExemption.vue';
+import AddIncomeDeduction from './AddIncomeDeduction.vue';
 import util from '../../util.js';
 
 export default {
     name: 'AddIncome',
     props: ['income', 'mode', 'unallocatedSum'],
+    components: {
+        AddIncomeExemption,
+        AddIncomeDeduction
+    },
     data () {
         return {
             // new income stream
@@ -109,80 +97,75 @@ export default {
             value: '',
             tax:   '',
             exemptions: [],
+            deductions: [],
 
             util: util
         }
     },
     mounted () {
-        this.focusNewIncome();
+        this.initNewIncome();
     },
     methods: {
         addIncome: function (e) {
             if (e) e.preventDefault();
-            this.tax   = parseInt(this.tax);
-            this.value = parseInt(this.value);
+            this.normalizeIncome();
+            this.normalizeExemptions();
+            this.normalizeDeductions();
+            if (!this.validateIncome()) return;
+            this.validateExemptions();
+            this.validateDeductions();
 
-            // validate
-            if (isNaN(this.tax) || this.tax < 1 || this.tax > 100) {
-                alert('Income stream tax rate should be between 1 and 100');
-                return;
-            }
-            if (isNaN(this.value) || this.value <= 0) {
-                alert('Income stream amount must be positive number.');
-                return;
-            }
-
-            // validate exemptions - required, valid labels,
-            // sum of exemptions cannot be greater than income stream total
-            var exemption_total = 0;
-            this.exemptions.forEach(exemption => {
-                exemption.value = parseInt(exemption.value);
-                if (isNaN(exemption.value) || exemption.value < 0) {
-                    let str = 'Exemption amount must be greater or equal to 0.';
-                    alert(str);
-                    throw str;
-                }
-                exemption.match = parseInt(exemption.match);
-                if (isNaN(exemption.match) || exemption.match < 0) {
-                    let str = 'Exemption match amount must be greater or equal to 0.';
-                    alert(str);
-                    throw str;
-                }
-                exemption_total += exemption.value;
-            })
-            if (exemption_total > this.value) {
-                alert('Exemption amount cannot be more than income stream amount!');
-                return;
+            // exemptions + deductions > income
+            let tax_free = this.exemptions.reduce((a, e) => a + e.value, 0);
+            tax_free = this.deductions.reduce((a, d) => a + d.value, tax_free);
+            if (tax_free > this.value) {
+                alert('Tax-exempt contributions and deductions cannot be more than income stream amount!');
+                return false;
             }
 
-            // if editing income stream, make sure new value doesn't make our budget
-            // go negative
-            let income = JSON.parse(JSON.stringify(this.income));
-            income.value = this.value;
-            var diff = util.getNet(this.income) - util.getNet(income);
-            if (diff > this.unallocatedSum) {
-                alert(`You cannot edit this income stream until you free up at least ${util.formatMoney(diff, this.mode)} into your unallocated budget. You must remove at least ${util.formatMoney(diff-this.unallocatedSum, this.mode)} in expenses or investments before you can make this change.`);
-                return;
-            }
-
-            // add the new stream
+            // add
             this.$emit('addIncome', {
                 label: this.label,
                 tax: this.tax,
                 value: this.value,
-                exemptions: this.exemptions
+                exemptions: this.exemptions,
+                deductions: this.deductions
             });
 
-            // reset everything in the form
-            this.label      = '';
-            this.tax        = '';
-            this.value      = '';
-            this.exemptions = [];
-
-            // focus new income
-            this.focusNewIncome();
+            this.initNewIncome();
         },
-        cancelEdit: function () {
+        normalizeIncome: function () {
+            this.tax   = parseInt(this.tax);
+            this.value = parseInt(this.value);
+        },
+        validateIncome: function () {
+            // do we have budget to edit this income when lowering the income value?
+            if (this.income) {
+                let income = JSON.parse(JSON.stringify(this.income));
+                income.value = this.value;
+                var diff = util.getNet(this.income) - util.getNet(income);
+                if (diff > this.unallocatedSum) {
+                    alert(`You cannot edit this income stream until you free up at least ${util.formatMoney(diff, this.mode)} into your unallocated budget. You must remove at least ${util.formatMoney(diff-this.unallocatedSum, this.mode)} in expenses or investments before you can make this change.`);
+                    return false;
+                }
+            }
+
+            // validate label, tax, and value
+            if (this.label == '') {
+                alert('Income stream label is required.');
+                return false;
+            }
+            if (isNaN(this.tax) || this.tax < 1 || this.tax > 100) {
+                alert('Income stream tax rate should be between 1 and 100.');
+                return false;
+            }
+            if (isNaN(this.value) || this.value <= 0) {
+                alert('Income stream amount must be positive number.');
+                return false;
+            }
+            return true;
+        },
+        cancelEditIncome: function () {
             this.$emit('editIncome', false);
         },
         deleteIncome: function () {
@@ -196,8 +179,17 @@ export default {
                 this.$emit('deleteIncome');
             }
         },
+        /************************************************************
+         * EXEMPTIONS
+         ************************************************************/
         addExemption: function () {
-            this.exemptions.push({ label: '', value: '', match: '' });
+            this.exemptions.push({
+                label: '',
+                value: '',
+                match: '',
+                value_mode: 'currency',
+                match_mode: 'currency'
+            });
         },
         removeExemption: function (idx) {
             var empty = !this.exemptions[idx].label;
@@ -205,30 +197,109 @@ export default {
             empty = empty && !this.exemptions[idx].match;
             if (empty || confirm('Are you sure you want to remove this exemption?')) {
                 this.exemptions.splice(idx, 1);
-                if (!this.exemptions.length) {
-                    document.getElementById('no-exemptions-cb').checked = true;
+            }
+        },
+        clearExemptions: function () {
+            this.exemptions = [];
+        },
+        // convert % contribution and match to $
+        normalizeExemptions: function () {
+            for (var key in this.exemptions) {
+                let exemption = this.exemptions[key];
+                if (exemption.value_mode == 'percent') {
+                    exemption.value      = this.value * exemption.value / 100;
+                    exemption.value_mode = 'currency';
+                }
+                if (exemption.match_mode == 'percent') {
+                    exemption.match      = this.value * exemption.match / 100;
+                    exemption.match_mode = 'currency';
                 }
             }
         },
-        focusNewIncome: function () {
+        validateExemptions: function () {
+            this.exemptions.forEach(exemption => {
+                exemption.value = parseInt(exemption.value);
+                if (isNaN(exemption.value) || exemption.value < 0) {
+                    let str = 'Exemption amount must be greater or equal to 0.';
+                    alert(str);
+                    throw str;
+                }
+                exemption.match = parseInt(exemption.match);
+                if (isNaN(exemption.match) || exemption.match < 0) {
+                    let str = 'Exemption match amount must be greater or equal to 0.';
+                    alert(str);
+                    throw str;
+                }
+            })
+        },
+        /************************************************************
+         * DEDUCTIONS
+         ************************************************************/
+        addDeduction: function () {
+            this.deductions.push({
+                label: '',
+                value: '',
+                value_mode: 'currency',
+            });
+        },
+        removeDeduction: function (idx) {
+            var empty = !this.deductions[idx].label && !this.deductions[idx].value;
+            if (empty || confirm('Are you sure you want to remove this deduction?')) {
+                this.deductions.splice(idx, 1);
+            }
+        },
+        clearDeductions: function () {
+            this.deductions = [];
+        },
+        // convert % deductions to $
+        normalizeDeductions: function () {
+            for (var key in this.deductions) {
+                let deduction = this.deductions[key];
+                if (deduction.value_mode == 'percent') {
+                    deduction.value      = this.value * deduction.value / 100;
+                    deduction.value_mode = 'currency';
+                }
+            }
+        },
+        validateDeductions: function () {
+            this.deductions.forEach(deduction => {
+                deduction.value = parseInt(deduction.value);
+                if (isNaN(deduction.value) || deduction.value < 0) {
+                    let str = 'Deduction amount must be greater or equal to 0.';
+                    alert(str);
+                    throw str;
+                }
+            })
+        },
+        /************************************************************
+         * UTIL
+         ************************************************************/
+        initNewIncome: function () {
+            this.label      = '';
+            this.tax        = '';
+            this.value      = '';
+            this.exemptions = [];
+            this.deductions = [];
             document.getElementById('new-income-focus').focus();
-            document.getElementById('no-exemptions-cb').checked = true;
         },
         processKeyPress: function (event) {
             if (event.keyCode == 13) this.addIncome();
         }
     },
-    computed: {
-        submitText: function () {
-            return this.income ? 'Update Income Stream' : 'Add Income Stream';
-        }
-    },
     watch: {
+        // set local scope values if someone clicks edit income
         income: function () {
             this.value      = this.income ? this.income.value : '';
             this.label      = this.income ? this.income.label : '';
             this.tax        = this.income ? this.income.tax : '';
-            this.exemptions = this.income ? this.income.exemptions : '';
+            this.exemptions = this.income ? this.income.exemptions : [];
+            this.deductions = this.income ? this.income.deductions : [];
+            if (this.exemptions.length) {
+                this.exemptions = JSON.parse(JSON.stringify(this.exemptions));
+            }
+            if (this.deductions.length) {
+                this.deductions = JSON.parse(JSON.stringify(this.deductions));
+            }
         }
     }
 }
@@ -237,63 +308,20 @@ export default {
 
 
 <style scoped>
-.exemptions {
-    padding:0px 2px 0px 2px !important;
-    margin-top:5px;
-}
-.add-exemption {
-    cursor:pointer;
-    color: #007bff;
-    text-decoration: none;
-    background-color: transparent;
-    padding: 0px;
-    border: 0px;
-    font-size: 100%;
-    font-weight: 400;
-}
 
-.add-exemption:focus {
-    text-decoration: #007bff;
-    text-decoration-line: underline;
-}
-
-.no-checkbox {
-     margin-left:10px;
-}
-
-.exemption-label {
-    font-size:14px;
-    margin-bottom:0px;
-}
-
-.remove-label {
-    color: transparent;
-}
-
-.btn.btn-primary.mobile-only {
-    margin-top:30px;
-    width:100%;
-}
-
-.btn.mobile-only.btn-outline-danger {
-    width:100%;
-}
-
-.btn.desktop-only {
+.desktop-only {
     float: right;
-}
-
-.btn.btn-primary.desktop-only {
-    margin-left: .5rem;
-}
-
-.btn.mobile-only.cancel-btn {
-    float:right;
+    display:inline;
+    margin-top:30px;
 }
 
 .remove-expense {
     color: red;
 }
 
+.desktop-only .remove-expense {
+    padding-left:5px;
+    padding-right:17px;
+}
 
 </style>

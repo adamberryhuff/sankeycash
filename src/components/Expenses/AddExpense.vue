@@ -28,11 +28,11 @@
         </button>
         <span v-if="expense">
             <!-- Delete Button -->
-            <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteExpense">Remove Expense</button>
-            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteExpense">Remove Expense</button>
+            <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteExpense">Delete</button>
+            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteExpense">Delete</button>
             <!-- Cancel Button -->
-            <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
-            <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">Cancel Edit</button>
+            <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">Cancel</button>
+            <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">Cancel</button>
         </span>
     </form>
 </template>
@@ -135,5 +135,11 @@ export default {
 .remove-expense {
     color: red;
 }
+
+.desktop-only .remove-expense {
+    padding-left:5px;
+    padding-right:17px;
+}
+
 
 </style>

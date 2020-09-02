@@ -36,16 +36,10 @@ export default {
      * Income Calculation Helpers
      ***************************************************************************/
     getTaxableIncome (income) {
-        var value = income.value;
-        income.exemptions.forEach(exemption => {
-            value -= exemption.value;
-        })
-        return value;
+        return income.value - this.getExemptions(income) - this.getDeductions(income);
     },
     getTax: function (income) {
-        let value = income.value;
-        value -= income.exemptions.reduce((a, e) => a + e.value, 0);
-        return value*(income.tax/100);
+        return this.getTaxableIncome(income)*(income.tax/100);
     },
     getMatch: function (income) {
         return income.exemptions.reduce((a, e) => a + e.match, 0);
@@ -53,7 +47,10 @@ export default {
     getExemptions: function (income) {
         return income.exemptions.reduce((a, e) => a + e.value, 0);
     },
+    getDeductions: function (income) {
+        return income.deductions.reduce((a, d) => a + d.value, 0);
+    },
     getNet: function (income) {
-        return income.value - this.getTax(income) + this.getMatch(income);
+        return income.value - this.getTax(income) + this.getMatch(income) - this.getDeductions(income);
     },
 }

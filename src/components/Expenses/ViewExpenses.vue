@@ -6,11 +6,11 @@
 
         <!-- expenses: net - expenses = savings -->
         <span class="float-right">
-            <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip">
+            <span class="badge badge-success net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip">
                 Unallocated<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum, mode) }}</span>
                 &nbsp;<span class="fa fa-question-circle"></span>
             </span>
-            <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="expenseTooltip">
+            <span class="badge badge-success net-income-badge clickable pad" data-toggle="tooltip" data-placement="top" :title="expenseTooltip">
                 Expenses<span class="desktop-only-inline">: {{ util.formatMoney(expenseSum, mode) }}</span>
                 &nbsp;<span class="fa fa-question-circle"></span>
             </span>
@@ -30,7 +30,7 @@
                         <span id="label">{{ expense.label }}</span>
                     </div>
                     <div class="col-md-8">
-                        <span class="badge badge-secondary badge-pill">
+                        <span class="badge badge-secondary">
                             {{ util.formatMoney(expense.value, mode) }}
                         </span>
                     </div>
@@ -97,4 +97,12 @@ export default {
 .net-income-badge {
     float:initial;
 }
+
+@media only screen and (min-width: 540px) {
+    .pad {
+        margin-right: calc(0.25rem + 15px);
+    }
+}
+
+
 </style>

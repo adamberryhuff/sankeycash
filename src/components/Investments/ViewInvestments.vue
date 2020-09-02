@@ -5,11 +5,11 @@
         <label>Investments</label>
         <!-- investments: net - expenses = savings -->
         <span class="float-right">
-            <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip" v-on:click="populateInvestment()">
+            <span class="badge badge-success net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip" v-on:click="populateInvestment()">
                 Unallocated<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum, mode) }}</span>&nbsp;
                 <span class="fa fa-question-circle"></span>
             </span>
-            <span class="badge badge-success badge-pill net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="investmentTooltip">
+            <span class="badge badge-success net-income-badge clickable pad" data-toggle="tooltip" data-placement="top" :title="investmentTooltip">
                 Investments<span class="desktop-only-inline">: {{ util.formatMoney(investmentSum, mode) }}</span>&nbsp;
                 <span class="fa fa-question-circle"></span>
             </span>
@@ -29,7 +29,7 @@
                         <span id="label">{{ investment.label }}</span>
                     </div>
                     <div class="col-md-8">
-                        <span class="badge badge-secondary badge-pill">
+                        <span class="badge badge-secondary">
                             {{ util.formatMoney(investment.value, mode) }}
                         </span>
                     </div>
@@ -44,7 +44,7 @@
                             <span id="label">{{ exemption.label }}</span>
                         </div>
                         <div class="col-md-8">
-                            <span class="badge badge-secondary badge-pill" :title="getExemptionTooltip(exemption)">
+                            <span class="badge badge-secondary" :title="getExemptionTooltip(exemption)">
                                 {{ displayExemption(exemption) }}
                                 <span class="fa fa-question-circle"></span>
                             </span>
@@ -143,4 +143,11 @@ export default {
 .net-income-badge {
     float:initial;
 }
+
+@media only screen and (min-width: 540px) {
+    .pad {
+        margin-right: calc(0.25rem + 15px);
+    }
+}
+
 </style>

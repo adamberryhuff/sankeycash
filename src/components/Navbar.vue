@@ -27,6 +27,11 @@
                 </li>
                 <li class="nav-item active" id="uploader"></li>
             </ul>
+            <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
+                <button type="button" v-on:click="toggleMode('$')" class="btn btn-secondary" :class="{ active: mode == '$' }">$</button>
+                <button type="button" v-on:click="toggleMode('£')" class="btn btn-secondary" :class="{ active: mode == '£' }">£</button>
+                <button type="button" v-on:click="toggleMode('€')" class="btn btn-secondary" :class="{ active: mode == '€' }">€</button>
+            </div>
         </div>
     </nav>
 </template>
@@ -36,8 +41,13 @@ import test from '../assets/sankey.json';
 
 export default {
     name: 'Navbar',
-    props: ['chartShowing', 'itemizedIncomes', 'itemizedExpenses', 'itemizedInvestments'],
+    props: [
+        'chartShowing', 'itemizedIncomes', 'itemizedExpenses', 'itemizedInvestments', 'mode'
+    ],
     methods: {
+        toggleMode: function (mode) {
+            this.$emit('setMode', mode);
+        },
         download: function () {
             if (!this.chartShowing) {
                 alert("You must input chart data before you can download the chart!");

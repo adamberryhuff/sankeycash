@@ -11,11 +11,6 @@
                     <button type="button" v-on:click="toggleCanvas('large')" class="btn btn-secondary canvas-large" :class="{ active: canvas == 'large' }"><span class="fa fa-square"></span></button>
                 </div>
                 <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
-                    <button type="button" v-on:click="toggleMode('$')" class="btn btn-secondary" :class="{ active: mode == '$' }">$</button>
-                    <button type="button" v-on:click="toggleMode('£')" class="btn btn-secondary" :class="{ active: mode == '£' }">£</button>
-                    <button type="button" v-on:click="toggleMode('€')" class="btn btn-secondary" :class="{ active: mode == '€' }">€</button>
-                </div>
-                <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
                     <button type="button" v-on:click="togglePercent(false)" class="btn btn-secondary" :class="{ active: !percent }">{{ mode }}</button>
                     <button type="button" v-on:click="togglePercent(true)" class="btn btn-secondary" :class="{ active: percent }">%</button>
                 </div>
@@ -38,9 +33,10 @@ import html2canvas from 'html2canvas';
 export default {
     name: 'Chart',
     props: [
-        'chartShowing',
+        'chartShowing', 'mode',
         'itemizedIncomes', 'itemizedExpenses', 'itemizedInvestments',
-        'grossSum', 'netSum', 'taxSum', 'unallocatedSum', 'investmentSum', 'expenseSum'
+        'grossSum', 'netSum', 'taxSum', 'unallocatedSum', 'investmentSum', 'expenseSum',
+        'deductionSum'
     ],
     data () {
         return {
@@ -48,6 +44,7 @@ export default {
             gross:       { label: 'Gross Income', value: this.formatValue(this.grossSum)      },
             net:         { label: 'Net Income',   value: this.formatValue(this.netSum)        },
             tax:         { label: 'Taxes',        value: this.formatValue(this.taxSum)        },
+            deductions:  { label: 'Deductions',   value: this.formatValue(this.deductionSum) },
             unallocated: { label: 'Unallocated',  value: this.formatValue(this.unallocatedSum)},
             expenses:    { label: 'Expenses',     value: this.formatValue(this.expenseSum)    },
             investments: { label: 'Investments',  value: this.formatValue(this.investmentSum) },
@@ -56,7 +53,6 @@ export default {
             chart: false,
             colors: 'gradient',
             atTop: true,
-            mode: '$',
             percent: false,
             canvas: 'small'
         }
@@ -74,32 +70,37 @@ export default {
     },
     watch: {
         grossSum: function () {
-            this.gross.value = this.formatValue(this.grossSum);
-            if (this.gross.value != 0) this.render();
+            this.render();
         },
         netSum: function () {
-            this.net.value = this.formatValue(this.netSum);
-            if (this.net.value != 0) this.render();
+            this.render();
         },
         taxSum: function () {
-            this.tax.value = this.formatValue(this.taxSum);
-            if (this.tax.value != 0) this.render();
+            this.render();
         },
         unallocatedSum: function () {
-            this.unallocated.value = this.formatValue(this.unallocatedSum);
-            if (this.unallocated.value != 0) this.render();
+            this.render();
         },
         expenseSum: function () {
-            this.expenses.value = this.formatValue(this.expenseSum);
-            if (this.expenses.value != 0) this.render();
+            this.render();
         },
         investmentSum: function () {
-            this.investments.value = this.formatValue(this.investmentSum);
-            if (this.investments.value != 0) this.render();
+            this.render();
         }
     },
     methods: {
         render: function (download=false) {
+            if (!this.grossSum && !this.netSum && !this.taxSum && !this.deductionSum
+                && !this.unallocatedSum && !this.expenseSum  && !this.investmentSum) {
+                return;
+            }
+            this.gross.value       = this.formatValue(this.grossSum);
+            this.net.value         = this.formatValue(this.netSum);
+            this.tax.value         = this.formatValue(this.taxSum);
+            this.deductions.value  = this.formatValue(this.deductionSum);
+            this.unallocated.value = this.formatValue(this.unallocatedSum);
+            this.expenses.value    = this.formatValue(this.expenseSum);
+            this.investments.value = this.formatValue(this.investmentSum);
             window.$(function () {
                 window.$('[data-toggle="tooltip"]').tooltip('dispose');
                 window.$('[data-toggle="tooltip"]').tooltip('enable');
@@ -125,6 +126,7 @@ export default {
         drawIncomeBreakdown: function () {
             this.drawGrossIncome();
             this.drawTaxes();
+            this.drawDeductions();
             this.drawNetIncome();
         },
         // draw lines: income streams -> gross
@@ -152,6 +154,14 @@ export default {
             this.addChartRow(this.gross, this.tax);
             this.addChartRow(this.tax, this.tax);
             this.addChartRow(this.tax, this.tax);
+        },
+        // draw line: gross      -> deductions
+        // draw line: deductions -> deductions
+        // draw line: deductions -> deductions
+        drawDeductions: function () {
+            this.addChartRow(this.gross, this.deductions);
+            this.addChartRow(this.deductions, this.deductions);
+            this.addChartRow(this.deductions, this.deductions);
         },
         // draw line: gross -> net
         drawNetIncome: function () {
@@ -258,22 +268,11 @@ export default {
         },
         togglePercent: function (percent) {
             this.percent = percent;
-            this.toggleMode(this.mode);
-        },
-        toggleMode: function (mode) {
-            this.mode              = mode;
-            this.gross.value       = this.formatValue(this.grossSum);
-            this.net.value         = this.formatValue(this.netSum);
-            this.tax.value         = this.formatValue(this.taxSum);
-            this.unallocated.value = this.formatValue(this.unallocatedSum);
-            this.expenses.value    = this.formatValue(this.expenseSum);
-            this.investments.value = this.formatValue(this.investmentSum);
             this.render();
-            this.$emit('setMode', this.mode);
         },
         toggleCanvas: function (size) {
             this.canvas = size;
-            this.toggleMode(this.mode);
+            this.render();
         }
     }
 }
@@ -282,19 +281,19 @@ export default {
 <style scoped>
 
 .sankey {
-    min-height:300px;
+    height:300px;
     width: 100%;
     min-width:1000px;
     margin-bottom:15px;
 }
 
 .sankey-md {
-    min-height:450px;
+    height:450px;
     width: 150%;
 }
 
 .sankey-lg {
-    min-height:600px;
+    height:600px;
     width:200%;
 }
 
