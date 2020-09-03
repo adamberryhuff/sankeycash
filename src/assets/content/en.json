@@ -128,7 +128,9 @@
         "expense_removed": "Expense Removed",
         "investment_update": "Investment Update",
         "investment_added": "Investment Added",
-        "investment_removed": "Investment Removed"
+        "investment_removed": "Investment Removed",
+        "config_imported": "Config Imported",
+        "data_reset": "Data Reset"
     },
     "footer": {
         "made": "Made with 💖 by Adam Berry-Huff",

@@ -1,5 +1,5 @@
 <template>
-    <div v-show="this.gross.value > 0">
+    <div v-show="show">
         <div class="sankey-wrapper" :class="{ 'sankey-scroll': canvas == 'medium' || canvas == 'large' }">
             <div id="sankey" class="sankey" :class="{ 'sankey-md': canvas == 'medium', 'sankey-lg': canvas == 'large' }"></div>
         </div>
@@ -93,10 +93,15 @@ export default {
             this.render();
         }
     },
+    computed: {
+        show: function () {
+            return this.grossSum || this.netSum || this.taxSum || this.deductionSum
+                || this.unallocatedSum || this.expenseSum || this.investmentSum;
+        }
+    },
     methods: {
         render: function (download=false) {
-            if (!this.grossSum && !this.netSum && !this.taxSum && !this.deductionSum
-                && !this.unallocatedSum && !this.expenseSum  && !this.investmentSum) {
+            if (!this.show) {
                 return;
             }
             this.gross.value       = this.formatValue(this.grossSum);

@@ -121,7 +121,7 @@ export default {
                         a.$emit('setItemizedInvestments', config.investments);
                         a.$emit('setItemizedExpenses', config.expenses);
                         a.$emit('setItemizedIncomes', config.income);
-                        a.$emit('alert', 'Config Imported');
+                        a.$emit('alert', this.$t('toasts.config_imported'));
                     }
                 };
             }) (f);
@@ -135,7 +135,7 @@ export default {
                 this.$emit('setItemizedInvestments', []);
                 this.$emit('setItemizedExpenses', []);
                 this.$emit('setItemizedIncomes', []);
-                this.$emit('alert', 'Data Reset');
+                this.$emit('alert', this.$t('toasts.data_reset'));
             }
         },
         loadTestData: function () {

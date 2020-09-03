@@ -128,7 +128,9 @@
         "expense_removed": "Ausgaben entfernt",
         "investment_update": "Investments aktualisiert",
         "investment_added": "Investments hinzugefügt",
-        "investment_removed": "Investments entfernt"
+        "investment_removed": "Investments entfernt",
+        "config_imported": "Konfiguration importiert",
+        "data_reset": "Daten zurücksetzen"
     },
     "footer": {
         "made": "Made with 💖 by Adam Berry-Huff",
