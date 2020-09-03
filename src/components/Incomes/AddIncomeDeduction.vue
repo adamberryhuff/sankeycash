@@ -29,14 +29,14 @@
                     <!-- label -->
                     <div class="col-md-6 exemptions">
                         <label class="exemption-label mobile-only">{{ $t('common.chart_label') }}</label>
-                        <input placeholder="Label" class="form-control" v-model="deduction.label" v-on:keyup="processKeyPress" />
+                        <input :placeholder="$t('common.label')" class="form-control" v-model="deduction.label" v-on:keyup="processKeyPress" />
                     </div>
 
                     <!-- value -->
                     <div class="col-md-5 exemptions">
                         <label class="exemption-label mobile-only">{{ $t('common.deduction') }}</label>
                         <div class="input-group">
-                            <input placeholder="Deduction" type="number" class="form-control"  v-model="deduction.value" v-on:keyup="processKeyPress" />
+                            <input :placeholder="$t('common.deduction')" type="number" class="form-control"  v-model="deduction.value" v-on:keyup="processKeyPress" />
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-sm btn-secondary" :class="{ active: deduction.value_mode == 'currency' }" v-on:click="deduction.value_mode = 'currency'">{{ mode }}</button>
                             </div>

@@ -32,14 +32,14 @@
                     <!-- label -->
                     <div class="col-md-3 exemptions">
                         <label class="exemption-label mobile-only">{{ $t('common.chart_label') }}</label>
-                        <input placeholder="Label" class="form-control" v-model="exemption.label" v-on:keyup="processKeyPress" />
+                        <input :placeholder="$t('common.label')" class="form-control" v-model="exemption.label" v-on:keyup="processKeyPress" />
                     </div>
 
                     <!-- value -->
                     <div class="col-md-4 exemptions">
                         <label class="exemption-label mobile-only">{{ $t('common.contribution') }}</label>
                         <div class="input-group">
-                            <input placeholder="Contribution" type="number" class="form-control"  v-model="exemption.value" v-on:keyup="processKeyPress" />
+                            <input :placeholder="$t('common.contribution')" type="number" class="form-control"  v-model="exemption.value" v-on:keyup="processKeyPress" />
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-sm btn-secondary" :class="{ active: exemption.value_mode == 'currency' }" v-on:click="exemption.value_mode = 'currency'">{{ mode }}</button>
                             </div>
@@ -53,7 +53,7 @@
                     <div class="col-md-4 exemptions">
                         <label class="exemption-label mobile-only">{{ $t('common.match') }}</label>
                         <div class="input-group">
-                            <input placeholder="Match" type="number" class="form-control" v-model="exemption.match" v-on:keyup="processKeyPress" />
+                            <input :placeholder="$t('common.match_short')" type="number" class="form-control" v-model="exemption.match" v-on:keyup="processKeyPress" />
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-sm btn-secondary" :class="{ active: exemption.match_mode == 'currency' }" v-on:click="exemption.match_mode = 'currency'">{{ mode }}</button>
                             </div>

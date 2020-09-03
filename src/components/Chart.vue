@@ -41,34 +41,13 @@ export default {
     data () {
         return {
             // chart labels
-            gross: {
-                label: this.$t('common.gross'),
-                value: this.formatValue(this.grossSum)
-            },
-            net: {
-                label: this.$t('common.net'),
-                value: this.formatValue(this.netSum)
-            },
-            tax: {
-                label: this.$t('common.taxes'),
-                value: this.formatValue(this.taxSum)
-            },
-            deductions: {
-                label: this.$t('common.deductions'),
-                value: this.formatValue(this.deductionSum)
-            },
-            unallocated: {
-                label: this.$t('common.unallocated'),
-                value: this.formatValue(this.unallocatedSum)
-            },
-            expenses: {
-                label: this.$t('common.expenses'),
-                value: this.formatValue(this.expenseSum)
-            },
-            investments: {
-                label: this.$t('common.investments'),
-                value: this.formatValue(this.investmentSum)
-            },
+            gross:       { label: false, value: false },
+            net:         { label: false, value: false },
+            tax:         { label: false, value: false },
+            deductions:  { label: false, value: false },
+            unallocated: { label: false, value: false },
+            expenses:    { label: false, value: false },
+            investments: { label: false, value: false },
 
             // chart rendering
             chart: false,
@@ -80,6 +59,7 @@ export default {
     },
     mounted () {
         google.charts.load('current', {'packages':['sankey']});
+        this.setChartLabels();
     },
     created () {
         window.addEventListener('scroll', this.handleScroll);
@@ -106,6 +86,10 @@ export default {
             this.render();
         },
         investmentSum: function () {
+            this.render();
+        },
+        '$i18n.locale': function () {
+            this.setChartLabels();
             this.render();
         }
     },
@@ -294,6 +278,36 @@ export default {
         toggleCanvas: function (size) {
             this.canvas = size;
             this.render();
+        },
+        setChartLabels: function () {
+            this.gross = {
+                label: this.$t('common.gross'),
+                value: this.formatValue(this.grossSum)
+            };
+            this.net = {
+                label: this.$t('common.net'),
+                value: this.formatValue(this.netSum)
+            };
+            this.tax = {
+                label: this.$t('common.taxes'),
+                value: this.formatValue(this.taxSum)
+            };
+            this.deductions = {
+                label: this.$t('common.deductions'),
+                value: this.formatValue(this.deductionSum)
+            };
+            this.unallocated = {
+                label: this.$t('common.unallocated'),
+                value: this.formatValue(this.unallocatedSum)
+            };
+            this.expenses = {
+                label: this.$t('common.expenses'),
+                value: this.formatValue(this.expenseSum)
+            };
+            this.investments = {
+                label: this.$t('common.investments'),
+                value: this.formatValue(this.investmentSum)
+            };
         }
     }
 }
