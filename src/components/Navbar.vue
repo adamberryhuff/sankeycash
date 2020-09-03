@@ -69,6 +69,7 @@ export default {
             this.$emit('download');
         },
         instructions: function () {
+            // this.$intro().setOption("nextLabel", " > ");
             this.$intro().start();
             this.$intro().showHints();
         },
