@@ -71,7 +71,8 @@ export default {
     },
     computed: {
         income: function () {
-            return this.incomesItemized[this.idx];
+            let income = this.incomesItemized[this.idx];
+            return income ? JSON.parse(JSON.stringify(income)) : income;
         }
     }
 }

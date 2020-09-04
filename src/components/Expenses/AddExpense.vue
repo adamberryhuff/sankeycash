@@ -17,23 +17,33 @@
                 {{ $t('expenses.amount_examples', {mode: mode}) }}
             </small>
         </div>
-        <br class="mobile-only">
 
-        <!-- Submit button -->
-        <button class="btn btn-primary desktop-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
-            {{ submitText }}
-        </button>
-        <button class="btn btn-primary mobile-only" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
-            {{ submitText }}
-        </button>
-        <span v-if="expense">
-            <!-- Delete Button -->
-            <button class="btn btn-link desktop-only remove-expense" v-on:click.enter.prevent="deleteExpense">{{ $t('common.delete') }}</button>
-            <button class="btn btn-link mobile-only remove-expense" v-on:click.enter.prevent="deleteExpense">{{ $t('common.delete') }}</button>
-            <!-- Cancel Button -->
-            <button class="btn btn-link desktop-only" v-on:click.enter.prevent="cancelEdit">{{ $t('common.cancel') }}</button>
-            <button class="btn btn-link mobile-only cancel-btn" v-on:click.enter.prevent="cancelEdit">{{ $t('common.cancel') }}</button>
-        </span>
+        <!-- desktop buttons: save, delete, cancel -->
+        <div class="desktop-only-inline">
+            <button class="btn btn-primary float-right" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
+                {{ submitText }}
+            </button>
+            <button v-if="expense" class="btn btn-link" v-on:click.enter.prevent="cancelEdit">
+                {{ $t('common.cancel') }}
+            </button>
+            <button v-if="expense" class="btn btn-link remove-expense" v-on:click.enter.prevent="deleteExpense">
+                {{ $t('common.delete') }}
+            </button>
+        </div>
+
+        <!-- mobile buttons: save, delete, cancel -->
+        <div class="mobile-only row">
+            <br>
+            <button class="btn btn-primary col-sm-12" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
+                {{ submitText }}
+            </button>
+            <button v-if="expense" class="btn btn-outline-primary col-sm-12" v-on:click.enter.prevent="cancelEdit">
+                {{ $t('common.cancel') }}
+            </button>
+            <button v-if="expense" class="btn btn-outline-danger col-sm-12" v-on:click.enter.prevent="deleteExpense">
+                {{ $t('common.delete') }}
+            </button>
+        </div>
     </form>
 </template>
 
@@ -115,31 +125,26 @@ export default {
 
 </script>
 
-<style SCOPED>
+<style scoped>
 
-.btn.btn-primary.mobile-only {
-    width:100%;
-}
 
-.btn.desktop-only {
+.desktop-only-inline {
     float: right;
+    margin-top: calc(30px - 1rem);
 }
 
-.btn.btn-primary.desktop-only {
-    margin-left: .5rem;
-}
-
-.btn.mobile-only.cancel-btn {
-    float:right;
-}
-
-.remove-expense {
-    color: red;
-}
-
-.desktop-only .remove-expense {
+.desktop-only-inline .remove-expense {
     padding-left:5px;
     padding-right:17px;
+    color:red;
+}
+
+.btn-outline-danger {
+    margin-top:5px;
+}
+
+.btn-outline-primary {
+    margin-top:5px;
 }
 
 

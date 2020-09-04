@@ -17,22 +17,6 @@ export default {
         return rate + '%';
     },
     /***************************************************************************
-     * Validation Helpers
-     ***************************************************************************/
-    isValidChartLabel (label, incomes) {
-        // not empty
-        if (label == '') return false;
-
-        // unique to incomes and exemptions
-        incomes.forEach(income => {
-            if (income.label == label) return false;
-            income.exemptions.forEach(exemption => {
-                if (exemption.label == label) return false;
-            })
-        })
-        return true;
-    },
-    /***************************************************************************
      * Income Calculation Helpers
      ***************************************************************************/
     getTaxableIncome (income) {

@@ -9,12 +9,10 @@
             &nbsp;{{ $t('common.no') }}
         </span>
 
-        <div class="row no-gutters" v-if="exemptions.length">
-            <div class="left-line"></div>
-            <div class="col-md-11">
-
+        <div v-if="exemptions.length" class="exemptions-expansion">
+            <span class="exemptions-content">
                 <!-- headers -->
-                <div class="row no-gutters">
+                <div class="row no-gutters desktop-only">
                     <div class="col-md-3 exemptions">
                         <label class="exemption-label">{{ $t('common.chart_label') }}</label>
                     </div>
@@ -27,9 +25,8 @@
                     <div class="col-md-1 exemptions"></div>
                 </div>
 
-                <div class="row no-gutters desktop-only" v-for="(exemption, idx) in exemptions" v-bind:key="idx">
-
-                    <!-- label -->
+                <div class="row no-gutters" v-for="(exemption, idx) in exemptions" v-bind:key="idx">
+                    <!-- chart label -->
                     <div class="col-md-3 exemptions">
                         <label class="exemption-label mobile-only">{{ $t('common.chart_label') }}</label>
                         <input :placeholder="$t('common.label')" class="form-control" v-model="exemption.label" v-on:keyup="processKeyPress" />
@@ -65,11 +62,14 @@
 
                     <!-- remove -->
                     <div class="col-md-1 exemptions">
-                        <button type="button" class="btn btn-danger desktop-only" v-on:click="removeExemption(idx)">X</button>
+                        <button type="button" class="btn btn-danger desktop-only" v-on:click="removeExemption(idx)"><div><b>X</b></div></button>
                         <button type="button" class="btn btn-danger mobile-only" v-on:click="removeExemption(idx)">{{ $t('incomes.exemption_remove') }}</button>
                     </div>
+                    <div class="col-md-12 mobile-only" v-if="idx != exemptions.length-1">
+                        <hr>
+                    </div>
                 </div>
-            </div>
+            </span>
         </div>
 
         <!-- exemption examples and add button -->
@@ -149,10 +149,22 @@ export default {
     text-decoration-line: underline;
 }
 
-.left-line {
-    border-left: thick solid #eae9e9;
-    margin-right:10px;
+.exemptions-expansion {
+    border-left: 5px solid #eae9e9;
+    padding-left: 10px;
 }
 
+.exemptions-content {
+    width: calc(100% - 15px);
+    display:block;
+}
+
+.btn-danger {
+    width:100%;
+}
+
+.btn-danger div {
+    margin:auto;
+}
 
 </style>

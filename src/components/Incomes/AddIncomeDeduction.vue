@@ -9,12 +9,10 @@
             &nbsp;{{ $t('common.no') }}
         </span>
 
-        <div class="row no-gutters" v-if="deductions.length">
-            <div class="left-line"></div>
-            <div class="col-md-11">
-
+        <div v-if="deductions.length" class="exemptions-expansion">
+            <span class="exemptions-content">
                 <!-- headers -->
-                <div class="row no-gutters">
+                <div class="row no-gutters desktop-only">
                     <div class="col-md-6 exemptions">
                         <label class="exemption-label">{{ $t('common.chart_label') }}</label>
                     </div>
@@ -24,7 +22,7 @@
                     <div class="col-md-1 exemptions"></div>
                 </div>
 
-                <div class="row no-gutters desktop-only" v-for="(deduction, idx) in deductions" v-bind:key="idx">
+                <div class="row no-gutters" v-for="(deduction, idx) in deductions" v-bind:key="idx">
 
                     <!-- label -->
                     <div class="col-md-6 exemptions">
@@ -48,11 +46,14 @@
 
                     <!-- remove -->
                     <div class="col-md-1 exemptions">
-                        <button type="button" class="btn btn-danger desktop-only" v-on:click="removeDeduction(idx)">X</button>
+                        <button type="button" class="btn btn-danger desktop-only" v-on:click="removeDeduction(idx)"><div><b>X</b></div></button>
                         <button type="button" class="btn btn-danger mobile-only" v-on:click="removeDeduction(idx)">{{ $t('incomes.deduction_remove') }}</button>
                     </div>
+                    <div class="col-md-12 mobile-only" v-if="idx != deductions.length-1">
+                        <hr>
+                    </div>
                 </div>
-            </div>
+            </span>
         </div>
 
         <!-- exemption examples and add button -->
@@ -132,10 +133,22 @@ export default {
     text-decoration-line: underline;
 }
 
-.left-line {
-    border-left: thick solid #eae9e9;
-    margin-right:10px;
+.exemptions-expansion {
+    border-left: 5px solid #eae9e9;
+    padding-left: 10px;
 }
 
+.exemptions-content {
+    width: calc(100% - 15px);
+    display:block;
+}
+
+.btn-danger {
+    width:100%;
+}
+
+.btn-danger div {
+    margin:auto;
+}
 
 </style>

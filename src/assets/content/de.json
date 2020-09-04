@@ -36,7 +36,10 @@
         "yes": "Ja",
         "no": "Nein",
         "add_another": "Weitere hinzufügen",
-        "remaining_budget": "Verbleibendes Budget:"
+        "remaining_budget": "Verbleibendes Budget:",
+        "next": "Nächster",
+        "back": "Zurück",
+        "skip": "Überspringen"
     },
     "instructions": {
         "header": "Das Diagramm wird oben auf der Seite in Echtzeit aktualisiert.<br><br>Im Navigationsbereich können Sie das Demo-Diagramm aktualisieren, ein PNG Ihres Diagramms herunterladen, eine zuvor exportierte Diagrammkonfiguration importieren, die aktuelle Diagrammkonfiguration exportieren oder die Diagrammdaten zurücksetzen. Sie können auch Ihre gewünschte Währung ändern."

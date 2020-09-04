@@ -49,7 +49,7 @@
             @clearDeductions="clearDeductions" />
 
         <!-- desktop buttons: save, delete, cancel -->
-        <div class="desktop-only">
+        <div class="desktop-only-inline">
             <button class="btn btn-primary float-right" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
                 {{ income ? $t('incomes.update') : $t('incomes.add') }}
             </button>
@@ -62,14 +62,15 @@
         </div>
 
         <!-- mobile buttons: save, delete, cancel -->
-        <div class="mobile-only">
-            <button class="btn btn-primary" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
+        <div class="mobile-only row">
+            <br>
+            <button class="btn btn-primary col-sm-12" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
                 {{ income ? $t('incomes.update') : $t('incomes.add') }}
             </button>
-            <button v-if="income" class="btn btn-link cancel-btn" v-on:click.enter.prevent="cancelEditIncome">
+            <button v-if="income" class="btn btn-outline-primary col-sm-12" v-on:click.enter.prevent="cancelEditIncome">
                 {{ $t('common.cancel') }}
             </button>
-            <button v-if="income" class="btn btn-link remove-expense" v-on:click.enter.prevent="deleteIncome">
+            <button v-if="income" class="btn btn-outline-danger col-sm-12" v-on:click.enter.prevent="deleteIncome">
                 {{ $t('common.delete') }}
             </button>
         </div>
@@ -312,19 +313,24 @@ export default {
 
 <style scoped>
 
-.desktop-only {
+.desktop-only-inline {
     float: right;
-    display:inline;
     margin-top:30px;
 }
 
-.remove-expense {
-    color: red;
-}
-
-.desktop-only .remove-expense {
+.desktop-only-inline .remove-expense {
     padding-left:5px;
     padding-right:17px;
+    color:red;
 }
+
+.btn-outline-danger {
+    margin-top:5px;
+}
+
+.btn-outline-primary {
+    margin-top:5px;
+}
+
 
 </style>

@@ -89,7 +89,8 @@ export default {
     },
     computed: {
         investment: function () {
-            return this.investmentsItemized[this.idx];
+            let investment = this.investmentsItemized[this.idx];
+            return investment ? JSON.parse(JSON.stringify(investment)) : investment;
         }
     }
 }

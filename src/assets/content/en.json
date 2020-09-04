@@ -36,7 +36,10 @@
         "yes": "Yes",
         "no": "No",
         "add_another": "Add Another",
-        "remaining_budget": "Remaining Budget:"
+        "remaining_budget": "Remaining Budget:",
+        "next": "Next",
+        "back": "Back",
+        "skip": "Skip"
     },
     "instructions": {
         "header": "The chart will render in realtime at the top of the page.<br><br>In the nav you can render the demo chart, download a PNG of your chart, import a previously exported chart configuration, export the current chart configuration, or reset the chart data. You can also change your desired currency."

@@ -76,7 +76,8 @@ export default {
     },
     computed: {
         expense: function () {
-            return this.expensesItemized[this.idx];
+            let expense = this.expensesItemized[this.idx];
+            return expense ? JSON.parse(JSON.stringify(expense)) : expense;
         },
     }
 }

@@ -69,9 +69,17 @@ export default {
             this.$emit('download');
         },
         instructions: function () {
-            // this.$intro().setOption("nextLabel", " > ");
-            this.$intro().start();
-            this.$intro().showHints();
+            let introJS = this.$intro();
+            introJS.setOption("nextLabel", this.$t('common.next'));
+            introJS.setOption("prevLabel", this.$t('common.back'));
+            introJS.setOption("skipLabel", this.$t('common.skip'));
+            introJS.setOption("showStepNumbers", false);
+            // introJS.addSteps({
+            //     element: '#step1',
+            //     intro: "This is a tooltip."
+            // })
+            introJS.start();
+            introJS.showHints();
         },
         exportConfig: function () {
             if (!this.chartShowing) {

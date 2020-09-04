@@ -91,6 +91,15 @@ export default {
         '$i18n.locale': function () {
             this.setChartLabels();
             this.render();
+        },
+        itemizedIncomes: function () {
+            this.render();
+        },
+        itemizedExpenses: function () {
+            this.render();
+        },
+        itemizedInvestments: function () {
+            this.render();
         }
     },
     computed: {
