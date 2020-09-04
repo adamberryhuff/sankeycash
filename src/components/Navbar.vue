@@ -1,17 +1,17 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a v-on:click="resetConfig()" class="navbar-brand" href="#" v-intro="'<div></div>'" v-intro-step="1"><span class="fa fa-money"></span> {{ $t('product') }}</a>
+        <a v-on:click="resetConfig()" class="navbar-brand" href="#"><span class="fa fa-money"></span> {{ $t('product') }}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent" v-intro="$t('instructions.header')" v-intro-step="5">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="#" v-on:click="instructions()" data-toggle="tooltip" data-placement="bottom" :title="$t('header.instructions_tt')">{{ $t('header.instructions') }} </a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="#" v-on:click="loadTestData()" data-toggle="tooltip" data-placement="bottom" :title="$t('header.demo_tt')">{{ $t('header.demo') }} </a>
+                    <a class="nav-link" href="#" v-on:click="loadTestData()" data-toggle="tooltip" data-placement="bottom" id="demo-btn" :title="$t('header.demo_tt')">{{ $t('header.demo') }} </a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="#" v-on:click="download()" data-toggle="tooltip" data-placement="bottom" :title="$t('header.download_tt')">{{ $t('header.download') }} </a>
@@ -74,12 +74,29 @@ export default {
             introJS.setOption("prevLabel", this.$t('common.back'));
             introJS.setOption("skipLabel", this.$t('common.skip'));
             introJS.setOption("showStepNumbers", false);
-            // introJS.addSteps({
-            //     element: '#step1',
-            //     intro: "This is a tooltip."
-            // })
+            introJS.addSteps([
+                {
+                    step: 1,
+                    intro: this.$t('instructions.example') + '<div class="sankey_diagram"></div>' + this.$t('instructions.generate') + '<br>' + this.$t('instructions.demo')
+                }, {
+                    step: 2,
+                    element: document.getElementById('incomes-label'),
+                    intro: this.$t('incomes.instructions')
+                }, {
+                    step: 3,
+                    element: document.getElementById('expenses-label'),
+                    intro: this.$t('expenses.instructions')
+                }, {
+                    step: 4,
+                    element: document.getElementById('investments-label'),
+                    intro: this.$t('investments.instructions')
+                }, {
+                    step: 5,
+                    element: document.getElementById('navbarSupportedContent'),
+                    intro: this.$t('instructions.header')
+                }
+            ]);
             introJS.start();
-            introJS.showHints();
         },
         exportConfig: function () {
             if (!this.chartShowing) {

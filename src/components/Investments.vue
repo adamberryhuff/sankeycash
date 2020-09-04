@@ -4,7 +4,7 @@
         <!-- income streams title -->
         <div class="col-md-12">
             <h2>
-                <span v-intro="$t('investments.instructions')" v-intro-step="4">
+                <span id="investments-label">
                     {{ $t('common.investments') }}
                 </span>
             </h2>

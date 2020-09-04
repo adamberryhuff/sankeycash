@@ -264,7 +264,7 @@ export default {
     margin: 60px 0px 60px -30px;
 }
 
-.introjs-tooltiptext div {
+.sankey_diagram {
     background-image:url('./assets/sankey.png');
     width: 700px;
     background-size: contain;

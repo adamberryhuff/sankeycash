@@ -3,7 +3,7 @@
         <!-- title -->
         <div class="col-md-12">
             <h2>
-                <span v-intro="$t('expenses.instructions')" v-intro-step="3">
+                <span id="expenses-label">
                     {{ $t('common.expenses') }}
                 </span>
             </h2>

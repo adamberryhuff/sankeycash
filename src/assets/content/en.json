@@ -42,7 +42,10 @@
         "skip": "Skip"
     },
     "instructions": {
-        "header": "The chart will render in realtime at the top of the page.<br><br>In the nav you can render the demo chart, download a PNG of your chart, import a previously exported chart configuration, export the current chart configuration, or reset the chart data. You can also change your desired currency."
+        "example": "This is an example of a Sankey chart.",
+        "generate": "This chart will generate in realtime at the top of the page as you input data.",
+        "demo": "You can click the 'demo' button to generate this example chart.",
+        "header": "In the nav you can render the demo chart, download a PNG of your chart, import a previously exported chart configuration, export the current chart configuration, or reset the chart data. You can also change your desired currency."
     },
     "header": {
         "instructions": "Instructions",
