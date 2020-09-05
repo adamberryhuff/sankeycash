@@ -3,9 +3,9 @@
 
         <!-- yes/no button -->
         <span class="float-right">
-            <input type="radio" name="yes-deductions" :checked="deductions.length" v-on:click="addDeduction()" v-on:keyup="processKeyPress">
+            <input type="radio" name="yes-deductions" :checked="deductions.length" v-on:click="addDeduction()" v-on:keyup.enter="addDeduction()">
             &nbsp;{{ $t('common.yes') }}
-            <input type="radio" class="no-checkbox" :checked="!deductions.length" name="no-deductions" v-on:click="clearDeductions()" v-on:keyup="processKeyPress">
+            <input type="radio" class="no-checkbox" :checked="!deductions.length" name="yes-deductions" v-on:click="clearDeductions()" v-on:keyup.enter="clearDeductions()">
             &nbsp;{{ $t('common.no') }}
         </span>
 
@@ -27,27 +27,27 @@
                     <!-- label -->
                     <div class="col-md-6 exemptions">
                         <label class="exemption-label mobile-only">{{ $t('common.chart_label') }}</label>
-                        <input :placeholder="$t('common.label')" class="form-control" v-model="deduction.label" v-on:keyup="processKeyPress" />
+                        <input :placeholder="$t('common.label')" class="form-control" v-model="deduction.label" v-on:keyup.enter="$emit('addIncome')" :id="'deduction_' + idx" />
                     </div>
 
                     <!-- value -->
                     <div class="col-md-5 exemptions">
                         <label class="exemption-label mobile-only">{{ $t('common.deduction') }}</label>
                         <div class="input-group">
-                            <input :placeholder="$t('common.deduction')" type="number" class="form-control"  v-model="deduction.value" v-on:keyup="processKeyPress" />
+                            <input :placeholder="$t('common.deduction')" type="number" step="any" class="form-control"  v-model="deduction.value" v-on:keyup.enter="$emit('addIncome')" />
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-secondary" :class="{ active: deduction.value_mode == 'currency' }" v-on:click="deduction.value_mode = 'currency'">{{ mode }}</button>
+                                <button type="button" class="btn btn-sm btn-secondary" :class="{ active: deduction.value_mode == 'currency' }" v-on:click="deduction.value_mode = 'currency'" tabindex="-1">{{ mode }}</button>
                             </div>
                             <div class="input-group-append">
-                                <button type="button" :class="{ active: deduction.value_mode == 'percent' }" v-on:click="deduction.value_mode = 'percent'" class="btn btn-sm btn-secondary">%</button>
+                                <button type="button" :class="{ active: deduction.value_mode == 'percent' }" v-on:click="deduction.value_mode = 'percent'" tabindex="-1" class="btn btn-sm btn-secondary">%</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- remove -->
                     <div class="col-md-1 exemptions">
-                        <button type="button" class="btn btn-danger desktop-only" v-on:click="removeDeduction(idx)"><div><b>X</b></div></button>
-                        <button type="button" class="btn btn-danger mobile-only" v-on:click="removeDeduction(idx)">{{ $t('incomes.deduction_remove') }}</button>
+                        <button type="button" class="btn btn-danger desktop-only" v-on:click="removeDeduction(idx)" v-on:keyup.enter="removeDeduction(idx)"><div><b>X</b></div></button>
+                        <button type="button" class="btn btn-danger mobile-only" v-on:click="removeDeduction(idx)" v-on:keyup.enter="removeDeduction(idx)">{{ $t('incomes.deduction_remove') }}</button>
                     </div>
                     <div class="col-md-12 mobile-only" v-if="idx != deductions.length-1">
                         <hr>
@@ -59,7 +59,7 @@
         <!-- exemption examples and add button -->
         <small class="form-text text-muted">
             {{ $t('incomes.deduction_examples') }}
-            <button type="button" class="btn btn-link float-right add-exemption" v-if="deductions.length" v-on:click="addDeduction()" tabindex="0">
+            <button type="button" class="btn btn-link float-right add-exemption" v-if="deductions.length" v-on:click="addDeduction()" tabindex="0" v-on:keyup.enter="addDeduction()">
                 <i>{{ $t('common.add_another') }}</i>
             </button>
         </small>
@@ -81,9 +81,6 @@ export default {
         },
         clearDeductions: function () {
             this.$emit('clearDeductions');
-        },
-        processKeyPress: function (event) {
-            if (event.keyCode == 13) this.$emit('addIncome');
         },
     },
 }

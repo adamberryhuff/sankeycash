@@ -126,13 +126,13 @@
         "uneditable": "Edit tax-exempt contributions using the 'Incomes' interface at the top of the page."
     },
     "toasts": {
-        "income_update": "Income Stream Update",
+        "income_update": "Income Stream Updated",
         "income_added": "Income Stream Added",
         "income_removed": "Income Stream Removed",
-        "expense_update": "Expense Update",
+        "expense_update": "Expense Updated",
         "expense_added": "Expense Added",
         "expense_removed": "Expense Removed",
-        "investment_update": "Investment Update",
+        "investment_update": "Investment Updated",
         "investment_added": "Investment Added",
         "investment_removed": "Investment Removed",
         "config_imported": "Config Imported",

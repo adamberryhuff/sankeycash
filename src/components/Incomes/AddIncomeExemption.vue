@@ -3,9 +3,9 @@
 
         <!-- yes/no button -->
         <span class="float-right">
-            <input type="radio" name="yes-exemptions" :checked="exemptions.length" v-on:click="addExemption()" v-on:keyup="processKeyPress">
+            <input type="radio" name="no-exemptions" :checked="exemptions.length" v-on:click="addExemption()" v-on:keyup.enter="addExemption()">
             &nbsp;{{ $t('common.yes') }}
-            <input type="radio" class="no-checkbox" :checked="!exemptions.length" name="no-exemptions" v-on:click="clearExemptions()" v-on:keyup="processKeyPress">
+            <input type="radio" class="no-checkbox" :checked="!exemptions.length" name="no-exemptions" v-on:click="clearExemptions()" v-on:keyup.enter="clearExemptions()">
             &nbsp;{{ $t('common.no') }}
         </span>
 
@@ -29,19 +29,19 @@
                     <!-- chart label -->
                     <div class="col-md-3 exemptions">
                         <label class="exemption-label mobile-only">{{ $t('common.chart_label') }}</label>
-                        <input :placeholder="$t('common.label')" class="form-control" v-model="exemption.label" v-on:keyup="processKeyPress" />
+                        <input :placeholder="$t('common.label')" class="form-control" v-model="exemption.label" v-on:keyup.enter="$emit('addIncome')" :id="'exemption_' + idx" />
                     </div>
 
                     <!-- value -->
                     <div class="col-md-4 exemptions">
                         <label class="exemption-label mobile-only">{{ $t('common.contribution') }}</label>
                         <div class="input-group">
-                            <input :placeholder="$t('common.contribution')" type="number" class="form-control"  v-model="exemption.value" v-on:keyup="processKeyPress" />
+                            <input :placeholder="$t('common.contribution')" type="number" step="any" class="form-control"  v-model="exemption.value" v-on:keyup.enter="$emit('addIncome')" />
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-secondary" :class="{ active: exemption.value_mode == 'currency' }" v-on:click="exemption.value_mode = 'currency'">{{ mode }}</button>
+                                <button type="button" class="btn btn-sm btn-secondary" :class="{ active: exemption.value_mode == 'currency' }" v-on:click="exemption.value_mode = 'currency'" tabindex="-1">{{ mode }}</button>
                             </div>
                             <div class="input-group-append">
-                                <button type="button" :class="{ active: exemption.value_mode == 'percent' }" v-on:click="exemption.value_mode = 'percent'" class="btn btn-sm btn-secondary">%</button>
+                                <button type="button" :class="{ active: exemption.value_mode == 'percent' }" v-on:click="exemption.value_mode = 'percent'" class="btn btn-sm btn-secondary" tabindex="-1">%</button>
                             </div>
                         </div>
                     </div>
@@ -50,20 +50,20 @@
                     <div class="col-md-4 exemptions">
                         <label class="exemption-label mobile-only">{{ $t('common.match') }}</label>
                         <div class="input-group">
-                            <input :placeholder="$t('common.match_short')" type="number" class="form-control" v-model="exemption.match" v-on:keyup="processKeyPress" />
+                            <input :placeholder="$t('common.match_short')" type="number" step="any" class="form-control" v-model="exemption.match" v-on:keyup.enter="$emit('addIncome')" />
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-secondary" :class="{ active: exemption.match_mode == 'currency' }" v-on:click="exemption.match_mode = 'currency'">{{ mode }}</button>
+                                <button type="button" class="btn btn-sm btn-secondary" :class="{ active: exemption.match_mode == 'currency' }" v-on:click="exemption.match_mode = 'currency'" tabindex="-1">{{ mode }}</button>
                             </div>
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-secondary" :class="{ active: exemption.match_mode == 'percent' }" v-on:click="exemption.match_mode = 'percent'">%</button>
+                                <button type="button" class="btn btn-sm btn-secondary" :class="{ active: exemption.match_mode == 'percent' }" v-on:click="exemption.match_mode = 'percent'" tabindex="-1">%</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- remove -->
                     <div class="col-md-1 exemptions">
-                        <button type="button" class="btn btn-danger desktop-only" v-on:click="removeExemption(idx)"><div><b>X</b></div></button>
-                        <button type="button" class="btn btn-danger mobile-only" v-on:click="removeExemption(idx)">{{ $t('incomes.exemption_remove') }}</button>
+                        <button type="button" class="btn btn-danger desktop-only" v-on:click="removeExemption(idx)" v-on:keyup.enter="removeExemption(idx)"><div><b>X</b></div></button>
+                        <button type="button" class="btn btn-danger mobile-only" v-on:click="removeExemption(idx)" v-on:keyup.enter="removeExemption(idx)">{{ $t('incomes.exemption_remove') }}</button>
                     </div>
                     <div class="col-md-12 mobile-only" v-if="idx != exemptions.length-1">
                         <hr>
@@ -75,7 +75,7 @@
         <!-- exemption examples and add button -->
         <small class="form-text text-muted">
             {{ $t('incomes.exemption_examples') }}
-            <button type="button" class="btn btn-link float-right add-exemption" v-if="exemptions.length" v-on:click="addExemption()" tabindex="0">
+            <button type="button" class="btn btn-link float-right add-exemption" v-if="exemptions.length" v-on:click="addExemption()" tabindex="0" v-on:keyup.enter="addExemption()">
                 <i>{{ $t('common.add_another') }}</i>
             </button>
         </small>
@@ -97,9 +97,6 @@ export default {
         },
         clearExemptions: function () {
             this.$emit('clearExemptions');
-        },
-        processKeyPress: function (event) {
-            if (event.keyCode == 13) this.$emit('addIncome');
         },
     },
 }

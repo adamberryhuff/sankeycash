@@ -3,7 +3,7 @@
         <!-- income stream label -->
         <div class="form-group">
             <label>{{ $t('common.chart_label') }}</label>
-            <input id="new-income-focus" v-model="label" type="text" class="form-control" :placeholder="$t('common.label')" name="income-stream-label">
+            <input id="new-income-focus" v-model="label" type="text" class="form-control" :placeholder="$t('common.label')" name="income-stream-label" v-on:keyup.enter="addIncome()">
             <small class="form-text text-muted">
                 {{ $t('incomes.chart_label_examples') }}
             </small>
@@ -12,7 +12,7 @@
         <!-- income stream amount -->
         <div class="form-group">
             <label>{{ $t('common.gross_amount') }}</label>
-            <input type="number" class="form-control" min="1" v-model="value" :placeholder="$t('common.amount')" v-on:keyup="processKeyPress">
+            <input type="number" class="form-control" min="1" v-model="value" :placeholder="$t('common.amount')" v-on:keyup.enter="addIncome()">
             <small class="form-text text-muted">
                 {{ $t('incomes.gross_amount_examples', { mode: mode }) }}
             </small>
@@ -21,7 +21,7 @@
         <!-- income stream tax rate -->
         <div class="form-group">
             <label>{{ $t('common.tax_rate') }}</label>
-            <input type="number" class="form-control" step=".001" min="1" max="100" v-model="tax" :placeholder="$t('common.tax')" v-on:keyup="processKeyPress">
+            <input type="number" class="form-control" step=".001" min="1" max="100" v-model="tax" :placeholder="$t('common.tax')" v-on:keyup.enter="addIncome()">
             <small class="form-text text-muted">
                 {{ $t('incomes.tax_rate_examples') }}
             </small>
@@ -50,27 +50,27 @@
 
         <!-- desktop buttons: save, delete, cancel -->
         <div class="desktop-only-inline">
-            <button class="btn btn-primary float-right" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
-                {{ income ? $t('incomes.update') : $t('incomes.add') }}
-            </button>
-            <button v-if="income" class="btn btn-link" v-on:click.enter.prevent="cancelEditIncome">
+            <button v-if="income" class="btn btn-link" v-on:click="cancelEditIncome()" v-on:keyup.enter="cancelEditIncome()">
                 {{ $t('common.cancel') }}
             </button>
-            <button v-if="income" class="btn btn-link remove-expense" v-on:click.enter.prevent="deleteIncome">
+            <button v-if="income" class="btn btn-link remove-expense" v-on:click="deleteIncome()" v-on:keyup.enter="deleteIncome()">
                 {{ $t('common.delete') }}
+            </button>
+            <button class="btn btn-primary" v-on:click="addIncome()" v-on:keyup.enter="addIncome()">
+                {{ income ? $t('incomes.update') : $t('incomes.add') }}
             </button>
         </div>
 
         <!-- mobile buttons: save, delete, cancel -->
         <div class="mobile-only row">
             <br>
-            <button class="btn btn-primary col-sm-12" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addIncome">
+            <button class="btn btn-primary col-sm-12" v-on:keyup.enter="addIncome()" v-on:click="addIncome()">
                 {{ income ? $t('incomes.update') : $t('incomes.add') }}
             </button>
-            <button v-if="income" class="btn btn-outline-primary col-sm-12" v-on:click.enter.prevent="cancelEditIncome">
+            <button v-if="income" class="btn btn-outline-primary col-sm-12" v-on:click="cancelEditIncome()" v-on:keyup.enter="cancelEditIncome()">
                 {{ $t('common.cancel') }}
             </button>
-            <button v-if="income" class="btn btn-outline-danger col-sm-12" v-on:click.enter.prevent="deleteIncome">
+            <button v-if="income" class="btn btn-outline-danger col-sm-12" v-on:click="deleteIncome()" v-on:keyup.enter="deleteIncome()">
                 {{ $t('common.delete') }}
             </button>
         </div>
@@ -286,9 +286,6 @@ export default {
             this.deductions = [];
             document.getElementById('new-income-focus').focus();
         },
-        processKeyPress: function (event) {
-            if (event.keyCode == 13) this.addIncome();
-        }
     },
     watch: {
         // set local scope values if someone clicks edit income

@@ -3,7 +3,7 @@
         <!-- investment label -->
         <div class="form-group">
             <label>{{ $t('common.chart_label') }}</label>
-            <input id="new-investment-focus" v-model="label" type="text" class="form-control" :placeholder="$t('common.label')">
+            <input id="new-investment-focus" v-model="label" type="text" class="form-control" :placeholder="$t('common.label')" v-on:keyup.enter="addInvestment()">
             <small class="form-text text-muted">
                 {{ $t('investments.chart_label_examples') }}
             </small>
@@ -12,7 +12,7 @@
         <!-- investment amount -->
         <div class="form-group">
             <label>{{ $t('common.amount') }}</label>
-            <input id="new-investment" type="number" class="form-control" min="1" v-model="value" :placeholder="$t('common.amount')" v-on:keyup="processKeyPress">
+            <input id="new-investment" type="number" class="form-control" min="1" v-model="value" :placeholder="$t('common.amount')" v-on:keyup.enter="addInvestment()">
             <small class="form-text text-muted">
                 {{ $t('investments.amount_examples', {mode: mode}) }}
             </small>
@@ -20,27 +20,27 @@
 
         <!-- desktop buttons: save, delete, cancel -->
         <div class="desktop-only-inline">
-            <button class="btn btn-primary float-right" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addInvestment">
-                {{ submitText }}
-            </button>
-            <button v-if="investment" class="btn btn-link" v-on:click.enter.prevent="cancelEdit">
+            <button v-if="investment" class="btn btn-link" v-on:keyup.enter="cancelEdit()" v-on:click="cancelEdit">
                 {{ $t('common.cancel') }}
             </button>
-            <button v-if="investment" class="btn btn-link remove-expense" v-on:click.enter.prevent="deleteInvestment">
+            <button v-if="investment" class="btn btn-link remove-expense" v-on:keyup.enter="deleteInvestment()" v-on:click="deleteInvestment">
                 {{ $t('common.delete') }}
+            </button>
+            <button class="btn btn-primary" v-on:keyup.enter="addInvestment()" v-on:click="addInvestment">
+                {{ submitText }}
             </button>
         </div>
 
         <!-- mobile buttons: save, delete, cancel -->
         <div class="mobile-only row">
             <br>
-            <button class="btn btn-primary col-sm-12" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addInvestment">
+            <button class="btn btn-primary col-sm-12" v-on:keyup.enter="addInvestment()" v-on:click="addInvestment">
                 {{ submitText }}
             </button>
-            <button v-if="investment" class="btn btn-outline-primary col-sm-12" v-on:click.enter.prevent="cancelEdit">
+            <button v-if="investment" class="btn btn-outline-primary col-sm-12" v-on:keyup.enter="cancelEdit()" v-on:click="cancelEdit">
                 {{ $t('common.cancel') }}
             </button>
-            <button v-if="investment" class="btn btn-outline-danger col-sm-12" v-on:click.enter.prevent="deleteInvestment">
+            <button v-if="investment" class="btn btn-outline-danger col-sm-12" v-on:keyup.enter="deleteInvestment()" v-on:click="deleteInvestment">
                 {{ $t('common.delete') }}
             </button>
         </div>
@@ -109,9 +109,6 @@ export default {
         focusNewInvestment: function () {
             document.getElementById('new-investment-focus').focus();
         },
-        processKeyPress: function (event) {
-            if (event.keyCode == 13) this.addInvestment();
-        }
     },
     computed: {
         submitText: function () {

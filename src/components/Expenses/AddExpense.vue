@@ -3,7 +3,7 @@
         <!-- expense label -->
         <div class="form-group">
             <label>{{ $t('common.chart_label') }}</label>
-            <input id="new-expense-focus" v-model="label" type="text" class="form-control" :placeholder="$t('common.label')">
+            <input id="new-expense-focus" v-model="label" type="text" class="form-control" :placeholder="$t('common.label')" v-on:keyup.enter="addExpense()">
             <small class="form-text text-muted">
                 {{ $t('expenses.chart_label_examples') }}
             </small>
@@ -12,7 +12,7 @@
         <!-- income stream amount -->
         <div class="form-group">
             <label>{{ $t('common.amount') }}</label>
-            <input type="number" class="form-control" min="1" v-model="value" :placeholder="$t('common.amount')" v-on:keyup="processKeyPress">
+            <input type="number" class="form-control" min="1" v-model="value" :placeholder="$t('common.amount')" v-on:keyup.enter="addExpense()">
             <small class="form-text text-muted">
                 {{ $t('expenses.amount_examples', {mode: mode}) }}
             </small>
@@ -20,27 +20,27 @@
 
         <!-- desktop buttons: save, delete, cancel -->
         <div class="desktop-only-inline">
-            <button class="btn btn-primary float-right" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
-                {{ submitText }}
-            </button>
-            <button v-if="expense" class="btn btn-link" v-on:click.enter.prevent="cancelEdit">
+            <button v-if="expense" class="btn btn-link" v-on:click="cancelEdit" v-on:keyup.enter="cancelEdit()">
                 {{ $t('common.cancel') }}
             </button>
-            <button v-if="expense" class="btn btn-link remove-expense" v-on:click.enter.prevent="deleteExpense">
+            <button v-if="expense" class="btn btn-link remove-expense" v-on:keyup.enter="deleteExpense()" v-on:click="deleteExpense">
                 {{ $t('common.delete') }}
+            </button>
+            <button class="btn btn-primary" v-on:keyup.enter="addExpense()">
+                {{ submitText }}
             </button>
         </div>
 
         <!-- mobile buttons: save, delete, cancel -->
         <div class="mobile-only row">
             <br>
-            <button class="btn btn-primary col-sm-12" v-on:keyup="processKeyPress" v-on:click.enter.prevent="addExpense">
+            <button class="btn btn-primary col-sm-12" v-on:keyup.enter="addExpense()">
                 {{ submitText }}
             </button>
-            <button v-if="expense" class="btn btn-outline-primary col-sm-12" v-on:click.enter.prevent="cancelEdit">
+            <button v-if="expense" class="btn btn-outline-primary col-sm-12" v-on:click="cancelEdit" v-on:keyup.enter="cancelEdit()">
                 {{ $t('common.cancel') }}
             </button>
-            <button v-if="expense" class="btn btn-outline-danger col-sm-12" v-on:click.enter.prevent="deleteExpense">
+            <button v-if="expense" class="btn btn-outline-danger col-sm-12" v-on:keyup.enter="deleteExpense()" v-on:click="deleteExpense">
                 {{ $t('common.delete') }}
             </button>
         </div>
