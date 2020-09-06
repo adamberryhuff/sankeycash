@@ -26,6 +26,7 @@
         "deduction": "Abzug",
         "contribution": "Zuschuss",
         "taxable": "Steuerpflichtiges Einkommen",
+        "taxable_short": "Steuerpflichtiges",
         "match": "Employee Match",
         "match_short": "Match",
         "cancel": "Abbrechen",
@@ -39,7 +40,9 @@
         "remaining_budget": "Verbleibendes Budget:",
         "next": "Nächster",
         "back": "Zurück",
-        "skip": "Überspringen"
+        "skip": "Überspringen",
+        "details": "Einzelheiten",
+        "edit": "Bearbeiten"
     },
     "instructions": {
         "example": "Dies ist ein Beispiel für ein Sankey-Diagramm.",
@@ -89,12 +92,14 @@
         "exemption_match_error": "Der Freistellungsbetrag Match muss größer oder gleich 0 sein.",
         "exemption_remove": "Ausnahme entfernen",
         "exemption_examples": "Beispiele: 401k, HSA",
+        "tax_exempt_contributions": "Ausnahmen",
+        "tax_exempt_match": "Employee Match",
+        "pretax_deductions": "Abzüge",
         "deduction_confirmation": "Sind Sie sicher, dass Sie diesen Abzug entfernen möchten?",
         "deduction_value_error": "Der Abzugsbetrag muss größer oder gleich 0 sein.",
         "deduction_remove": "Abzüge entfernen",
         "deduction_examples": "Beispiele: Sozialversicherung, Krankenversicherung",
-        "no_incomes": "Sie haben noch keine Einkommensquellen hinzugefügt.",
-        "edit_instructions": "Klicken Sie auf eine Einkommensquelle um diese zu bearbeiten oder zu entfernen."
+        "no_incomes": "Sie haben noch keine Einkommensquellen hinzugefügt."
     },
     "expenses": {
         "instructions": "Im Abschnitt Ausgaben können Sie Ihre erwarteten Ausgaben wie Hypothekenzahlungen, Miete und andere Lebenshaltungskosten hinzufügen.",
@@ -107,8 +112,7 @@
         "delete_confirmation": "Sind Sie sicher, dass Sie diese Ausgaben streichen wollen?",
         "difference_error_edit": "Die Ausgabendifferenz muss geringer sein als Ihr verfügbares Budget von {budget}",
         "difference_error_add": "Die Ausgaben müssen geringer sein als Ihr verfügbares Budget von {budget}",
-        "no_expenses": "Sie haben noch keine Ausgaben hinzugefügt.",
-        "edit_instructions": "Klicken Sie auf eine Ausgabe um sie zu bearbeiten oder zu entfernen."
+        "no_expenses": "Sie haben noch keine Ausgaben hinzugefügt."
     },
     "investments": {
         "instructions": "Im Abschnitt Investments können Sie Ihre erwarteten Investitionsbeiträge hinzufügen. Die Beiträge vor Steuern, die Sie im Abschnitt Einkommensquellen eingegeben haben, werden hier automatisch angezeigt.",
@@ -122,7 +126,6 @@
         "difference_error_add": "Das Investment muss geringer sein als Ihr verfügbares Budget von {budget}",
         "delete_confirmation": "Are you sure you want to remove this investment?",
         "no_investments": "Sie haben noch keine Investments hinzugefügt.",
-        "edit_instructions": "Klicken Sie auf ein Investment um es zu bearbeiten oder zu entfernen.",
         "uneditable": "Bearbeiten Sie steuerbefreite Beiträge über die Schnittstelle 'Einkommen' oben auf der Seite."
     },
     "toasts": {

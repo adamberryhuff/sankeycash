@@ -17,8 +17,7 @@
                 :mode="mode"
                 :unallocatedSum="unallocatedSum"
                 @addIncome="addIncome"
-                @editIncome="editIncome"
-                @deleteIncome="deleteIncome" />
+                @editIncome="editIncome" />
         </div>
 
         <div class="col-sm-12 mobile-only">
@@ -33,13 +32,15 @@
                 :taxSum="taxSum"
                 :netSum="netSum"
                 :mode="mode"
-                @editIncome="editIncome" />
+                @editIncome="editIncome"
+                @deleteIncome="deleteIncome" />
         </div>
     </div>
 </template>
 
 <script>
 
+import util from '../util.js';
 import AddIncome from './Incomes/AddIncome.vue';
 import ViewIncomes from './Incomes/ViewIncomes.vue';
 
@@ -52,13 +53,25 @@ export default {
     },
     data () {
         return {
-            idx: false
+            idx: false,
+            util: util
         }
     },
     methods: {
-        deleteIncome: function () {
-            this.$emit('removeIncome', this.idx);
-            this.idx = false;
+        deleteIncome: function (idx) {
+            let income = this.incomesItemized[idx];
+            let net = util.getNet(income);
+            net = net - income.exemptions.reduce((a, e) => a + e.value + e.match, 0);
+            if (net > this.unallocatedSum) {
+                alert(this.$t('incomes.deletion_error', {
+                    required_total: util.formatMoney(net, this.mode),
+                    required_additional: util.formatMoney(net-this.unallocatedSum, this.mode)
+                }));
+                return;
+            }
+            if (confirm(this.$t('incomes.deletion_confirmation'))) {
+                this.$emit('removeIncome', idx);
+            }
         },
         editIncome: function (idx) {
             this.idx = idx;

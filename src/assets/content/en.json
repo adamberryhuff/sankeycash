@@ -26,6 +26,7 @@
         "deduction": "Deduction",
         "contribution": "Contribution",
         "taxable": "Taxable Income",
+        "taxable_short": "Taxable",
         "match": "Employee Match",
         "match_short": "Match",
         "cancel": "Cancel",
@@ -39,7 +40,9 @@
         "remaining_budget": "Remaining Budget:",
         "next": "Next",
         "back": "Back",
-        "skip": "Skip"
+        "skip": "Skip",
+        "details": "Details",
+        "edit": "Edit"
     },
     "instructions": {
         "example": "This is an example of a Sankey chart.",
@@ -89,12 +92,14 @@
         "exemption_match_error": "Exemption match amount must be greater or equal to 0.",
         "exemption_remove": "Remove Exemption",
         "exemption_examples": "Examples: 401k, HSA",
+        "tax_exempt_contributions": "Tax Exempt Contributions",
+        "tax_exempt_match": "Tax Exempt Contribution Match",
+        "pretax_deductions": "Pre-Tax Deducations",
         "deduction_confirmation": "Are you sure you want to remove this deduction?",
         "deduction_value_error": "Deduction amount must be greater or equal to 0.",
         "deduction_remove": "Remove Deduction",
         "deduction_examples": "Examples: Social Security, Medicare, Health Insurance",
-        "no_incomes": "You haven't added any income streams yet.",
-        "edit_instructions": "Click on an income stream to edit or remove it."
+        "no_incomes": "You haven't added any income streams yet."
     },
     "expenses": {
         "instructions": "In the Expenses section you can add your expected expenses such as mortgage payments, rent, and other living expenses.",
@@ -107,8 +112,7 @@
         "delete_confirmation": "Are you sure you want to remove this expense?",
         "difference_error_edit": "Expense difference must be less than your available budget of {budget}",
         "difference_error_add": "Expense must be less than your available budget of {budget}",
-        "no_expenses": "You haven't added any expenses yet.",
-        "edit_instructions": "Click on an expense to edit or remove it."
+        "no_expenses": "You haven't added any expenses yet."
     },
     "investments": {
         "instructions": "In the Investments section you can add your expected investment contribtions. The pre-tax contributions you entered in the Income Streams section will automatically show up here.",
@@ -122,7 +126,6 @@
         "difference_error_add": "Investment must be less than your available budget of {budget}",
         "delete_confirmation": "Are you sure you want to remove this investment?",
         "no_investments": "You haven't added any investments yet.",
-        "edit_instructions": "Click on an investment to edit or remove it.",
         "uneditable": "Edit tax-exempt contributions using the 'Incomes' interface at the top of the page."
     },
     "toasts": {

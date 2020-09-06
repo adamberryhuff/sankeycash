@@ -1,5 +1,6 @@
 <template>
     <div>
+        <ViewIncomeBreakdown ref="breakdown" :mode="mode" />
 
         <!-- income streams label -->
         <label>{{ $t('incomes.header') }}</label>
@@ -12,7 +13,7 @@
             <span class="badge badge-success net-income-badge clickable pad" data-toggle="tooltip" data-placement="top" :title="netTooltip">
                 {{ $t('common.net_short') }}<span class="desktop-only-inline">: {{ util.formatMoney(netSum, mode) }}</span>
                 &nbsp;
-                <span class="fa fa-question-circle"></span>
+                <span class="fa fa-question-circle" v-if="incomesItemized.length"></span>
             </span>
         </span>
 
@@ -22,29 +23,41 @@
             <li class="list-group-item d-flex justify-content-between align-items-center disabled" v-if="!incomesItemized.length">
                 {{ $t('incomes.no_incomes') }}
             </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="(income, idx) in incomesItemized" v-bind:key="income.label" v-on:click="editIncome(idx)">
+            <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="(income, idx) in incomesItemized" v-bind:key="income.label">
                 <div class="row no-gutters income-display">
-                    <div class="col-md-4">
-                        <span id="label">{{ income.label }}</span>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="badge badge-primary clickable" data-toggle="tooltip" data-placement="top" :title="getNetTooltip(income)" data-html="true">
-                            {{ getNetDisplay(income) }}
-                            <span class="fa fa-question-circle"></span>
+                    <div class="col-md-4 left-side">
+                        <span id="label">{{ income.label }}</span><br>
+                        <span class="view-edit-container">
+                            <button type="button" class="btn btn-link view-breakdown" v-on:click="editIncome(idx)">
+                                {{ $t('common.edit') }}
+                            </button>&nbsp;
+                            |
+                            <button type="button" class="btn btn-link view-breakdown" v-on:click="deleteIncome(idx)">
+                                {{ $t('common.delete') }}
+                            </button>&nbsp;
+                            |
+                            <button type="button" class="btn btn-link view-breakdown" v-on:click="showBreakdownModal(income)">
+                                {{ $t('common.details') }}
+                            </button>
                         </span>
-                        <span class="badge badge-primary">
+                    </div>
+                    <div class="col-md-8 badges">
+                        <span class="badge badge-secondary">
                             {{ getGrossDisplay(income) }}
+                        </span>
+                        <span class="badge badge-secondary clickable" data-toggle="tooltip" data-placement="top" data-html="true">
+                            {{ getNetDisplay(income) }}
                         </span><br>
-                        <span class="badge badge-secondary float-right">
+                        <span class="badge badge-light badge-exemption">
                             {{ getIncomeDisplay(income) }}
                         </span>
                         <span v-for="exemption in income.exemptions" v-bind:key="exemption.label">
-                            <span class="badge badge-secondary">
+                            <span class="badge badge-light badge-exemption">
                                 {{ getExemptionDisplay(exemption) }}
                             </span>&nbsp;
                         </span>
                         <span v-for="deduction in income.deductions" v-bind:key="deduction.label">
-                            <span class="badge badge-secondary">
+                            <span class="badge badge-light badge-deduction">
                                 {{ getDeductionDisplay(deduction) }}
                             </span>&nbsp;
                         </span>
@@ -52,22 +65,23 @@
                 </div>
             </li>
         </ul>
-        <small class="form-text text-muted">
-            {{ $t('incomes.edit_instructions') }}
-        </small>
     </div>
 </template>
 
 
 <script>
 import util from '../../util.js';
+import ViewIncomeBreakdown from './ViewIncomeBreakdown.vue';
 
 export default {
     name: 'ViewIncomes',
     props: ['incomesItemized', 'grossSum', 'taxSum', 'netSum', 'mode'],
+    components: {
+        ViewIncomeBreakdown
+    },
     data () {
         return {
-            util: util,
+            util: util
         }
     },
     methods: {
@@ -78,68 +92,8 @@ export default {
             let net = util.formatMoney(util.getNet(income), this.mode);
             return `${this.$t('common.net_short')}: ${net}`;
         },
-        getNetTooltip: function (income) {
-            var exemptions = util.formatMoney(util.getExemptions(income), this.mode);
-            var deductions = util.formatMoney(util.getDeductions(income), this.mode);
-            var match      = util.formatMoney(util.getMatch(income), this.mode);
-            var gross      = util.formatMoney(income.value, this.mode);
-            var tax        = util.formatMoney(util.getTax(income), this.mode);
-            var tax_rate   = util.formatTax(income.tax);
-            var taxable    = util.formatMoney(util.getTaxableIncome(income), this.mode);
-            let net        = util.formatMoney(util.getNet(income), this.mode);
-
-            var tip = '';
-            if (income.exemptions.length) {
-                tip += `${this.$t('common.exemptions')} (${exemptions}) = `;
-                income.exemptions.forEach(exemption => {
-                    tip += `${exemption.label} `;
-                    tip += `(${util.formatMoney(exemption.value, this.mode)}) + `;
-                });
-                tip = tip.substring(0, tip.length-2);
-                tip += `<br><br>${this.$t('common.match')} (${match}) = `
-                income.exemptions.forEach(exemption => {
-                    tip += `${exemption.label} `;
-                    tip += `(${util.formatMoney(exemption.match, this.mode)}) + `;
-                });
-                tip = tip.substring(0, tip.length-2);
-                tip += `<br><br>`;
-            }
-            if (income.deductions.length) {
-                tip += `${this.$t('common.deductions')} (${deductions}) = `;
-                income.deductions.forEach(deduction => {
-                    tip += `${deduction.label} `;
-                    tip += `(${util.formatMoney(deduction.value, this.mode)}) + `;
-                });
-                tip = tip.substring(0, tip.length-2);
-                tip += `<br><br>`;
-            }
-            if (income.exemptions.length || income.deductions.length) {
-                tip += `${this.$t('common.taxable')} (${taxable}) = `;
-                tip += `${this.$t('common.gross_short')} ${gross}`;
-                if (exemptions) tip += ` - ${this.$t('common.exemptions')} (${exemptions})`;
-                if (deductions) tip += ` - ${this.$t('common.deductions')} (${deductions})`;
-                tip += `<br><br>`;
-                tip += `${this.$t('common.tax')} (${tax}) = `;
-                tip += `${this.$t('common.taxable')} ${taxable} * `;
-                tip += `${this.$t('common.tax_rate')} (${tax_rate})`;
-                tip += `<br><br>`;
-            }
-
-            // net
-            if (!income.exemptions.length && !income.deductions.length) {
-                tip += `${this.$t('common.net_short')} (${net}) = `;
-                tip += `${this.$t('common.gross_short')} (${gross}) - `;
-                tip += `${this.$t('common.tax')} (${tax})`;
-                return tip;
-            }
-            tip += `${this.$t('common.net_short')} (${net}) = `;
-            tip += `${this.$t('common.taxable')} (${taxable}) - `;
-            tip += `${this.$t('common.tax')} (${tax})`;
-            if (income.exemptions.length) {
-                tip += ` + ${this.$t('common.exemptions')} (${exemptions}) + `;
-                tip += `${this.$t('common.match')} (${match})`;
-            }
-            return tip;
+        showBreakdownModal: function (income) {
+            this.$refs.breakdown.show(income);
         },
         getGrossDisplay: function (income) {
             let gross = util.formatMoney(income.value, this.mode);
@@ -155,22 +109,26 @@ export default {
         getIncomeDisplay: function (income) {
             let taxable = util.formatMoney(util.getTaxableIncome(income), this.mode);
             let tax     = util.formatTax(income.tax);
-            return `${income.label}: ${taxable} - ${tax}`;
+            return `${this.$t('common.taxable_short')}: ${taxable} (${tax})`;
         },
         getDeductionDisplay: function (deduction) {
             let value = util.formatMoney(deduction.value, this.mode);
             return `${deduction.label}: ${value}`;
+        },
+        deleteIncome: function (idx) {
+            this.$emit('deleteIncome', idx);
         }
     },
     computed: {
         netTooltip () {
-            var tip = `${this.$t('common.net_short')} `;
-            tip += `(${util.formatMoney(this.netSum, this.mode)}) = `;
-            tip += `${this.$t('common.gross_short')} `;
-            tip += `(${util.formatMoney(this.grossSum, this.mode)}) - `;
-            tip += `${this.$t('common.tax')} `;
-            tip += `(${util.formatMoney(this.taxSum, this.mode)})`;
-            return tip;
+            if (!this.incomesItemized.length) return '';
+            var tip = `${this.$t('common.net_short')} = `;
+            this.incomesItemized.forEach(income => {
+                tip += income.label + ' (';
+                tip += util.formatMoney(util.getNet(income), this.mode);
+                tip += ') + ';
+            })
+            return tip.substring(0, tip.length-2);
         }
     },
 }
@@ -183,7 +141,6 @@ export default {
     cursor:pointer
 }
 .badge {
-    float:right;
     margin:2px;
 }
 .income-display {
@@ -199,5 +156,38 @@ export default {
     }
 }
 
+.badge-deduction {
+    color: #ef6060;
+}
+
+.badge-exemption {
+    color: #6c757d;
+}
+
+.badges {
+    text-align:right;
+}
+
+.view-breakdown {
+    cursor: pointer;
+    text-decoration: none;
+    background-color: transparent;
+    padding: 0px;
+    border: 0px;
+    color: #007bff;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.view-edit-container {
+    font-size: 12px;
+    font-weight: 400;
+    position:absolute;
+    bottom:0px;
+}
+
+.left-side {
+    min-height:62px;
+}
 
 </style>

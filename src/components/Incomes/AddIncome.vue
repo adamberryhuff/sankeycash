@@ -48,20 +48,17 @@
             @removeDeduction="removeDeduction"
             @clearDeductions="clearDeductions" />
 
-        <!-- desktop buttons: save, delete, cancel -->
+        <!-- desktop buttons: save, cancel -->
         <div class="desktop-only-inline">
             <button v-if="income" class="btn btn-link" v-on:click="cancelEditIncome()" v-on:keyup.enter="cancelEditIncome()">
                 {{ $t('common.cancel') }}
-            </button>
-            <button v-if="income" class="btn btn-link remove-expense" v-on:click="deleteIncome()" v-on:keyup.enter="deleteIncome()">
-                {{ $t('common.delete') }}
             </button>
             <button class="btn btn-primary" v-on:click="addIncome()" v-on:keyup.enter="addIncome()">
                 {{ income ? $t('incomes.update') : $t('incomes.add') }}
             </button>
         </div>
 
-        <!-- mobile buttons: save, delete, cancel -->
+        <!-- mobile buttons: save, cancel -->
         <div class="mobile-only row">
             <br>
             <button class="btn btn-primary col-sm-12" v-on:keyup.enter="addIncome()" v-on:click="addIncome()">
@@ -69,9 +66,6 @@
             </button>
             <button v-if="income" class="btn btn-outline-primary col-sm-12" v-on:click="cancelEditIncome()" v-on:keyup.enter="cancelEditIncome()">
                 {{ $t('common.cancel') }}
-            </button>
-            <button v-if="income" class="btn btn-outline-danger col-sm-12" v-on:click="deleteIncome()" v-on:keyup.enter="deleteIncome()">
-                {{ $t('common.delete') }}
             </button>
         </div>
     </form>
@@ -171,20 +165,6 @@ export default {
         },
         cancelEditIncome: function () {
             this.$emit('editIncome', false);
-        },
-        deleteIncome: function () {
-            let net = util.getNet(this.income);
-            net = net - this.income.exemptions.reduce((a, e) => a + e.value + e.match, 0);
-            if (net > this.unallocatedSum) {
-                alert(this.$t('incomes.deletion_error', {
-                    required_total: util.formatMoney(net, this.mode),
-                    required_additional: util.formatMoney(net-this.unallocatedSum, this.mode)
-                }));
-                return;
-            }
-            if (confirm(this.$t('incomes.deletion_confirmation'))) {
-                this.$emit('deleteIncome');
-            }
         },
         /************************************************************
          * EXEMPTIONS

@@ -18,20 +18,17 @@
             </small>
         </div>
 
-        <!-- desktop buttons: save, delete, cancel -->
+        <!-- desktop buttons: save, cancel -->
         <div class="desktop-only-inline">
             <button v-if="investment" class="btn btn-link" v-on:keyup.enter="cancelEdit()" v-on:click="cancelEdit">
                 {{ $t('common.cancel') }}
-            </button>
-            <button v-if="investment" class="btn btn-link remove-expense" v-on:keyup.enter="deleteInvestment()" v-on:click="deleteInvestment">
-                {{ $t('common.delete') }}
             </button>
             <button class="btn btn-primary" v-on:keyup.enter="addInvestment()" v-on:click="addInvestment">
                 {{ submitText }}
             </button>
         </div>
 
-        <!-- mobile buttons: save, delete, cancel -->
+        <!-- mobile buttons: save, cancel -->
         <div class="mobile-only row">
             <br>
             <button class="btn btn-primary col-sm-12" v-on:keyup.enter="addInvestment()" v-on:click="addInvestment">
@@ -39,9 +36,6 @@
             </button>
             <button v-if="investment" class="btn btn-outline-primary col-sm-12" v-on:keyup.enter="cancelEdit()" v-on:click="cancelEdit">
                 {{ $t('common.cancel') }}
-            </button>
-            <button v-if="investment" class="btn btn-outline-danger col-sm-12" v-on:keyup.enter="deleteInvestment()" v-on:click="deleteInvestment">
-                {{ $t('common.delete') }}
             </button>
         </div>
     </form>
@@ -97,11 +91,6 @@ export default {
         },
         cancelEdit: function () {
             this.$emit('editInvestment', false);
-        },
-        deleteInvestment: function () {
-            if (confirm(this.$t('investments.delete_confirmation'))) {
-                this.$emit('removeInvestment');
-            }
         },
         populateInvestment: function () {
             this.value = this.unallocatedSum;

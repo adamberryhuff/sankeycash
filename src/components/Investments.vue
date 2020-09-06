@@ -24,7 +24,6 @@
                 :mode="mode"
                 :investment="investment"
                 @addInvestment="addInvestment"
-                @removeInvestment="removeInvestment"
                 @editInvestment="editInvestment" />
         </div>
         <div class="col-sm-12 mobile-only">
@@ -42,7 +41,8 @@
                 :investmentSum="investmentSum"
                 :mode="mode"
                 @populateInvestment="populateInvestment"
-                @editInvestment="editInvestment" />
+                @editInvestment="editInvestment"
+                @deleteInvestment="deleteInvestment" />
         </div>
     </div>
 </template>
@@ -71,9 +71,10 @@ export default {
         AddInvestment
     },
     methods: {
-        removeInvestment: function () {
-            this.$emit('removeInvestment', this.idx);
-            this.idx = false;
+        deleteInvestment: function (idx) {
+            if (confirm(this.$t('investments.delete_confirmation'))) {
+                this.$emit('removeInvestment', idx);
+            }
         },
         editInvestment: function (idx) {
             this.idx = idx;

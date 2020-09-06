@@ -18,20 +18,17 @@
             </small>
         </div>
 
-        <!-- desktop buttons: save, delete, cancel -->
+        <!-- desktop buttons: save, cancel -->
         <div class="desktop-only-inline">
             <button v-if="expense" class="btn btn-link" v-on:click="cancelEdit" v-on:keyup.enter="cancelEdit()">
                 {{ $t('common.cancel') }}
-            </button>
-            <button v-if="expense" class="btn btn-link remove-expense" v-on:keyup.enter="deleteExpense()" v-on:click="deleteExpense">
-                {{ $t('common.delete') }}
             </button>
             <button class="btn btn-primary" v-on:keyup.enter="addExpense()">
                 {{ submitText }}
             </button>
         </div>
 
-        <!-- mobile buttons: save, delete, cancel -->
+        <!-- mobile buttons: save, cancel -->
         <div class="mobile-only row">
             <br>
             <button class="btn btn-primary col-sm-12" v-on:keyup.enter="addExpense()">
@@ -39,9 +36,6 @@
             </button>
             <button v-if="expense" class="btn btn-outline-primary col-sm-12" v-on:click="cancelEdit" v-on:keyup.enter="cancelEdit()">
                 {{ $t('common.cancel') }}
-            </button>
-            <button v-if="expense" class="btn btn-outline-danger col-sm-12" v-on:keyup.enter="deleteExpense()" v-on:click="deleteExpense">
-                {{ $t('common.delete') }}
             </button>
         </div>
     </form>
@@ -97,11 +91,6 @@ export default {
         },
         cancelEdit: function () {
             this.$emit('editExpense', false);
-        },
-        deleteExpense: function () {
-            if (confirm(this.$t('expenses.delete_confirmation'))) {
-                this.$emit('deleteExpense');
-            }
         },
         focusNewExpense: function () {
             document.getElementById('new-expense-focus').focus();

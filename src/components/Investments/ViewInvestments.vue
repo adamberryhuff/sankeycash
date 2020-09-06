@@ -23,10 +23,19 @@
             </li>
 
             <!-- investments -->
-            <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="(investment, idx) in investmentsItemized" v-bind:key="idx" v-on:click="editInvestment(idx)">
+            <li class="list-group-item d-flex justify-content-between align-items-center" v-for="(investment, idx) in investmentsItemized" v-bind:key="idx">
                 <div class="row no-gutters income-display">
-                    <div class="col-md-4">
+                    <div class="col-md-4 left-side">
                         <span id="label">{{ investment.label }}</span>
+                        <span class="view-edit-container">
+                            <button type="button" class="btn btn-link view-breakdown" v-on:click="editInvestment(idx)">
+                                {{ $t('common.edit') }}
+                            </button>&nbsp;
+                            |
+                            <button type="button" class="btn btn-link view-breakdown" v-on:click="deleteInvestment(idx)">
+                                {{ $t('common.delete') }}
+                            </button>
+                        </span>
                     </div>
                     <div class="col-md-8">
                         <span class="badge badge-secondary">
@@ -38,10 +47,19 @@
 
             <!-- contribution investments -->
             <span v-for="income in incomesItemized" v-bind:key="income.label">
-                <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="exemption in income.exemptions" v-bind:key="exemption.label" v-on:click="uneditableInvestment()">
+                <li class="list-group-item d-flex justify-content-between align-items-center" v-for="exemption in income.exemptions" v-bind:key="exemption.label" v-on:click="uneditableInvestment()">
                     <div class="row no-gutters income-display">
-                        <div class="col-md-4">
+                        <div class="col-md-4 left-side">
                             <span id="label">{{ exemption.label }}</span>
+                            <span class="view-edit-container">
+                                <button type="button" class="btn btn-link view-breakdown">
+                                    {{ $t('common.edit') }}
+                                </button>&nbsp;
+                                |
+                                <button type="button" class="btn btn-link view-breakdown">
+                                    {{ $t('common.delete') }}
+                                </button>
+                            </span>
                         </div>
                         <div class="col-md-8">
                             <span class="badge badge-secondary" :title="getExemptionTooltip(exemption)">
@@ -53,9 +71,6 @@
                 </li>
             </span>
         </ul>
-        <small class="form-text text-muted">
-            {{ $t('investments.edit_instructions') }}
-        </small>
     </div>
 </template>
 
@@ -78,6 +93,9 @@ export default {
     methods: {
         editInvestment: function (idx) {
             this.$emit('editInvestment', idx);
+        },
+        deleteInvestment: function (idx) {
+            this.$emit('deleteInvestment', idx);
         },
         uneditableInvestment: function () {
             alert(this.$t('investments.uneditable'));
@@ -155,6 +173,29 @@ export default {
     .pad {
         margin-right: calc(0.25rem + 15px);
     }
+}
+
+.view-breakdown {
+    cursor: pointer;
+    text-decoration: none;
+    background-color: transparent;
+    padding: 0px;
+    border: 0px;
+    color: #007bff;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.view-edit-container {
+    font-size: 12px;
+    font-weight: 400;
+    position:absolute;
+    bottom:0px;
+    left: 0px;
+}
+
+.left-side {
+    min-height:62px;
 }
 
 </style>

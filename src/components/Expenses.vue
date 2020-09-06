@@ -20,7 +20,6 @@
                 :unallocatedSum="unallocatedSum"
                 :mode="mode"
                 :expense="expense"
-                @deleteExpense="deleteExpense"
                 @editExpense="editExpense"
                 @addExpense="addExpense" />
         </div>
@@ -35,6 +34,7 @@
                 :unallocatedSum="unallocatedSum"
                 :investmentSum="investmentSum"
                 :mode="mode"
+                @deleteExpense="deleteExpense"
                 @editExpense="editExpense" />
         </div>
     </div>
@@ -61,9 +61,11 @@ export default {
         }
     },
     methods: {
-        deleteExpense: function () {
-            this.$emit('removeExpense', this.idx);
-            this.idx = false;
+        deleteExpense: function (idx) {
+            if (confirm(this.$t('expenses.delete_confirmation'))) {
+                this.$emit('removeExpense', idx);
+                this.idx = false;
+            }
         },
         editExpense: function (idx) {
             this.idx = idx;
