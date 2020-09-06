@@ -137,7 +137,8 @@ export default {
                 this.drawExpensesBreakdown();
                 this.drawInvestmentBreakdown();
 
-                var canvas = document.getElementById('sankey');
+                var canvas = document.getElementById('sankey-test');
+                if (!canvas) canvas = document.getElementById('sankey');
                 var chart = new google.visualization.Sankey(canvas);
                 chart.draw(this.chart, this.getChartStyling());
                 if (download) this.downloadChart();

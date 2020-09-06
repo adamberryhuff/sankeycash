@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a v-on:click="resetConfig()" class="navbar-brand" href="#"><span class="fa fa-money"></span> {{ $t('product') }}</a>
+        <a v-on:click="resetConfig()" class="navbar-brand" id="logo-main" href="#"><span class="fa fa-money"></span> {{ $t('product') }}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -77,7 +77,8 @@ export default {
             introJS.addSteps([
                 {
                     step: 1,
-                    intro: this.$t('instructions.example') + '<div class="sankey_diagram"></div>' + this.$t('instructions.generate') + '<br>' + this.$t('instructions.demo')
+                    element: document.getElementById('logo-main'),
+                    intro: this.$t('instructions.example') + '<div id="sankey-test"></div>' + this.$t('instructions.generate') + '<br>' + this.$t('instructions.demo')
                 }, {
                     step: 2,
                     element: document.getElementById('incomes-label'),
@@ -96,7 +97,22 @@ export default {
                     intro: this.$t('instructions.header')
                 }
             ]);
+            var reset = this.chartShowing ? false : true;
+            introJS.oncomplete(() => {
+                if (reset) this.reset();
+            });
+
             introJS.start();
+            let skip_btn = document.getElementsByClassName('introjs-skipbutton')[0];
+            let overlay = document.getElementsByClassName('introjs-overlay')[0];
+            skip_btn.addEventListener('click', () => {
+                if (reset) this.reset();
+            });
+            overlay.addEventListener('click', () => {
+                if (reset) this.reset();
+            });
+            if (!this.chartShowing) this.load();
+            this.$emit('forceRender');
         },
         exportConfig: function () {
             if (!this.chartShowing) {
@@ -158,19 +174,26 @@ export default {
             fresh = fresh && !this.itemizedExpenses.length;
             fresh = fresh && !this.itemizedIncomes.length;
             if (fresh || confirm(this.$t('header.reset_confirmation'))) {
-                this.$emit('setItemizedInvestments', []);
-                this.$emit('setItemizedExpenses', []);
-                this.$emit('setItemizedIncomes', []);
+                this.reset();
                 this.$emit('alert', this.$t('toasts.data_reset'));
             }
         },
+        reset: function () {
+            this.$emit('setItemizedInvestments', []);
+            this.$emit('setItemizedExpenses', []);
+            this.$emit('setItemizedIncomes', []);
+            window.scrollTo(0,0);
+        },
         loadTestData: function () {
             if (!this.chartShowing || confirm(this.$t('header.demo_confirmation'))) {
-                this.$emit('setItemizedInvestments', test.investments);
-                this.$emit('setItemizedExpenses', test.expenses);
-                this.$emit('setItemizedIncomes', test.income);
+                this.load();
                 this.$emit('alert', 'Demo Data Loaded');
             }
+        },
+        load: function () {
+            this.$emit('setItemizedInvestments', test.investments);
+            this.$emit('setItemizedExpenses', test.expenses);
+            this.$emit('setItemizedIncomes', test.income);
         },
         setLanguage: function (key) {
             this.$i18n.locale = key;

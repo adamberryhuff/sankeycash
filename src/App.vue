@@ -12,7 +12,8 @@
             @setItemizedIncomes="setItemizedIncomes"
             @download="download"
             @alert="alert"
-            @setMode="setMode" />
+            @setMode="setMode"
+            @forceRender="forceRender" />
         <Chart
             ref="chart"
             :chartShowing="chartShowing"
@@ -183,6 +184,9 @@ export default {
         },
         setMode: function (mode) {
             this.mode = mode;
+        },
+        forceRender: function () {
+            this.$refs.chart.render();
         }
     },
     computed: {
@@ -264,14 +268,6 @@ export default {
     margin: 60px 0px 60px -30px;
 }
 
-.sankey_diagram {
-    background-image:url('./assets/sankey.png');
-    width: 700px;
-    background-size: contain;
-    min-height: 180px;
-    background-repeat: no-repeat;
-}
-
 .introjs-tooltip {
     max-width:800px !important;
 }
@@ -295,6 +291,10 @@ export default {
 
 .desktop-only-inline {
     display: none;
+}
+
+#sankey-test {
+    min-width:800px;
 }
 
 @media only screen and (min-width: 540px) {
