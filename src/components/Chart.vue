@@ -54,7 +54,9 @@ export default {
             colors: 'gradient',
             atTop: true,
             percent: false,
-            canvas: 'small'
+            canvas: 'small',
+            coded: [],
+            nodes: []
         }
     },
     mounted () {
@@ -129,6 +131,8 @@ export default {
                 this.chart.addColumn('string', 'From');
                 this.chart.addColumn('string', 'To');
                 this.chart.addColumn('number', 'Amount');
+                this.coded             = [];
+                this.nodes             = [];
                 this.drawIncomeBreakdown();
                 this.drawExpensesBreakdown();
                 this.drawInvestmentBreakdown();
@@ -154,14 +158,14 @@ export default {
             this.itemizedIncomes.forEach(stream => {
                 stream = JSON.parse(JSON.stringify(stream));
                 stream.value = this.formatValue(stream.value);
-                this.addChartRow(stream, this.gross);
+                this.addChartRow(stream, this.gross, '#1f78b4', '#a6cee3');
                 stream.exemptions.forEach(exemption => {
                     exemption = JSON.parse(JSON.stringify(exemption));
                     if (exemption.match > 0) {
                         exemption.match = this.formatValue(exemption.match);
                         this.addChartRow({
                             label: exemption.label+' Match', value: exemption.match
-                        }, this.gross);
+                        }, this.gross, '#1f78b4', '#a6cee3');
                     }
                 });
             })
@@ -170,21 +174,21 @@ export default {
         // draw line: taxes -> taxes
         // draw line: taxes -> taxes
         drawTaxes: function () {
-            this.addChartRow(this.gross, this.tax);
-            this.addChartRow(this.tax, this.tax);
-            this.addChartRow(this.tax, this.tax);
+            this.addChartRow(this.gross, this.tax, '#a6cee3', '#fb9a99');
+            this.addChartRow(this.tax, this.tax, '#fb9a99', '#fb9a99');
+            this.addChartRow(this.tax, this.tax, '#fb9a99', 'red');
         },
         // draw line: gross      -> deductions
         // draw line: deductions -> deductions
         // draw line: deductions -> deductions
         drawDeductions: function () {
-            this.addChartRow(this.gross, this.deductions);
-            this.addChartRow(this.deductions, this.deductions);
-            this.addChartRow(this.deductions, this.deductions);
+            this.addChartRow(this.gross, this.deductions, '#a6cee3', '#fb9a99');
+            this.addChartRow(this.deductions, this.deductions, '#fb9a99', '#fb9a99');
+            this.addChartRow(this.deductions, this.deductions, '#fb9a99', 'red');
         },
         // draw line: gross -> net
         drawNetIncome: function () {
-            this.addChartRow(this.gross, this.net);
+            this.addChartRow(this.gross, this.net, '#a6cee3', '#a6cee3');
         },
         /**************************************************************
          * Expenses
@@ -193,8 +197,8 @@ export default {
             this.itemizedExpenses.forEach(expense => {
                 expense = JSON.parse(JSON.stringify(expense));
                 expense.value = this.formatValue(expense.value);
-                this.addChartRow(this.net, expense);
-                this.addChartRow(expense, this.expenses);
+                this.addChartRow(this.net, expense, '#a6cee3', '#fb9a99');
+                this.addChartRow(expense, this.expenses, '#fb9a99', 'red');
             })
         },
         /**************************************************************
@@ -205,26 +209,26 @@ export default {
             this.itemizedInvestments.forEach(investment => {
                 investment = JSON.parse(JSON.stringify(investment));
                 investment.value = this.formatValue(investment.value);
-                this.addChartRow(this.net, investment);
-                this.addChartRow(investment, this.investments);
+                this.addChartRow(this.net, investment, '#a6cee3', '#b2df8a');
+                this.addChartRow(investment, this.investments, '#b2df8a', '#33a02c');
             })
-            this.addChartRow(this.net, this.unallocated);
-            this.addChartRow(this.unallocated, this.unallocated);
+            this.addChartRow(this.net, this.unallocated, '#a6cee3', 'gray');
+            this.addChartRow(this.unallocated, this.unallocated, 'gray', 'black');
         },
         drawExemptions: function () {
             this.itemizedIncomes.forEach(stream => {
                 stream.exemptions.forEach(exemption => {
                     exemption = JSON.parse(JSON.stringify(exemption));
                     exemption.value = this.formatValue(exemption.value + exemption.match);
-                    this.addChartRow(this.net, exemption);
-                    this.addChartRow(exemption, this.investments);
+                    this.addChartRow(this.net, exemption, '#a6cee3', '#b2df8a');
+                    this.addChartRow(exemption, this.investments, '#b2df8a', '#33a02c');
                 });
             })
         },
         /**************************************************************
          * Chart Stuff
          **************************************************************/
-        addChartRow: function (from, to) {
+        addChartRow: function (from, to, from_color, to_color) {
             let mode = this.percent ? '%' : this.mode;
             if (from.value == 0 || to.value == 0) return;
             var append = to.label == from.label ? ' ' : '';
@@ -235,6 +239,10 @@ export default {
             let to_label   = to.label + append + ' (';
             to_label += util.formatMoney(to.value, mode);
             to_label += ')';
+            if (!this.nodes.includes(from_label)) this.coded.push(from_color);
+            if (!this.nodes.includes(to_label)) this.coded.push(to_color);
+            this.nodes.push(from_label);
+            this.nodes.push(to_label);
             this.chart.addRow([from_label, to_label, value]);
             to.label += append;
         },
@@ -258,19 +266,19 @@ export default {
             this.render();
         },
         getChartStyling: function () {
-            var colors = [
-                '#a6cee3', '#b2df8a', '#fb9a99', '#fdbf6f',
-                '#cab2d6', '#ffff99', '#1f78b4', '#33a02c'
-            ];
+            // var colors = [
+            //     '#a6cee3', '#b2df8a', '#fb9a99', '#fdbf6f',
+            //     '#cab2d6', '#ffff99', '#1f78b4', '#33a02c'
+            // ];
             return {
                 sankey: {
                     node: {
-                        colors: colors,
+                        colors: this.coded,
                         nodePadding: 7
                     },
                     link: {
                         colorMode: this.colors,
-                        colors: colors
+                        colors: this.coded
                     },
                     iterations: 0,
                 },
