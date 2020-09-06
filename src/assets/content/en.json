@@ -1,10 +1,5 @@
 {
-    "languages": {
-        "en": "English",
-        "de": "German"
-    },
     "currency": "$",
-    "location": "../assets/content/en.json",
     "add": "To request new language support translate the downloaded file and email it to adamberryhuff@gmail.com",
     "product": "SankeyCash",
     "common": {

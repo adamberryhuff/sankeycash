@@ -27,23 +27,22 @@
                 </li>
                 <li class="nav-item active" id="uploader"></li>
             </ul>
+            <div class="btn-group percent-buttons" style="margin-right:10px;" role="group" aria-label="Basic example">
+                <button type="button" v-on:click="toggleMode('$')" class="btn btn-secondary" :class="{ active: mode == '$' }">$</button>
+                <button type="button" v-on:click="toggleMode('£')" class="btn btn-secondary" :class="{ active: mode == '£' }">£</button>
+                <button type="button" v-on:click="toggleMode('€')" class="btn btn-secondary" :class="{ active: mode == '€' }">€</button>
+            </div>
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle languages" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="fa fa-globe"></span>
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#" v-for="(language, key) in $t('languages')" v-bind:key="key" v-on:click="setLanguage(key)">
-                        {{ language }}
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#" v-for="(language, idx) in languages" v-bind:key="idx" v-on:click="setLanguage(language.key)">
+                        {{ language.label }}<span class="float-right" style="color: rgba(108, 117, 125, 0.39); font-weight:bold;">{{ language.currency }}</span>
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#" v-on:click="addLanguage()" download>Add Language</a>
-
                 </div>
-            </div>
-            <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
-                <button type="button" v-on:click="toggleMode('$')" class="btn btn-secondary" :class="{ active: mode == '$' }">$</button>
-                <button type="button" v-on:click="toggleMode('£')" class="btn btn-secondary" :class="{ active: mode == '£' }">£</button>
-                <button type="button" v-on:click="toggleMode('€')" class="btn btn-secondary" :class="{ active: mode == '€' }">€</button>
             </div>
         </div>
     </nav>
@@ -57,6 +56,22 @@ export default {
     props: [
         'chartShowing', 'itemizedIncomes', 'itemizedExpenses', 'itemizedInvestments', 'mode'
     ],
+    data () {
+        return {
+            languages: [
+                {
+                    key: 'en',
+                    label: 'English',
+                    currency: '$'
+                },
+                {
+                    key: 'de',
+                    label: 'German',
+                    currency: '€'
+                }
+            ]
+        }
+    },
     methods: {
         toggleMode: function (mode) {
             this.$emit('setMode', mode);
