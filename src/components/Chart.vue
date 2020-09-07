@@ -217,8 +217,8 @@ export default {
                 this.addChartRow(this.net, investment, '#a6cee3', '#b2df8a');
                 this.addChartRow(investment, this.investments, '#b2df8a', '#33a02c');
             })
-            this.addChartRow(this.net, this.unallocated, '#a6cee3', 'gray');
-            this.addChartRow(this.unallocated, this.unallocated, 'gray', 'black');
+            this.addChartRow(this.net, this.unallocated, '#a6cee3', '#ffe5c3');
+            this.addChartRow(this.unallocated, this.unallocated, '#ffe5c3', '#fdbf6f');
         },
         drawExemptions: function () {
             this.itemizedIncomes.forEach(stream => {
@@ -271,6 +271,7 @@ export default {
             this.render();
         },
         getChartStyling: function () {
+            // light yellow - #fdbf6f, #ffff99
             // var colors = [
             //     '#a6cee3', '#b2df8a', '#fb9a99', '#fdbf6f',
             //     '#cab2d6', '#ffff99', '#1f78b4', '#33a02c'
