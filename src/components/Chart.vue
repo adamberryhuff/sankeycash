@@ -6,10 +6,6 @@
         <div style="position: relative;">
             <span class="float-right switch">
                 <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
-                    <button type="button" v-on:click="setTimeline('annual')" class="btn btn-secondary" :class="{ active: timeline == 'annual' }">Annual</button>
-                    <button type="button" v-on:click="setTimeline('monthly')" class="btn btn-secondary" :class="{ active: timeline == 'monthly' }">Monthly</button>
-                </div>
-                <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
                     <button type="button" v-on:click="toggleCanvas('small')" class="btn btn-secondary canvas-small" :class="{ active: canvas == 'small' }"><span class="fa fa-square"></span></button>
                     <button type="button" v-on:click="toggleCanvas('medium')" class="btn btn-secondary canvas-medium" :class="{ active: canvas == 'medium' }"><span class="fa fa-square"></span></button>
                     <button type="button" v-on:click="toggleCanvas('large')" class="btn btn-secondary canvas-large" :class="{ active: canvas == 'large' }"><span class="fa fa-square"></span></button>
@@ -37,7 +33,7 @@ import html2canvas from 'html2canvas';
 export default {
     name: 'Chart',
     props: [
-        'chartShowing', 'mode',
+        'chartShowing', 'mode', 'percent', 'canvas',
         'itemizedIncomes', 'itemizedExpenses', 'itemizedInvestments',
         'grossSum', 'netSum', 'taxSum', 'unallocatedSum', 'investmentSum', 'expenseSum',
         'deductionSum'
@@ -57,11 +53,8 @@ export default {
             chart: false,
             colors: 'gradient',
             atTop: true,
-            percent: false,
-            canvas: 'small',
             coded: [],
             nodes: [],
-            timeline: 'annual'
         }
     },
     mounted () {
@@ -106,6 +99,12 @@ export default {
             this.render();
         },
         itemizedInvestments: function () {
+            this.render();
+        },
+        percent: function () {
+            this.render();
+        },
+        canvas: function () {
             this.render();
         }
     },
@@ -297,20 +296,13 @@ export default {
             this.render();
         },
         formatValue: function (num) {
-            var sum = this.grossSum;
-            if (this.timeline == 'monthly') {
-                num = Math.floor(num / 12);
-                sum = Math.floor(sum / 12);
-            }
-            return this.percent ? Math.round(num/sum*100*10)/10 : num;
+            return this.percent ? Math.round(num/this.grossSum*100*10)/10 : num;
         },
         togglePercent: function (percent) {
-            this.percent = percent;
-            this.render();
+            this.$emit('setPercent', percent);
         },
         toggleCanvas: function (size) {
-            this.canvas = size;
-            this.render();
+            this.$emit('setCanvas', size);
         },
         setChartLabels: function () {
             this.gross = {
@@ -342,10 +334,6 @@ export default {
                 value: this.formatValue(this.investmentSum)
             };
         },
-        setTimeline: function (timeline) {
-            this.timeline = timeline;
-            this.render();
-        }
     }
 }
 </script>

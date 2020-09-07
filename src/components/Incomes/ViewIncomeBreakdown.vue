@@ -5,7 +5,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" style="width:100%" v-if="income">
                         {{ income.label }} - Net Breakdown
-                        <span class="float-right">
+                        <span class="gross-net-header">
                             <span class="badge badge-primary">
                                 {{ $t('common.gross_short') }}: {{ gross }}
                             </span>&nbsp;
@@ -27,6 +27,7 @@
                             </h6>
                             <span class="equation" v-html="exemptionsBreakdown"></span>
                         </div>
+                        <div class="col-sm-12 mobile-only"><br></div>
                         <div class="col-md-6 col-sm-12">
                             <h6>
                                 {{ $t('incomes.tax_exempt_match') }}
@@ -233,6 +234,12 @@ export default {
 
 h6 {
     margin-bottom: 0px;
+}
+
+@media only screen and (min-width: 540px) {
+    .gross-net-header {
+        float:right;
+    }
 }
 
 </style>

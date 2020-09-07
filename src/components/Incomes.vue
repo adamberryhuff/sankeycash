@@ -7,7 +7,7 @@
                     {{ $t('incomes.header') }}
                 </span>
             </h2>
-            <p>{{ $t('incomes.title') }}</p>
+            <p>{{ title }}</p>
         </div>
 
         <!-- add income stream -->
@@ -15,6 +15,7 @@
             <AddIncome
                 :income="income"
                 :mode="mode"
+                :timeline="timeline"
                 :unallocatedSum="unallocatedSum"
                 @addIncome="addIncome"
                 @editIncome="editIncome" />
@@ -46,7 +47,10 @@ import ViewIncomes from './Incomes/ViewIncomes.vue';
 
 export default {
     name: 'Incomes',
-    props: ['incomesItemized', 'unallocatedSum', 'grossSum', 'netSum', 'taxSum', 'mode'],
+    props: [
+        'incomesItemized', 'unallocatedSum', 'grossSum', 'netSum', 'taxSum',
+        'mode', 'timeline'
+    ],
     components: {
         AddIncome,
         ViewIncomes
@@ -86,6 +90,10 @@ export default {
         income: function () {
             let income = this.incomesItemized[this.idx];
             return income ? JSON.parse(JSON.stringify(income)) : income;
+        },
+        title: function () {
+            var timeline = this.timeline == 'annual' ? 'common.annual' : 'common.monthly';
+            return this.$t('incomes.title', { timeline: this.$t(timeline) })
         }
     }
 }

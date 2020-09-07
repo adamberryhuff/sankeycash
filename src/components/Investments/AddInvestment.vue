@@ -14,16 +14,16 @@
             <label>{{ $t('common.amount') }}</label>
             <input id="new-investment" type="number" class="form-control" min="1" v-model="value" :placeholder="$t('common.amount')" v-on:keyup.enter="addInvestment()">
             <small class="form-text text-muted">
-                {{ $t('investments.amount_examples', {mode: mode}) }}
+                {{ amountExamples }}
             </small>
         </div>
 
         <!-- desktop buttons: save, cancel -->
         <div class="desktop-only-inline">
-            <button v-if="investment" class="btn btn-link" v-on:keyup.enter="cancelEdit()" v-on:click="cancelEdit">
+            <button v-if="investment" class="btn btn-link" v-on:keyup.enter="cancelEdit()" v-on:click.enter.prevent="cancelEdit">
                 {{ $t('common.cancel') }}
             </button>
-            <button class="btn btn-primary" v-on:keyup.enter="addInvestment()" v-on:click="addInvestment">
+            <button class="btn btn-primary" v-on:keyup.enter="addInvestment()" v-on:click.enter.prevent="addInvestment">
                 {{ submitText }}
             </button>
         </div>
@@ -31,10 +31,10 @@
         <!-- mobile buttons: save, cancel -->
         <div class="mobile-only row">
             <br>
-            <button class="btn btn-primary col-sm-12" v-on:keyup.enter="addInvestment()" v-on:click="addInvestment">
+            <button class="btn btn-primary col-sm-12" v-on:keyup.enter="addInvestment()" v-on:click.enter.prevent="addInvestment">
                 {{ submitText }}
             </button>
-            <button v-if="investment" class="btn btn-outline-primary col-sm-12" v-on:keyup.enter="cancelEdit()" v-on:click="cancelEdit">
+            <button v-if="investment" class="btn btn-outline-primary col-sm-12" v-on:keyup.enter="cancelEdit()" v-on:click.enter.prevent="cancelEdit">
                 {{ $t('common.cancel') }}
             </button>
         </div>
@@ -47,7 +47,7 @@ import util from '../../util.js';
 
 export default {
     name: 'AddInvestment',
-    props: ['unallocatedSum', 'mode', 'investment'],
+    props: ['unallocatedSum', 'mode', 'investment', 'timeline'],
     data () {
         return {
             // new investment
@@ -102,6 +102,13 @@ export default {
     computed: {
         submitText: function () {
             return this.investment ? this.$t('investments.update') : this.$t('investments.add');
+        },
+        amountExamples: function () {
+            var timeline = this.timeline == 'annual' ? 'common.annual' : 'common.monthly';
+            return this.$t('investments.amount_examples', {
+                mode: this.mode ,
+                timeline: this.$t(timeline)
+            });
         }
     },
     watch: {

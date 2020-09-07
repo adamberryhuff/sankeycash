@@ -14,7 +14,7 @@
             <label>{{ $t('common.gross_amount') }}</label>
             <input type="number" class="form-control" min="1" v-model="value" :placeholder="$t('common.amount')" v-on:keyup.enter="addIncome()">
             <small class="form-text text-muted">
-                {{ $t('incomes.gross_amount_examples', { mode: mode }) }}
+                {{ grossExample }}
             </small>
         </div>
 
@@ -50,10 +50,10 @@
 
         <!-- desktop buttons: save, cancel -->
         <div class="desktop-only-inline">
-            <button v-if="income" class="btn btn-link" v-on:click="cancelEditIncome()" v-on:keyup.enter="cancelEditIncome()">
+            <button v-if="income" class="btn btn-link" v-on:click.enter.prevent="cancelEditIncome()" v-on:keyup.enter="cancelEditIncome()">
                 {{ $t('common.cancel') }}
             </button>
-            <button class="btn btn-primary" v-on:click="addIncome()" v-on:keyup.enter="addIncome()">
+            <button class="btn btn-primary" v-on:click.enter.prevent="addIncome()" v-on:keyup.enter="addIncome()">
                 {{ income ? $t('incomes.update') : $t('incomes.add') }}
             </button>
         </div>
@@ -61,10 +61,10 @@
         <!-- mobile buttons: save, cancel -->
         <div class="mobile-only row">
             <br>
-            <button class="btn btn-primary col-sm-12" v-on:keyup.enter="addIncome()" v-on:click="addIncome()">
+            <button class="btn btn-primary col-sm-12" v-on:keyup.enter="addIncome()" v-on:click.enter.prevent="addIncome()">
                 {{ income ? $t('incomes.update') : $t('incomes.add') }}
             </button>
-            <button v-if="income" class="btn btn-outline-primary col-sm-12" v-on:click="cancelEditIncome()" v-on:keyup.enter="cancelEditIncome()">
+            <button v-if="income" class="btn btn-outline-primary col-sm-12" v-on:click.enter.prevent="cancelEditIncome()" v-on:keyup.enter="cancelEditIncome()">
                 {{ $t('common.cancel') }}
             </button>
         </div>
@@ -80,7 +80,7 @@ import util from '../../util.js';
 
 export default {
     name: 'AddIncome',
-    props: ['income', 'mode', 'unallocatedSum'],
+    props: ['income', 'mode', 'unallocatedSum', 'timeline'],
     components: {
         AddIncomeExemption,
         AddIncomeDeduction
@@ -99,6 +99,15 @@ export default {
     },
     mounted () {
         this.initNewIncome();
+    },
+    computed: {
+        grossExample: function () {
+            var timeline = this.timeline == 'annual' ? 'common.annual' : 'common.monthly';
+            return this.$t('incomes.gross_amount_examples', {
+                mode: this.mode ,
+                timeline: this.$t(timeline)
+            });
+        }
     },
     methods: {
         addIncome: function (e) {

@@ -37,7 +37,9 @@
         "back": "Zurück",
         "skip": "Überspringen",
         "details": "Einzelheiten",
-        "edit": "Bearbeiten"
+        "edit": "Bearbeiten",
+        "annual": "jährlich",
+        "monthly": "monatlich"
     },
     "instructions": {
         "example": "Dies ist ein Beispiel für ein Sankey-Diagramm.",

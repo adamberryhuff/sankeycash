@@ -8,7 +8,7 @@
                 </span>
             </h2>
             <p>
-                {{ $t('expenses.title') }} {{ $t('common.remaining_budget') }}
+                {{ title }} {{ $t('common.remaining_budget') }}
                 <span class="budget-inline">
                     {{ util.formatMoney(unallocatedSum, mode) }}
                 </span>
@@ -20,6 +20,7 @@
                 :unallocatedSum="unallocatedSum"
                 :mode="mode"
                 :expense="expense"
+                :timeline="timeline"
                 @editExpense="editExpense"
                 @addExpense="addExpense" />
         </div>
@@ -48,7 +49,8 @@ import ViewExpenses from './Expenses/ViewExpenses.vue';
 export default {
     name: 'Expenses',
     props: [
-        'expensesItemized', 'netSum', 'expenseSum', 'unallocatedSum', 'investmentSum', 'mode'
+        'expensesItemized', 'netSum', 'expenseSum', 'unallocatedSum', 'investmentSum',
+        'mode', 'timeline'
     ],
     components: {
         AddExpense,
@@ -81,6 +83,10 @@ export default {
             let expense = this.expensesItemized[this.idx];
             return expense ? JSON.parse(JSON.stringify(expense)) : expense;
         },
+        title: function () {
+            var timeline = this.timeline == 'annual' ? 'common.annual' : 'common.monthly';
+            return this.$t('expenses.title', { timeline: this.$t(timeline) })
+        }
     }
 }
 

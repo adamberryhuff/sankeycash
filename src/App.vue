@@ -3,6 +3,9 @@
         <Toast ref="toast"></Toast>
         <Navbar
             :mode="mode"
+            :percent="percent"
+            :canvas="canvas"
+            :timeline="timeline"
             :chartShowing="chartShowing"
             :itemizedIncomes="incomesItemized"
             :itemizedExpenses="expensesItemized"
@@ -10,10 +13,13 @@
             @setItemizedInvestments="setItemizedInvestments"
             @setItemizedExpenses="setItemizedExpenses"
             @setItemizedIncomes="setItemizedIncomes"
+            @setTimeline="setTimeline"
             @download="download"
             @alert="alert"
             @setMode="setMode"
-            @forceRender="forceRender" />
+            @forceRender="forceRender"
+            @setPercent="setPercent"
+            @setCanvas="setCanvas" />
         <Chart
             ref="chart"
             :chartShowing="chartShowing"
@@ -24,10 +30,14 @@
             :netSum="netSum"
             :taxSum="taxSum"
             :mode="mode"
+            :percent="percent"
+            :canvas="canvas"
             :expenseSum="expenseSum"
             :unallocatedSum="unallocatedSum"
             :investmentSum="investmentSum"
-            :deductionSum="deductionSum" />
+            :deductionSum="deductionSum"
+            @setPercent="setPercent"
+            @setCanvas="setCanvas" />
         <div class="container-fluid">
             <Incomes
                 :incomesItemized="incomesItemized"
@@ -35,6 +45,7 @@
                 :grossSum="grossSum"
                 :netSum="netSum"
                 :taxSum="taxSum"
+                :timeline="timeline"
                 :mode="mode"
                 @addIncome="addIncome"
                 @removeIncome="removeIncome" />
@@ -45,6 +56,7 @@
                 :expenseSum="expenseSum"
                 :unallocatedSum="unallocatedSum"
                 :investmentSum="investmentSum"
+                :timeline="timeline"
                 :mode="mode"
                 @removeExpense="removeExpense"
                 @addExpense="addExpense" />
@@ -56,6 +68,7 @@
                 :expenseSum="expenseSum"
                 :unallocatedSum="unallocatedSum"
                 :investmentSum="investmentSum"
+                :timeline="timeline"
                 :mode="mode"
                 @removeInvestment="removeInvestment"
                 @addInvestment="addInvestment" />
@@ -89,7 +102,10 @@ export default {
             incomesItemized: [],
             expensesItemized: [],
             investmentsItemized: [],
-            mode: '$'
+            mode: '$',
+            timeline: 'annual',
+            percent: false,
+            canvas: 'small'
         }
     },
     methods: {
@@ -187,6 +203,40 @@ export default {
         },
         forceRender: function () {
             this.$refs.chart.render();
+        },
+        setTimeline: function (timeline) {
+            // adjust all numbers
+            this.incomesItemized.forEach(income => {
+                income.value = this.adjustTimeline(income.value, timeline);
+                income.exemptions.forEach(exemption => {
+                    exemption.value = this.adjustTimeline(exemption.value, timeline);
+                    exemption.match = this.adjustTimeline(exemption.match, timeline);
+                });
+                income.deductions.forEach(deduction => {
+                    deduction.value = this.adjustTimeline(deduction.value, timeline);
+                })
+            });
+            this.expensesItemized.forEach(expense => {
+                expense.value = this.adjustTimeline(expense.value, timeline);
+            });
+            this.investmentsItemized.forEach(investment => {
+                investment.value = this.adjustTimeline(investment.value, timeline);
+            });
+
+            this.timeline = timeline;
+        },
+        adjustTimeline (amount, new_timeline) {
+            if (this.timeline == 'annual' && new_timeline == 'monthly') {
+                return amount/12;
+            } else if (this.timeline == 'monthly' && new_timeline == 'annual') {
+                return amount*12;
+            }
+        },
+        setPercent: function (percent) {
+            this.percent = percent;
+        },
+        setCanvas: function (canvas) {
+            this.canvas = canvas;
         }
     },
     computed: {

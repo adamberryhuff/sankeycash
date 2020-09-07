@@ -1,20 +1,23 @@
 <template>
     <div>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- expenses label -->
+                <label>{{ $t('common.expenses') }}</label>
 
-        <!-- expenses label -->
-        <label>{{ $t('common.expenses') }}</label>
-
-        <!-- expenses: net - expenses = savings -->
-        <span class="float-right">
-            <span class="badge badge-success net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip">
-                {{ $t('common.unallocated') }}<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum, mode) }}</span>
-                &nbsp;<span class="fa fa-question-circle"></span>
-            </span>
-            <span class="badge badge-success net-income-badge clickable pad" data-toggle="tooltip" data-placement="top" :title="expenseTooltip">
-                {{ $t('common.expenses') }}<span class="desktop-only-inline">: {{ util.formatMoney(expenseSum, mode) }}</span>
-                &nbsp;<span class="fa fa-question-circle"></span>
-            </span>
-        </span>
+                <!-- expenses: net - expenses = savings -->
+                <span class="float-right net-income">
+                    <span class="badge badge-success net-income-badge clickable" data-toggle="tooltip" data-placement="top" :title="budgetTooltip">
+                        {{ $t('common.unallocated') }}<span class="desktop-only-inline">: {{ util.formatMoney(unallocatedSum, mode) }}</span>
+                        &nbsp;<span class="fa fa-question-circle"></span>
+                    </span>
+                    <span class="badge badge-success net-income-badge clickable pad" data-toggle="tooltip" data-placement="top" :title="expenseTooltip">
+                        {{ $t('common.expenses') }}<span class="desktop-only-inline">: {{ util.formatMoney(expenseSum, mode) }}</span>
+                        &nbsp;<span class="fa fa-question-circle"></span>
+                    </span>
+                </span>
+            </div>
+        </div>
 
         <ul class="list-group">
 
@@ -110,7 +113,9 @@ export default {
 .net-income-badge {
     float:initial;
 }
-
+.net-income {
+    margin-bottom:0.5rem;
+}
 @media only screen and (min-width: 540px) {
     .pad {
         margin-right: calc(0.25rem + 15px);
@@ -131,13 +136,24 @@ export default {
 .view-edit-container {
     font-size: 12px;
     font-weight: 400;
-    position:absolute;
-    bottom:0px;
-    left: 0px;
 }
 
-.left-side {
-    min-height:62px;
+@media only screen and (min-width: 540px) {
+    .left-side {
+        min-height:62px;
+    }
+
+    .view-edit-container {
+        position:absolute;
+        bottom:0px;
+        left: 0px;
+    }
+}
+
+@media only screen and (max-width: 540px) {
+    .view-edit-container {
+        float:right;
+    }
 }
 
 

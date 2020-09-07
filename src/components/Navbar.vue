@@ -28,6 +28,10 @@
                 <li class="nav-item active" id="uploader"></li>
             </ul>
             <div class="btn-group percent-buttons" style="margin-right:10px;" role="group" aria-label="Basic example">
+                <button type="button" v-on:click="$emit('setTimeline', 'annual')" class="btn btn-secondary" :class="{ active: timeline == 'annual' }">Year</button>
+                <button type="button" v-on:click="$emit('setTimeline', 'monthly')" class="btn btn-secondary" :class="{ active: timeline == 'monthly' }">Month</button>
+            </div>
+            <div class="btn-group percent-buttons" style="margin-right:10px;" role="group" aria-label="Basic example">
                 <button type="button" v-on:click="toggleMode('$')" class="btn btn-secondary" :class="{ active: mode == '$' }">$</button>
                 <button type="button" v-on:click="toggleMode('£')" class="btn btn-secondary" :class="{ active: mode == '£' }">£</button>
                 <button type="button" v-on:click="toggleMode('€')" class="btn btn-secondary" :class="{ active: mode == '€' }">€</button>
@@ -54,7 +58,8 @@ import test from '../assets/sankey.json';
 export default {
     name: 'Navbar',
     props: [
-        'chartShowing', 'itemizedIncomes', 'itemizedExpenses', 'itemizedInvestments', 'mode'
+        'itemizedIncomes', 'itemizedExpenses', 'itemizedInvestments',
+        'mode', 'timeline', 'percent', 'canvas', 'chartShowing'
     ],
     data () {
         return {
@@ -69,7 +74,7 @@ export default {
                     label: 'German',
                     currency: '€'
                 }
-            ]
+            ],
         }
     },
     methods: {
@@ -138,7 +143,12 @@ export default {
             let contents = {
                 income: this.itemizedIncomes,
                 expenses: this.itemizedExpenses,
-                investments: this.itemizedInvestments
+                investments: this.itemizedInvestments,
+                timeline: this.timeline,
+                mode: this.mode,
+                percent: this.percent,
+                canvas: this.canvas,
+                language: this.$i18n.locale
             };
             contents = encodeURIComponent(JSON.stringify(contents));
             var element  = document.createElement('a');
@@ -178,7 +188,12 @@ export default {
                         a.$emit('setItemizedInvestments', config.investments);
                         a.$emit('setItemizedExpenses', config.expenses);
                         a.$emit('setItemizedIncomes', config.income);
-                        a.$emit('alert', this.$t('toasts.config_imported'));
+                        if (config.timeline) a.$emit('setTimeline', config.timeline);
+                        if (config.mode) a.$emit('setMode', config.mode);
+                        if (config.percent !== undefined) a.$emit('setPercent', config.percent);
+                        if (config.canvas) a.$emit('setCanvas', config.canvas);
+                        if (config.language) a.$i18n.locale = config.language;
+                        a.$emit('alert', a.$t('toasts.config_imported'));
                     }
                 };
             }) (f);
@@ -206,9 +221,9 @@ export default {
             }
         },
         load: function () {
-            this.$emit('setItemizedInvestments', test.investments);
-            this.$emit('setItemizedExpenses', test.expenses);
-            this.$emit('setItemizedIncomes', test.income);
+            this.$emit('setItemizedInvestments', JSON.parse(JSON.stringify(test.investments)));
+            this.$emit('setItemizedExpenses', JSON.parse(JSON.stringify(test.expenses)));
+            this.$emit('setItemizedIncomes', JSON.parse(JSON.stringify(test.income)));
         },
         setLanguage: function (key) {
             this.$i18n.locale = key;
@@ -225,7 +240,7 @@ export default {
             element.click();
             document.body.removeChild(element);
             alert(this.$t('add'));
-        }
+        },
     }
 }
 

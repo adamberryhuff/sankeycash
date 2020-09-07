@@ -3,19 +3,23 @@
         <ViewIncomeBreakdown ref="breakdown" :mode="mode" />
 
         <!-- income streams label -->
-        <label>{{ $t('incomes.header') }}</label>
+        <div class="row">
+            <div class="col-md-12">
+                <label>{{ $t('incomes.header') }}</label>
 
-        <!-- income streams gross, tax, net -->
-        <span class="float-right net-income">
-            <span class="badge badge-success net-income-badge clickable">
-                {{ $t('common.gross_short') }}<span class="desktop-only-inline">: {{ util.formatMoney(grossSum, mode) }}</span>
-            </span>
-            <span class="badge badge-success net-income-badge clickable pad" data-toggle="tooltip" data-placement="top" :title="netTooltip">
-                {{ $t('common.net_short') }}<span class="desktop-only-inline">: {{ util.formatMoney(netSum, mode) }}</span>
-                &nbsp;
-                <span class="fa fa-question-circle" v-if="incomesItemized.length"></span>
-            </span>
-        </span>
+                <!-- income streams gross, tax, net -->
+                <span class="float-right net-income">
+                    <span class="badge badge-success net-income-badge clickable">
+                        {{ $t('common.gross_short') }}<span class="desktop-only-inline">: {{ util.formatMoney(grossSum, mode) }}</span>
+                    </span>
+                    <span class="badge badge-success net-income-badge clickable pad" data-toggle="tooltip" data-placement="top" :title="netTooltip">
+                        {{ $t('common.net_short') }}<span class="desktop-only-inline">: {{ util.formatMoney(netSum, mode) }}</span>
+                        &nbsp;
+                        <span class="fa fa-question-circle" v-if="incomesItemized.length"></span>
+                    </span>
+                </span>
+            </div>
+        </div>
 
         <ul class="list-group">
 
@@ -26,7 +30,7 @@
             <li class="list-group-item d-flex justify-content-between align-items-center clickable" v-for="(income, idx) in incomesItemized" v-bind:key="income.label">
                 <div class="row no-gutters income-display">
                     <div class="col-md-4 left-side">
-                        <span id="label">{{ income.label }}</span><br>
+                        <span id="label">{{ income.label }}</span><br class="desktop-only">
                         <span class="view-edit-container">
                             <button type="button" class="btn btn-link view-breakdown" v-on:click="editIncome(idx)">
                                 {{ $t('common.edit') }}
@@ -146,8 +150,14 @@ export default {
 .income-display {
     width:100%;
 }
+.net-income {
+    margin-bottom: 0.5rem;
+}
 .net-income-badge {
     float:initial;
+}
+.badge-light {
+    background-color: #ebebeb;
 }
 
 @media only screen and (min-width: 540px) {
@@ -164,10 +174,6 @@ export default {
     color: #6c757d;
 }
 
-.badges {
-    text-align:right;
-}
-
 .view-breakdown {
     cursor: pointer;
     text-decoration: none;
@@ -182,12 +188,28 @@ export default {
 .view-edit-container {
     font-size: 12px;
     font-weight: 400;
-    position:absolute;
-    bottom:0px;
 }
 
-.left-side {
-    min-height:62px;
+.badges {
+    text-align:right;
+}
+
+@media only screen and (min-width: 540px) {
+    .left-side {
+        min-height:62px;
+    }
+
+    .view-edit-container {
+        position:absolute;
+        bottom:0px;
+        left: 0px;
+    }
+}
+
+@media only screen and (max-width: 540px) {
+    .view-edit-container {
+        float:right;
+    }
 }
 
 </style>

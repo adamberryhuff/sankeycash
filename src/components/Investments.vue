@@ -9,7 +9,7 @@
                 </span>
             </h2>
             <p>
-                {{ $t('investments.title') }} {{ $t('common.remaining_budget') }}
+                {{ title }} {{ $t('common.remaining_budget') }}
                 <span class="budget-inline" v-on:click="populateInvestment()">
                     {{ util.formatMoney(unallocatedSum, mode) }}
                 </span>
@@ -22,6 +22,7 @@
                 ref="add"
                 :unallocatedSum="unallocatedSum"
                 :mode="mode"
+                :timeline="timeline"
                 :investment="investment"
                 @addInvestment="addInvestment"
                 @editInvestment="editInvestment" />
@@ -58,7 +59,7 @@ export default {
     props: [
         'investmentsItemized', 'incomesItemized',
         'unallocatedSum', 'netSum', 'investmentSum', 'expenseSum',
-        'mode'
+        'mode', 'timeline'
     ],
     data () {
         return {
@@ -92,6 +93,10 @@ export default {
         investment: function () {
             let investment = this.investmentsItemized[this.idx];
             return investment ? JSON.parse(JSON.stringify(investment)) : investment;
+        },
+        title: function () {
+            var timeline = this.timeline == 'annual' ? 'common.annual' : 'common.monthly';
+            return this.$t('investments.title', { timeline: this.$t(timeline) })
         }
     }
 }

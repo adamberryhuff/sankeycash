@@ -14,16 +14,16 @@
             <label>{{ $t('common.amount') }}</label>
             <input type="number" class="form-control" min="1" v-model="value" :placeholder="$t('common.amount')" v-on:keyup.enter="addExpense()">
             <small class="form-text text-muted">
-                {{ $t('expenses.amount_examples', {mode: mode}) }}
+                {{ amountExamples }}
             </small>
         </div>
 
         <!-- desktop buttons: save, cancel -->
         <div class="desktop-only-inline">
-            <button v-if="expense" class="btn btn-link" v-on:click="cancelEdit" v-on:keyup.enter="cancelEdit()">
+            <button v-if="expense" class="btn btn-link" v-on:click.enter.prevent="cancelEdit" v-on:keyup.enter="cancelEdit()">
                 {{ $t('common.cancel') }}
             </button>
-            <button class="btn btn-primary" v-on:keyup.enter="addExpense()">
+            <button class="btn btn-primary" v-on:click.enter.prevent="addExpense()" v-on:keyup.enter="addExpense()">
                 {{ submitText }}
             </button>
         </div>
@@ -31,10 +31,10 @@
         <!-- mobile buttons: save, cancel -->
         <div class="mobile-only row">
             <br>
-            <button class="btn btn-primary col-sm-12" v-on:keyup.enter="addExpense()">
+            <button class="btn btn-primary col-sm-12" v-on:click.enter.prevent="addExpense()" v-on:keyup.enter="addExpense()">
                 {{ submitText }}
             </button>
-            <button v-if="expense" class="btn btn-outline-primary col-sm-12" v-on:click="cancelEdit" v-on:keyup.enter="cancelEdit()">
+            <button v-if="expense" class="btn btn-outline-primary col-sm-12" v-on:click.enter.prevent="cancelEdit" v-on:keyup.enter="cancelEdit()">
                 {{ $t('common.cancel') }}
             </button>
         </div>
@@ -47,7 +47,7 @@ import util from '../../util.js';
 
 export default {
     name: 'AddExpense',
-    props: ['unallocatedSum', 'mode', 'expense'],
+    props: ['unallocatedSum', 'mode', 'expense', 'timeline'],
     data () {
         return {
             // new income stream
@@ -102,6 +102,13 @@ export default {
     computed: {
         submitText: function () {
             return this.expense ? this.$t('expenses.update') : this.$t('expenses.add');
+        },
+        amountExamples: function () {
+            var timeline = this.timeline == 'annual' ? 'common.annual' : 'common.monthly';
+            return this.$t('expenses.amount_examples', {
+                mode: this.mode ,
+                timeline: this.$t(timeline)
+            });
         }
     },
     watch: {

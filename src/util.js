@@ -3,6 +3,7 @@ export default {
      * Formatting Helpers
      ***************************************************************************/
     formatMoney (quantity, type='$') {
+        if (type != '%') quantity = Math.round(quantity);
         if (type == '$') {
             return '$' + quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         } else if (type == '%') {
