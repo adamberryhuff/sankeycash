@@ -87,6 +87,7 @@ import Footer from './components/Footer.vue'
 import Incomes from './components/Incomes.vue'
 import Expenses from './components/Expenses.vue'
 import Investments from './components/Investments.vue'
+import defaults from './assets/defaults.json';
 import Vue from 'vue';
 
 export default {
@@ -105,20 +106,11 @@ export default {
             incomesItemized: [],
             expensesItemized: [],
             investmentsItemized: [],
-            mode: '$',
-            timeline: 'annual',
-            percent: false,
-            canvas: 'small',
-            colors: {
-                income_dark: '#1f78b4',
-                income_light: '#a6cee3',
-                expenses_dark: '#FF0000',
-                expenses_light: '#fb9a99',
-                investments_dark: '#33a02c',
-                investments_light: '#b2df8a',
-                unallocated_dark: '#fdbf6f',
-                unallocated_light: '#ffe5c3',
-            }
+            mode: defaults.mode,
+            timeline: defaults.timeline,
+            percent: defaults.percent,
+            canvas: defaults.canvas,
+            colors: defaults.colors
         }
     },
     methods: {

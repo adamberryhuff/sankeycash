@@ -1,5 +1,5 @@
-{"income":
-    [
+{
+    "income":[
         {
             "label":"Salary",
             "tax":30,
@@ -72,5 +72,19 @@
             "label":"Roth IRA",
             "value":6000
         }
-    ]
+    ],
+    "timeline":"annual",
+    "mode":"$",
+    "percent":false,
+    "canvas":"small",
+    "colors":{
+        "income_dark":"#1f78b4",
+        "income_light":"#a6cee3",
+        "expenses_dark":"#FF0000",
+        "expenses_light":"#fb9a99",
+        "investments_dark":"#33a02c",
+        "investments_light":"#b2df8a",
+        "unallocated_dark":"#000000",
+        "unallocated_light":"#000000"
+    }
 }

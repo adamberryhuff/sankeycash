@@ -54,6 +54,7 @@
 
 <script>
 import test from '../assets/sankey.json';
+import defaults from '../assets/defaults.json';
 
 export default {
     name: 'Navbar',
@@ -215,6 +216,11 @@ export default {
             this.$emit('setItemizedInvestments', []);
             this.$emit('setItemizedExpenses', []);
             this.$emit('setItemizedIncomes', []);
+            this.$emit('setTimeline', defaults.timeline);
+            this.$emit('setMode', defaults.mode);
+            this.$emit('setPercent', defaults.percent);
+            this.$emit('setCanvas', defaults.canvas);
+            this.$emit('setColors', defaults.colors);
             window.scrollTo(0,0);
         },
         loadTestData: function () {
@@ -227,6 +233,11 @@ export default {
             this.$emit('setItemizedInvestments', JSON.parse(JSON.stringify(test.investments)));
             this.$emit('setItemizedExpenses', JSON.parse(JSON.stringify(test.expenses)));
             this.$emit('setItemizedIncomes', JSON.parse(JSON.stringify(test.income)));
+            this.$emit('setTimeline', test.timeline);
+            this.$emit('setMode', test.mode);
+            this.$emit('setPercent', test.percent);
+            this.$emit('setCanvas', test.canvas);
+            this.$emit('setColors', test.colors);
         },
         setLanguage: function (key) {
             this.$i18n.locale = key;
