@@ -59,7 +59,7 @@ export default {
     name: 'Navbar',
     props: [
         'itemizedIncomes', 'itemizedExpenses', 'itemizedInvestments',
-        'mode', 'timeline', 'percent', 'canvas', 'chartShowing'
+        'mode', 'timeline', 'percent', 'canvas', 'chartShowing', 'colors'
     ],
     data () {
         return {
@@ -149,7 +149,8 @@ export default {
                 mode: this.mode,
                 percent: this.percent,
                 canvas: this.canvas,
-                language: this.$i18n.locale
+                language: this.$i18n.locale,
+                colors: this.colors
             };
             contents = encodeURIComponent(JSON.stringify(contents));
             var element  = document.createElement('a');
@@ -186,14 +187,15 @@ export default {
                         || config.expenses === undefined || config.income === undefined) {
                         alert(a.$t('header.import_error'));
                     } else {
-                        a.$emit('setItemizedInvestments', config.investments);
-                        a.$emit('setItemizedExpenses', config.expenses);
                         a.$emit('setItemizedIncomes', config.income);
+                        a.$emit('setItemizedExpenses', config.expenses);
+                        a.$emit('setItemizedInvestments', config.investments);
                         if (config.timeline) a.$emit('setTimeline', config.timeline);
                         if (config.mode) a.$emit('setMode', config.mode);
                         if (config.percent !== undefined) a.$emit('setPercent', config.percent);
                         if (config.canvas) a.$emit('setCanvas', config.canvas);
                         if (config.language) a.$i18n.locale = config.language;
+                        if (config.colors) a.$emit('setColors', config.colors);
                         a.$emit('alert', a.$t('toasts.config_imported'));
                     }
                 };

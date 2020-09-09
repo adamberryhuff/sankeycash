@@ -5,6 +5,7 @@
             :mode="mode"
             :percent="percent"
             :canvas="canvas"
+            :colors="colors"
             :timeline="timeline"
             :chartShowing="chartShowing"
             :itemizedIncomes="incomesItemized"
@@ -19,9 +20,11 @@
             @setMode="setMode"
             @forceRender="forceRender"
             @setPercent="setPercent"
-            @setCanvas="setCanvas" />
+            @setCanvas="setCanvas"
+            @setColors="setColors" />
         <Chart
             ref="chart"
+            :colors="colors"
             :chartShowing="chartShowing"
             :itemizedIncomes="incomesItemized"
             :itemizedExpenses="expensesItemized"
@@ -105,7 +108,17 @@ export default {
             mode: '$',
             timeline: 'annual',
             percent: false,
-            canvas: 'small'
+            canvas: 'small',
+            colors: {
+                income_dark: '#1f78b4',
+                income_light: '#a6cee3',
+                expenses_dark: '#FF0000',
+                expenses_light: '#fb9a99',
+                investments_dark: '#33a02c',
+                investments_light: '#b2df8a',
+                unallocated_dark: '#fdbf6f',
+                unallocated_light: '#ffe5c3',
+            }
         }
     },
     methods: {
@@ -231,12 +244,16 @@ export default {
             } else if (this.timeline == 'monthly' && new_timeline == 'annual') {
                 return amount*12;
             }
+            return amount;
         },
         setPercent: function (percent) {
             this.percent = percent;
         },
         setCanvas: function (canvas) {
             this.canvas = canvas;
+        },
+        setColors: function (colors) {
+            this.colors = colors;
         }
     },
     computed: {

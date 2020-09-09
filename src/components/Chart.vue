@@ -6,6 +6,12 @@
         <div style="position: relative;">
             <span class="float-right switch">
                 <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
+                    <input type="color" class="btn btn-secondary color-inputs" v-model="colors.income_light" />
+                    <input type="color" class="btn btn-secondary color-inputs" v-model="colors.expenses_light" />
+                    <input type="color" class="btn btn-secondary color-inputs" v-model="colors.investments_light" />
+                    <input type="color" class="btn btn-secondary color-inputs" v-model="colors.unallocated_light" />
+                </div>
+                <div class="btn-group percent-buttons" role="group" aria-label="Basic example">
                     <button type="button" v-on:click="toggleCanvas('small')" class="btn btn-secondary canvas-small" :class="{ active: canvas == 'small' }"><span class="fa fa-square"></span></button>
                     <button type="button" v-on:click="toggleCanvas('medium')" class="btn btn-secondary canvas-medium" :class="{ active: canvas == 'medium' }"><span class="fa fa-square"></span></button>
                     <button type="button" v-on:click="toggleCanvas('large')" class="btn btn-secondary canvas-large" :class="{ active: canvas == 'large' }"><span class="fa fa-square"></span></button>
@@ -33,7 +39,7 @@ import html2canvas from 'html2canvas';
 export default {
     name: 'Chart',
     props: [
-        'chartShowing', 'mode', 'percent', 'canvas',
+        'chartShowing', 'mode', 'percent', 'canvas', 'colors',
         'itemizedIncomes', 'itemizedExpenses', 'itemizedInvestments',
         'grossSum', 'netSum', 'taxSum', 'unallocatedSum', 'investmentSum', 'expenseSum',
         'deductionSum'
@@ -51,7 +57,7 @@ export default {
 
             // chart rendering
             chart: false,
-            colors: 'gradient',
+            color_mode: 'gradient',
             atTop: true,
             coded: [],
             nodes: [],
@@ -108,6 +114,22 @@ export default {
             this.render();
         },
         mode: function () {
+            this.render();
+        },
+        'colors.income_light': function () {
+            this.colors.income_dark = util.shadeColor(this.colors.income_light, -40);
+            this.render();
+        },
+        'colors.expenses_light': function () {
+            this.colors.expenses_dark = util.shadeColor(this.colors.expenses_light, -40);
+            this.render();
+        },
+        'colors.investments_light': function () {
+            this.colors.investments_dark = util.shadeColor(this.colors.investments_light, -40);
+            this.render();
+        },
+        'colors.unallocated_light': function () {
+            this.colors.unallocated_dark = util.shadeColor(this.colors.unallocated_light, -40);
             this.render();
         }
     },
@@ -166,14 +188,14 @@ export default {
             this.itemizedIncomes.forEach(stream => {
                 stream = JSON.parse(JSON.stringify(stream));
                 stream.value = this.formatValue(stream.value);
-                this.addChartRow(stream, this.gross, '#1f78b4', '#a6cee3');
+                this.addChartRow(stream, this.gross, this.colors.income_dark, this.colors.income_light);
                 stream.exemptions.forEach(exemption => {
                     exemption = JSON.parse(JSON.stringify(exemption));
                     if (exemption.match > 0) {
                         exemption.match = this.formatValue(exemption.match);
                         this.addChartRow({
                             label: exemption.label+' Match', value: exemption.match
-                        }, this.gross, '#1f78b4', '#a6cee3');
+                        }, this.gross, this.colors.income_dark, this.colors.income_light);
                     }
                 });
             })
@@ -182,21 +204,21 @@ export default {
         // draw line: taxes -> taxes
         // draw line: taxes -> taxes
         drawTaxes: function () {
-            this.addChartRow(this.gross, this.tax, '#a6cee3', '#fb9a99');
-            this.addChartRow(this.tax, this.tax, '#fb9a99', '#fb9a99');
-            this.addChartRow(this.tax, this.tax, '#fb9a99', 'red');
+            this.addChartRow(this.gross, this.tax, this.colors.income_light, this.colors.expenses_light);
+            this.addChartRow(this.tax, this.tax, this.colors.expenses_light, this.colors.expenses_light);
+            this.addChartRow(this.tax, this.tax, this.colors.expenses_light, this.colors.expenses_dark);
         },
         // draw line: gross      -> deductions
         // draw line: deductions -> deductions
         // draw line: deductions -> deductions
         drawDeductions: function () {
-            this.addChartRow(this.gross, this.deductions, '#a6cee3', '#fb9a99');
-            this.addChartRow(this.deductions, this.deductions, '#fb9a99', '#fb9a99');
-            this.addChartRow(this.deductions, this.deductions, '#fb9a99', 'red');
+            this.addChartRow(this.gross, this.deductions, this.colors.income_light, this.colors.expenses_light);
+            this.addChartRow(this.deductions, this.deductions, this.colors.expenses_light, this.colors.expenses_light);
+            this.addChartRow(this.deductions, this.deductions, this.colors.expenses_light, this.colors.expenses_dark);
         },
         // draw line: gross -> net
         drawNetIncome: function () {
-            this.addChartRow(this.gross, this.net, '#a6cee3', '#a6cee3');
+            this.addChartRow(this.gross, this.net, this.colors.income_light, this.colors.income_light);
         },
         /**************************************************************
          * Expenses
@@ -205,8 +227,8 @@ export default {
             this.itemizedExpenses.forEach(expense => {
                 expense = JSON.parse(JSON.stringify(expense));
                 expense.value = this.formatValue(expense.value);
-                this.addChartRow(this.net, expense, '#a6cee3', '#fb9a99');
-                this.addChartRow(expense, this.expenses, '#fb9a99', 'red');
+                this.addChartRow(this.net, expense, this.colors.income_light, this.colors.expenses_light);
+                this.addChartRow(expense, this.expenses, this.colors.expenses_light, this.colors.expenses_dark);
             })
         },
         /**************************************************************
@@ -217,19 +239,19 @@ export default {
             this.itemizedInvestments.forEach(investment => {
                 investment = JSON.parse(JSON.stringify(investment));
                 investment.value = this.formatValue(investment.value);
-                this.addChartRow(this.net, investment, '#a6cee3', '#b2df8a');
-                this.addChartRow(investment, this.investments, '#b2df8a', '#33a02c');
+                this.addChartRow(this.net, investment, this.colors.income_light, this.colors.investments_light);
+                this.addChartRow(investment, this.investments, this.colors.investments_light, this.colors.investments_dark);
             })
-            this.addChartRow(this.net, this.unallocated, '#a6cee3', '#ffe5c3');
-            this.addChartRow(this.unallocated, this.unallocated, '#ffe5c3', '#fdbf6f');
+            this.addChartRow(this.net, this.unallocated, this.colors.income_light, this.colors.unallocated_light);
+            this.addChartRow(this.unallocated, this.unallocated, this.colors.unallocated_light, this.colors.unallocated_dark);
         },
         drawExemptions: function () {
             this.itemizedIncomes.forEach(stream => {
                 stream.exemptions.forEach(exemption => {
                     exemption = JSON.parse(JSON.stringify(exemption));
                     exemption.value = this.formatValue(exemption.value + exemption.match);
-                    this.addChartRow(this.net, exemption, '#a6cee3', '#b2df8a');
-                    this.addChartRow(exemption, this.investments, '#b2df8a', '#33a02c');
+                    this.addChartRow(this.net, exemption, this.colors.income_light, this.colors.investments_light);
+                    this.addChartRow(exemption, this.investments, this.colors.investments_light, this.colors.investments_dark);
                 });
             })
         },
@@ -256,7 +278,7 @@ export default {
         },
         viewChart: () => window.scrollTo(0,0),
         downloadChartTrigger: function () {
-            this.colors = 'source';
+            this.color_mode = 'source';
             this.render(true);
         },
         downloadChart: function () {
@@ -270,7 +292,7 @@ export default {
                 link.click();
                 document.body.removeChild(link);
             });
-            this.colors = 'gradient';
+            this.color_mode = 'gradient';
             this.render();
         },
         getChartStyling: function () {
@@ -286,7 +308,7 @@ export default {
                         nodePadding: 7
                     },
                     link: {
-                        colorMode: this.colors,
+                        colorMode: this.color_mode,
                         colors: this.coded
                     },
                     iterations: 0,
@@ -416,6 +438,12 @@ export default {
 }
 .canvas-large {
     font-size: 15px;
+}
+
+.color-inputs {
+    width: 40px;
+    height: 36.5px;
+    padding: .6rem .7rem;
 }
 
 </style>
