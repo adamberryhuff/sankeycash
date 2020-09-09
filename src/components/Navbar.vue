@@ -93,6 +93,7 @@ export default {
             introJS.setOption("nextLabel", this.$t('common.next'));
             introJS.setOption("prevLabel", this.$t('common.back'));
             introJS.setOption("skipLabel", this.$t('common.skip'));
+            introJS.setOption("doneLabel", this.$t('common.done'));
             introJS.setOption("showStepNumbers", false);
             introJS.addSteps([
                 {
@@ -228,6 +229,10 @@ export default {
         setLanguage: function (key) {
             this.$i18n.locale = key;
             this.toggleMode(this.$t('currency'));
+            window.$(function () {
+                window.$('[data-toggle="tooltip"]').tooltip('dispose');
+                window.$('[data-toggle="tooltip"]').tooltip('enable');
+            })
         },
         addLanguage: function () {
             var contents = require("../assets/content/en.json");

@@ -39,7 +39,8 @@
         "details": "Details",
         "edit": "Edit",
         "annual": "annual",
-        "monthly": "monthly"
+        "monthly": "monthly",
+        "done": "Done"
     },
     "instructions": {
         "example": "This is an example of a Sankey chart.",
