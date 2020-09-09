@@ -106,6 +106,9 @@ export default {
         },
         canvas: function () {
             this.render();
+        },
+        mode: function () {
+            this.render();
         }
     },
     computed: {
