@@ -212,8 +212,14 @@ export default {
         // draw line: deductions -> deductions
         // draw line: deductions -> deductions
         drawDeductions: function () {
-            this.addChartRow(this.gross, this.deductions, this.colors.income_light, this.colors.expenses_light);
-            this.addChartRow(this.deductions, this.deductions, this.colors.expenses_light, this.colors.expenses_light);
+            this.itemizedIncomes.forEach(stream => {
+                stream.deductions.forEach(deduction => {
+                    deduction = JSON.parse(JSON.stringify(deduction));
+                    deduction.value = this.formatValue(deduction.value);
+                    this.addChartRow(this.gross, deduction, this.colors.expenses_light, this.colors.expenses_light);
+                    this.addChartRow(deduction, this.deductions, this.colors.expenses_light, this.colors.expenses_light);
+                });
+            });
             this.addChartRow(this.deductions, this.deductions, this.colors.expenses_light, this.colors.expenses_dark);
         },
         // draw line: gross -> net
